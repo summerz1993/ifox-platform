@@ -1,0 +1,9 @@
+rootProject.name = 'platform-global'
+include 'ifox-web'
+include 'ifox-common'
+include 'ifox-entity'
+include 'ifox-utility'
+include 'ifox-dao'
+include 'ifox-base-service'
+include 'admin-user-service'
+
