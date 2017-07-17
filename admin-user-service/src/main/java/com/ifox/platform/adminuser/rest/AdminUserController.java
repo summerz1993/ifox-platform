@@ -7,7 +7,7 @@ import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.common.rest.BaseResponse;
 import com.ifox.platform.common.rest.MultiResponse;
 import com.ifox.platform.common.rest.TokenResponse;
-import com.ifox.platform.entity.adminuser.AdminUser;
+import com.ifox.platform.entity.adminuser.AdminUserEO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,9 +58,9 @@ public class AdminUserController {
     @ResponseBody
     BaseResponse save(@ApiParam @RequestBody SaveRequest saveRequest){
         logger.info("保存用户信息:{}", saveRequest);
-        AdminUser adminUser = new AdminUser();
-        BeanUtils.copyProperties(saveRequest, adminUser);
-        adminUserService.save(adminUser);
+        AdminUserEO adminUserEO = new AdminUserEO();
+        BeanUtils.copyProperties(saveRequest, adminUserEO);
+        adminUserService.save(adminUserEO);
 
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setStatus(SUCCESS);
@@ -74,12 +74,12 @@ public class AdminUserController {
     @ResponseBody
     MultiResponse<AdminUserVO> listAll(){
         logger.info("获取所有用户信息");
-        List<AdminUser> adminUserList = adminUserService.listAll();
+        List<AdminUserEO> adminUserEOList = adminUserService.listAll();
         List<AdminUserVO> adminUserVOList = new ArrayList<>();
-        for (int i = 0; i < adminUserList.size(); i ++) {
-            AdminUser adminUser = adminUserList.get(i);
+        for (int i = 0; i < adminUserEOList.size(); i ++) {
+            AdminUserEO adminUserEO = adminUserEOList.get(i);
             AdminUserVO adminUserVO = new AdminUserVO();
-            BeanUtils.copyProperties(adminUser, adminUserVO);
+            BeanUtils.copyProperties(adminUserEO, adminUserVO);
             adminUserVOList.add(adminUserVO);
         }
 

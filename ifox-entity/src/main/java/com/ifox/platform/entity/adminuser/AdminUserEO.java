@@ -1,10 +1,11 @@
 package com.ifox.platform.entity.adminuser;
 
 import com.ifox.platform.entity.base.BaseEntity;
+import com.ifox.platform.entity.common.RoleEO;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yeager
@@ -13,7 +14,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ifox_admin_user")
-public class AdminUser extends BaseEntity {
+public class AdminUserEO extends BaseEntity {
+
+    /**
+     * 用户状态
+     */
+    public enum AdminUserEOStatus {
+        //有效的
+        ACTIVE,
+        //无效的
+        INVALID
+    }
 
     /**
      * 登录名
@@ -31,7 +42,13 @@ public class AdminUser extends BaseEntity {
      * 状态
      */
     @Column(nullable = false)
-    private AdminUserStatus status;
+    private AdminUserEOStatus status;
+
+    /**
+     * 是否内置用户(不可删除)
+     */
+    @Column(nullable = false)
+    private Boolean buildinSystem = false;
 
     /**
      * 昵称
@@ -55,14 +72,12 @@ public class AdminUser extends BaseEntity {
     private String remark;
 
     /**
-     * 用户状态
+     * 所属角色
      */
-    public enum AdminUserStatus{
-        //有效的
-        ACTIVE,
-        //无效的
-        INVALID
-    }
+    @ManyToMany
+    @JoinTable(name = "ifox_admin_user_role", joinColumns = {@JoinColumn(name = "admin_user")}, inverseJoinColumns = {@JoinColumn(name = "role")})
+    private List<RoleEO> roleEOList = new ArrayList<>();
+
 
     public String getLoginName() {
         return loginName;
@@ -112,11 +127,41 @@ public class AdminUser extends BaseEntity {
         this.nickName = nickName;
     }
 
-    public AdminUserStatus getStatus() {
+    public AdminUserEOStatus getStatus() {
         return status;
     }
 
-    public void setStatus(AdminUserStatus status) {
+    public void setStatus(AdminUserEOStatus status) {
         this.status = status;
+    }
+
+    public Boolean getBuildinSystem() {
+        return buildinSystem;
+    }
+
+    public void setBuildinSystem(Boolean buildinSystem) {
+        this.buildinSystem = buildinSystem;
+    }
+
+    public List<RoleEO> getRoleEOList() {
+        return roleEOList;
+    }
+
+    public void setRoleEOList(List<RoleEO> roleEOList) {
+        this.roleEOList = roleEOList;
+    }
+
+    @Override
+    public String toString() {
+        return "AdminUserEO{" +
+                "loginName='" + loginName + '\'' +
+                ", password='" + password + '\'' +
+                ", status=" + status +
+                ", buildinSystem=" + buildinSystem +
+                ", nickName='" + nickName + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }
