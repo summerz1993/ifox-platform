@@ -65,7 +65,7 @@ public class DateTimeUtil {
 
 	/**
 	 * 在当前时间加秒数
-	 * @param second 秒
+	 * @param second 秒(可为负数)
 	 * @return 日期
 	 */
 	public static Date plusSecondBaseOnCurrentDate(int second) {

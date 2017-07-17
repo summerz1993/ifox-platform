@@ -1,7 +1,9 @@
 package com.ifox.platform.adminuser.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,12 +20,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+    @Autowired
+    private Environment env;
+
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ifox.platform.adminuser.rest"))
+                .apis(RequestHandlerSelectors.basePackage(env.getProperty("swagger2.apis.base.package")))
 //                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
