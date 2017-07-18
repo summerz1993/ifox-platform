@@ -1,0 +1,8 @@
+spring:
+  thymeleaf:
+    cache: false
+    cache-period: 0
+    encoding: UTF-8
+  template:
+    cache: false
+
