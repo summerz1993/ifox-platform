@@ -6,4 +6,6 @@ include 'ifox-utility'
 include 'ifox-dao'
 include 'ifox-base-service'
 include 'admin-user-service'
+include 'login-service'
+include 'template-service'
 

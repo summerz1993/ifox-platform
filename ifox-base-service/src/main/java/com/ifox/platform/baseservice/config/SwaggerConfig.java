@@ -1,4 +1,4 @@
-package com.ifox.platform.adminuser.config;
+package com.ifox.platform.baseservice.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

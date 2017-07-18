@@ -28,7 +28,6 @@ import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
 /**
  * 后台用户管理接口
- * Created by yezhang on 7/14/2017.
  */
 @Api("后台用户管理接口")
 @Controller

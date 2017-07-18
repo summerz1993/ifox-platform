@@ -1,8 +1,7 @@
-package com.ifox.platform.adminuser.config;
+package com.ifox.platform.baseservice.config;
 
 import com.ifox.platform.utility.dao.DataSourceUtil;
-import com.ifox.platform.utility.dao.HibernatePropertiesUtil;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
+import com.ifox.platform.utility.dao.SessionFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +20,8 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("unchecked")
 @Configuration
-//@PropertySource({"classpath:persistence-mysql.properties"})
 public class PersistenceConfig {
 
-    /**
-     * 上面导入的属性文件中的属性会 注入到 Environment 中
-     */
     private final Environment env;
 
     @Autowired
@@ -36,14 +31,7 @@ public class PersistenceConfig {
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
-        final LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        //配置数据源
-        sessionFactory.setDataSource(dataSource());
-        //配置entity扫描包路径
-        sessionFactory.setPackagesToScan(env.getProperty("sessionFactory.package.scan"));
-        //设置hibernate基本属性
-        sessionFactory.setHibernateProperties(HibernatePropertiesUtil.hibernateProperties(env));
-        return sessionFactory;
+        return SessionFactoryUtil.createSessionFactory(env);
     }
 
     @Bean
@@ -53,7 +41,7 @@ public class PersistenceConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        final HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
     }

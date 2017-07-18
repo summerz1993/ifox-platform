@@ -9,6 +9,8 @@ import com.ifox.platform.dao.common.GenericDao;
 import com.ifox.platform.entity.base.BaseEntity;
 import com.ifox.platform.utility.dao.HQLUtil;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -31,7 +33,7 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializable> extends HibernateDaoSupport implements GenericDao<T, ID> {
 
-//    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Class<?> entityClass;
 
@@ -48,6 +50,7 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
      * 构造方法初始化entityClass
      */
     public GenericHibernateDaoImpl() {
+        logger.info("初始化GenericHibernateDaoImpl");
         Class<?> c = this.getClass();
         Type t = c.getGenericSuperclass();
         if (t instanceof ParameterizedType) {
