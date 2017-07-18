@@ -2,6 +2,7 @@ package com.ifox.platform.adminuser.config;
 
 import com.ifox.platform.utility.dao.DataSourceUtil;
 import com.ifox.platform.utility.dao.HibernatePropertiesUtil;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -24,10 +24,10 @@ public class BaseEntity implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     private String id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "create_date")
     private Date createDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "modify_date")
     private Date modifyDate;
 
     public String getId() {

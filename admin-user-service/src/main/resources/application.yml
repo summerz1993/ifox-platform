@@ -28,7 +28,7 @@ spring:
 #==================== logging Setting =====================#
 logging.level:
   org.springframework: info
-  org.hibernate: debug
+  org.hibernate: info
 
 #==================== DataSource Setting =====================#
 # https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8

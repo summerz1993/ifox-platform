@@ -50,7 +50,7 @@ public class RoleEO extends BaseEntity{
     /**
      * 是否内置角色(不可删除)
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buildin_system")
     private Boolean buildinSystem = false;
 
     /**

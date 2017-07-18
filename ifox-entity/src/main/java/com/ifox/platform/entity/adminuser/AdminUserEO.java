@@ -29,7 +29,7 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 登录名
      */
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 30, unique = true, name = "login_name")
     private String loginName;
 
     /**
@@ -47,12 +47,13 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 是否内置用户(不可删除)
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buildin_system")
     private Boolean buildinSystem = false;
 
     /**
      * 昵称
      */
+    @Column(name = "nick_name")
     private String nickName;
 
     /**

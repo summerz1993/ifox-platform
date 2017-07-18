@@ -57,7 +57,7 @@ public class PermissionEO extends BaseEntity{
     /**
      * 是否内置权限(不可删除)
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buildin_system")
     private Boolean buildinSystem = false;
 
     /**
