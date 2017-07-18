@@ -10,7 +10,7 @@ sessionFactory:
 
 #==================== swagger Setting =====================#
 swagger2:
-  apis.base.package: com.ifox.platform.adminuser.rest
+  apis.base.package: com.ifox.platform
 
 #==================== spring Setting =====================#
 spring:
