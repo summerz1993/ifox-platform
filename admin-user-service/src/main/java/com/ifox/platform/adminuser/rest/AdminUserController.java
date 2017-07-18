@@ -32,7 +32,7 @@ import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
  */
 @Api("后台用户管理接口")
 @Controller
-@RequestMapping("/adminUser")
+@RequestMapping(value = "/adminUser", headers = "api-version=1.0")
 public class AdminUserController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
