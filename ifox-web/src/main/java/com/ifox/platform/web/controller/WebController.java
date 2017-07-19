@@ -14,16 +14,14 @@ public class WebController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(){
+    public String login(){
         logger.info("进入登录页面");
-
-        ModelAndView modelAndView = new ModelAndView("/index");
-        modelAndView.addObject("test", "yeager test");
-        return modelAndView;
+        return "/login";
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(String token){
+        logger.info("进入主页");
         //TODO:token校验
         return "/home";
     }

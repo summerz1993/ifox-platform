@@ -3,6 +3,7 @@ spring:
     cache: false
     cache-period: 0
     encoding: UTF-8
+    mode: LEGACYHTML5
   template:
     cache: false
 
