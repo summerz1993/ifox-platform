@@ -20,8 +20,8 @@ public class PasswordUtil {
 
     /**
      * 验证密码
-     * @param plainPassword 明文密码
-     * @param password 密文密码
+     * @param plainPassword 需要验证的明文密码
+     * @param password 数据库密文密码
      * @return 验证成功返回true
      */
     public static boolean validatePassword(String plainPassword, String password) {

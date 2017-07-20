@@ -30,36 +30,25 @@
   <div th:replace="fragments/header :: header"></div>
 
   <!-- Left side column. contains the logo and sidebar -->
-  <div th:replace="fragments/aside :: aside"></div>
+  <div th:replace="fragments/left-side :: left-side"></div>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Page Header -----------------
-        <small>Optional description</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol>
-    </section>
+    <div th:replace="fragments/content-header :: content-header"></div>
 
     <!-- Main content -->
     <section class="content container-fluid">
 
     </section>
     <!-- /.content -->
+
   </div>
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
   <div th:replace="fragments/footer :: footer"></div>
 
-  <!-- Add the sidebar's background. This div must be placed
-  immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
 

@@ -6,6 +6,19 @@ package com.ifox.platform.common.constant;
  */
 public final class RestStatusConstant {
 
+    /**
+     * 标准http状态
+     */
+
     public static final Integer SUCCESS = 200;
+
+
+    public static final Integer NOT_FOUND = 404;
+
+    /**
+     * 以下为自定义异常
+     */
+    // 用户名或者密码错误
+    public static final Integer USER_NAME_OR_PASSWORD_ERROR = 490;
 
 }

@@ -1,5 +1,7 @@
 package com.ifox.platform.adminuser.rest;
 
+import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
+import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
 import com.ifox.platform.adminuser.request.LoginRequest;
 import com.ifox.platform.adminuser.request.SaveRequest;
 import com.ifox.platform.adminuser.response.AdminUserVO;
@@ -8,6 +10,8 @@ import com.ifox.platform.common.rest.BaseResponse;
 import com.ifox.platform.common.rest.MultiResponse;
 import com.ifox.platform.common.rest.TokenResponse;
 import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.utility.common.PasswordUtil;
+import com.ifox.platform.utility.jwt.JWTUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,7 +28,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
+import static com.ifox.platform.common.constant.RestStatusConstant.USER_NAME_OR_PASSWORD_ERROR;
 
 /**
  * 后台用户管理接口
@@ -44,12 +50,31 @@ public class AdminUserController {
     @ResponseBody
     TokenResponse login(@ApiParam @RequestBody LoginRequest loginRequest){
         logger.info("用户登陆:{}", loginRequest);
+        Boolean validAdminUser = false;
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setStatus(SUCCESS);
-        tokenResponse.setDesc("成功");
-        tokenResponse.setJwt("woefjweof29037r02934ru20rfr4f");
-        logger.info("登陆成功:{}", loginRequest.getLoginName());
-        return tokenResponse;
+        try {
+            validAdminUser = adminUserService.validLoginNameAndPassword(loginRequest.getLoginName(), loginRequest.getPassword());
+        } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
+            e.printStackTrace();
+            tokenResponse.setStatus(NOT_FOUND);
+            tokenResponse.setDesc("用户不存在");
+            logger.info("登陆异常 loginName:{}", loginRequest.getLoginName());
+            return tokenResponse;
+        }
+
+        if (validAdminUser) {
+            tokenResponse.setStatus(SUCCESS);
+            tokenResponse.setDesc("登陆成功");
+//            tokenResponse.setJwt(JWTUtil.generateJWT());
+            tokenResponse.setJwt("jjjjjjjjjwwwwwwwwwwwwttttttttt");
+            logger.info("登陆成功 loginName:{}", loginRequest.getLoginName());
+            return tokenResponse;
+        } else {
+            tokenResponse.setStatus(USER_NAME_OR_PASSWORD_ERROR);
+            tokenResponse.setDesc("用户名或者密码错误");
+            logger.info("用户名或者密码错误 loginName:{}", loginRequest.getLoginName());
+            return tokenResponse;
+        }
     }
 
     @ApiOperation(value = "保存用户信息")
@@ -59,6 +84,7 @@ public class AdminUserController {
         logger.info("保存用户信息:{}", saveRequest);
         AdminUserEO adminUserEO = new AdminUserEO();
         BeanUtils.copyProperties(saveRequest, adminUserEO);
+        adminUserEO.setPassword(PasswordUtil.encryptPassword(saveRequest.getPassword()));
         adminUserService.save(adminUserEO);
 
         BaseResponse baseResponse = new BaseResponse();
