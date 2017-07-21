@@ -10,7 +10,10 @@ import com.ifox.platform.common.rest.BaseResponse;
 import com.ifox.platform.common.rest.MultiResponse;
 import com.ifox.platform.common.rest.TokenResponse;
 import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.utility.common.DigestUtil;
+import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
+import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +69,10 @@ public class AdminUserController {
             tokenResponse.setStatus(SUCCESS);
             tokenResponse.setDesc("登陆成功");
 //            tokenResponse.setJwt(JWTUtil.generateJWT());
+
+            JWTPayload payload = new JWTPayload();
+
+
             tokenResponse.setJwt("jjjjjjjjjwwwwwwwwwwwwttttttttt");
             logger.info("登陆成功 loginName:{}", loginRequest.getLoginName());
             return tokenResponse;
@@ -84,12 +91,16 @@ public class AdminUserController {
         logger.info("保存用户信息:{}", saveRequest);
         AdminUserEO adminUserEO = new AdminUserEO();
         BeanUtils.copyProperties(saveRequest, adminUserEO);
-        adminUserEO.setPassword(PasswordUtil.encryptPassword(saveRequest.getPassword()));
+
+        byte[] bytes = DigestUtil.generateSalt(PasswordUtil.SALT_SIZE);
+        String salt = EncodeUtil.encodeHex(bytes);
+        adminUserEO.setSalt(salt);
+        adminUserEO.setPassword(PasswordUtil.encryptPassword(saveRequest.getPassword(), salt));
         adminUserService.save(adminUserEO);
 
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setStatus(SUCCESS);
-        baseResponse.setDesc("成功");
+        baseResponse.setDesc("保存成功");
         logger.info("保存成功:{}", saveRequest.getLoginName());
         return baseResponse;
     }

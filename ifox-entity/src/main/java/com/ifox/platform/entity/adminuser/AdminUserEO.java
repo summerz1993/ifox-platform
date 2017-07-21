@@ -39,6 +39,12 @@ public class AdminUserEO extends BaseEntity {
     private String password;
 
     /**
+     * 盐
+     */
+    @Column(nullable = false)
+    private String salt;
+
+    /**
      * 状态
      */
     @Column(nullable = false)
@@ -152,17 +158,24 @@ public class AdminUserEO extends BaseEntity {
         this.roleEOList = roleEOList;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     @Override
     public String toString() {
         return "AdminUserEO{" +
-                "loginName='" + loginName + '\'' +
-                ", password='" + password + '\'' +
-                ", status=" + status +
-                ", buildinSystem=" + buildinSystem +
-                ", nickName='" + nickName + '\'' +
-                ", email='" + email + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", remark='" + remark + '\'' +
-                '}';
+            "loginName='" + loginName + '\'' +
+            ", status=" + status +
+            ", buildinSystem=" + buildinSystem +
+            ", nickName='" + nickName + '\'' +
+            ", email='" + email + '\'' +
+            ", mobile='" + mobile + '\'' +
+            ", remark='" + remark + '\'' +
+            '}';
     }
 }

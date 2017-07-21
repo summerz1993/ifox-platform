@@ -51,7 +51,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         AdminUserEO adminUserEO = adminUserEOList.get(0);
         boolean validatePassword;
         try {
-            validatePassword = PasswordUtil.validatePassword(password, adminUserEO.getPassword());
+            validatePassword = PasswordUtil.validatePassword(password, adminUserEO.getSalt(), adminUserEO.getPassword());
         } catch (Exception e) {
             logger.error(ExceptionUtil.getStackTraceAsString(e));
             validatePassword = false;
