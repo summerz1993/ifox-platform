@@ -74,4 +74,26 @@ public class DateTimeUtil {
 		return convertLocalDateTimeToDate(plusSeconds);
 	}
 
+    /**
+     * 在当前时间加分钟
+     * @param min 分钟(可为负数)
+     * @return 日期
+     */
+    public static Date plusMinBaseOnCurrentDate(int min) {
+        LocalDateTime currentLocalDateTime = getCurrentLocalDateTime(null);
+        LocalDateTime plusMin = currentLocalDateTime.plusMinutes(min);
+        return convertLocalDateTimeToDate(plusMin);
+    }
+
+    /**
+     * 在当前时间加小时
+     * @param hour 小时(可为负数)
+     * @return 日期
+     */
+    public static Date plusHourBaseOnCurrentDate(int hour) {
+        LocalDateTime currentLocalDateTime = getCurrentLocalDateTime(null);
+        LocalDateTime plusHours = currentLocalDateTime.plusHours(hour);
+        return convertLocalDateTimeToDate(plusHours);
+    }
+
 }

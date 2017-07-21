@@ -1,5 +1,6 @@
 package com.ifox.platform.adminuser.rest;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
 import com.ifox.platform.adminuser.request.LoginRequest;
@@ -12,9 +13,13 @@ import com.ifox.platform.common.rest.TokenResponse;
 import com.ifox.platform.entity.adminuser.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
+import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
+import com.ifox.platform.utility.jwt.JWTHeader;
 import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.jwt.JWTUtil;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,18 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
-import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
-import static com.ifox.platform.common.constant.RestStatusConstant.USER_NAME_OR_PASSWORD_ERROR;
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 /**
  * 后台用户管理接口
@@ -44,6 +46,9 @@ import static com.ifox.platform.common.constant.RestStatusConstant.USER_NAME_OR_
 public class AdminUserController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     private AdminUserService adminUserService;
@@ -66,15 +71,19 @@ public class AdminUserController {
         }
 
         if (validAdminUser) {
-            tokenResponse.setStatus(SUCCESS);
-            tokenResponse.setDesc("登陆成功");
-//            tokenResponse.setJwt(JWTUtil.generateJWT());
-
-            JWTPayload payload = new JWTPayload();
-
-
-            tokenResponse.setJwt("jjjjjjjjjwwwwwwwwwwwwttttttttt");
-            logger.info("登陆成功 loginName:{}", loginRequest.getLoginName());
+            String secret = env.getProperty("jwt.secret");
+            try {
+                tokenResponse.setStatus(SUCCESS);
+                tokenResponse.setDesc("登陆成功");
+                String token = JWTUtil.generateJWT(new JWTHeader(), adminUserService.generatePayload(loginRequest.getLoginName()), secret);
+                tokenResponse.setToken(token);
+                logger.info("登陆成功 loginName:{}, token:{}", loginRequest.getLoginName(), token);
+            } catch (UnsupportedEncodingException e) {
+                tokenResponse.setStatus(SERVER_EXCEPTION);
+                tokenResponse.setDesc("服务器异常");
+                logger.error(ExceptionUtil.getStackTraceAsString(e));
+                logger.info("登陆异常 loginName:{}", loginRequest.getLoginName());
+            }
             return tokenResponse;
         } else {
             tokenResponse.setStatus(USER_NAME_OR_PASSWORD_ERROR);
@@ -87,18 +96,44 @@ public class AdminUserController {
     @ApiOperation(value = "保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    BaseResponse save(@ApiParam @RequestBody SaveRequest saveRequest){
+    BaseResponse save(@ApiParam @RequestBody SaveRequest saveRequest, @RequestHeader("Authorization") String token){
         logger.info("保存用户信息:{}", saveRequest);
+        BaseResponse baseResponse = new BaseResponse();
+
+        DecodedJWT decodedJWT;
+        try {
+            //校验token
+            decodedJWT = JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
+        } catch (UnsupportedEncodingException e) {
+            baseResponse.setStatus(INVALID_REQUEST);
+            baseResponse.setDesc("无效请求");
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            return baseResponse;
+        }
+        //解码payload，获取userID
+        String payloadBase64 = decodedJWT.getPayload();
+        byte[] decodeBase64 = EncodeUtil.decodeBase64(payloadBase64);
+        String payloadString = "";
+        try {
+            payloadString = new String(decodeBase64, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+        }
+        String userId = JsonIterator.deserialize(payloadString).get("userId").toString();
+
         AdminUserEO adminUserEO = new AdminUserEO();
         BeanUtils.copyProperties(saveRequest, adminUserEO);
 
+        adminUserEO.setCreator(userId);
+
+        //加盐
         byte[] bytes = DigestUtil.generateSalt(PasswordUtil.SALT_SIZE);
         String salt = EncodeUtil.encodeHex(bytes);
         adminUserEO.setSalt(salt);
         adminUserEO.setPassword(PasswordUtil.encryptPassword(saveRequest.getPassword(), salt));
+
         adminUserService.save(adminUserEO);
 
-        BaseResponse baseResponse = new BaseResponse();
         baseResponse.setStatus(SUCCESS);
         baseResponse.setDesc("保存成功");
         logger.info("保存成功:{}", saveRequest.getLoginName());
@@ -126,5 +161,6 @@ public class AdminUserController {
         logger.info("获取成功");
         return multiResponse;
     }
+
 
 }

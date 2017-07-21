@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class JWTPayload {
 
-    /***************************** JWT标准字段 ****************************/
+    //***************************** JWT标准字段 ****************************/
 
     /**
      * 签发者 issuer
@@ -52,7 +52,7 @@ public class JWTPayload {
      */
     private String sub;
 
-    /***************************** 自定义字段 ****************************/
+    //***************************** 自定义字段 ****************************/
 
     /**
      * 用户ID
@@ -65,14 +65,9 @@ public class JWTPayload {
     private String loginName;
 
     /**
-     * 登陆电话
+     * 角色ID列表
      */
-    private String loginMobile;
-
-    /**
-     * 角色列表
-     */
-    private String[] roleList;
+    private String[] roleIdList;
 
     public String getIss() {
         return iss;
@@ -98,12 +93,12 @@ public class JWTPayload {
         this.userId = userId;
     }
 
-    public String[] getRoleList() {
-        return roleList;
+    public String[] getRoleIdList() {
+        return roleIdList;
     }
 
-    public void setRoleList(String[] roleList) {
-        this.roleList = roleList;
+    public void setRoleIdList(String[] roleIdList) {
+        this.roleIdList = roleIdList;
     }
 
     public String getLoginName() {
@@ -112,14 +107,6 @@ public class JWTPayload {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
-    }
-
-    public String getLoginMobile() {
-        return loginMobile;
-    }
-
-    public void setLoginMobile(String loginMobile) {
-        this.loginMobile = loginMobile;
     }
 
     public String[] getAud() {

@@ -6,15 +6,13 @@ package com.ifox.platform.common.rest;
  */
 public class TokenResponse extends BaseResponse{
 
-    private String jwt;
+    private String token;
 
-    public String getJwt() {
-        return jwt;
+    public String getToken() {
+        return token;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setToken(String token) {
+        this.token = token;
     }
-
-
 }

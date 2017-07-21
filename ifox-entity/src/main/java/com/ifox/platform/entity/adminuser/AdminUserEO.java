@@ -79,6 +79,11 @@ public class AdminUserEO extends BaseEntity {
     private String remark;
 
     /**
+     * 创建人
+     */
+    private String creator;
+
+    /**
      * 所属角色
      */
     @ManyToMany
@@ -164,6 +169,14 @@ public class AdminUserEO extends BaseEntity {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     @Override
