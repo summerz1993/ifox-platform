@@ -5,6 +5,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.impl.PublicClaims;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ifox.platform.utility.common.EncodeUtil;
+import com.ifox.platform.utility.common.ExceptionUtil;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -16,6 +24,8 @@ import java.util.Map;
  * @author Yeager
  */
 public class JWTUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(JWTUtil.class);
 
     /**
      * 生成JWT
@@ -59,6 +69,37 @@ public class JWTUtil {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         return jwtVerifier.verify(token);
+    }
+
+    /**
+     * 根据token解析出Payload数据
+     * @param token Token
+     * @return Payload
+     */
+    public static String getPayloadStringByToken(String token, String secret){
+        String payloadString = "";
+        DecodedJWT decodedJWT;
+        try {
+            decodedJWT = JWTUtil.verifyToken(token, secret);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            return payloadString;
+        }
+
+        String payloadBase64 = decodedJWT.getPayload();
+        byte[] decodeBase64 = EncodeUtil.decodeBase64(payloadBase64);
+        try {
+            payloadString = new String(decodeBase64, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+        }
+
+        // TODO:转化为Payload对象
+//        Any any = JsonIterator.deserialize(payloadString);
+//        JWTPayload payload = new JWTPayload();
+//        payload.setIss(any.get("iss").toString());
+
+        return payloadString;
     }
 
 }

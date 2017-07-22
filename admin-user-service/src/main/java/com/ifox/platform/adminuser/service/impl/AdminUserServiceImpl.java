@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by yezhang on 7/14/2017.
- */
 @Service
 public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String> implements AdminUserService{
 

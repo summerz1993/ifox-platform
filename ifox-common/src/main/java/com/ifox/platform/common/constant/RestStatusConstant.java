@@ -15,6 +15,8 @@ public final class RestStatusConstant {
 
     public static final Integer INVALID_REQUEST = 400;
 
+    public static final Integer UNAUTHORIZED = 401;
+
     public static final Integer NOT_FOUND = 404;
 
     public static final Integer SERVER_EXCEPTION = 500;

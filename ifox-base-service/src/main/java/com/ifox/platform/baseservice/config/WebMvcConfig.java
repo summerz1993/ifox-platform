@@ -1,10 +1,9 @@
 package com.ifox.platform.baseservice.config;
 
+import com.ifox.platform.baseservice.interceptor.AuthenticationInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * @author Yeager
@@ -41,5 +40,20 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/**")
             .allowedOrigins("*")
             .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE");
+    }
+
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor(){
+        return new AuthenticationInterceptor();
+    }
+
+    /**
+     * 配置拦截器
+     * @param registry 拦截器注册
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**").excludePathPatterns("/adminUser/login");
+        super.addInterceptors(registry);
     }
 }

@@ -100,35 +100,17 @@ public class AdminUserController {
         logger.info("保存用户信息:{}", saveRequest);
         BaseResponse baseResponse = new BaseResponse();
 
-        DecodedJWT decodedJWT;
-        try {
-            //校验token
-            decodedJWT = JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
-        } catch (UnsupportedEncodingException e) {
-            baseResponse.setStatus(INVALID_REQUEST);
-            baseResponse.setDesc("无效请求");
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
-            return baseResponse;
-        }
-        //解码payload，获取userID
-        String payloadBase64 = decodedJWT.getPayload();
-        byte[] decodeBase64 = EncodeUtil.decodeBase64(payloadBase64);
-        String payloadString = "";
-        try {
-            payloadString = new String(decodeBase64, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
-        }
-        String userId = JsonIterator.deserialize(payloadString).get("userId").toString();
+        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String userId = JsonIterator.deserialize(payload).get("userId").toString();
 
         AdminUserEO adminUserEO = new AdminUserEO();
         BeanUtils.copyProperties(saveRequest, adminUserEO);
 
         adminUserEO.setCreator(userId);
 
-        //加盐
         byte[] bytes = DigestUtil.generateSalt(PasswordUtil.SALT_SIZE);
         String salt = EncodeUtil.encodeHex(bytes);
+
         adminUserEO.setSalt(salt);
         adminUserEO.setPassword(PasswordUtil.encryptPassword(saveRequest.getPassword(), salt));
 
