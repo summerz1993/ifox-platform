@@ -54,11 +54,11 @@ public class RoleEO extends BaseEntity{
     private Boolean buildinSystem = false;
 
     /**
-     * 对应的权限
+     * 对应的菜单权限
      */
     @ManyToMany
-    @JoinTable(name = "ifox_common_role_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "permission")})
-    private List<PermissionEO> permissionEOList = new ArrayList<>();
+    @JoinTable(name = "ifox_common_role_menu_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "menu_permission")})
+    private List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
 
 
     public String getName() {
@@ -101,12 +101,12 @@ public class RoleEO extends BaseEntity{
         this.buildinSystem = buildinSystem;
     }
 
-    public List<PermissionEO> getPermissionEOList() {
-        return permissionEOList;
+    public List<MenuPermissionEO> getMenuPermissionEOList() {
+        return menuPermissionEOList;
     }
 
-    public void setPermissionEOList(List<PermissionEO> permissionEOList) {
-        this.permissionEOList = permissionEOList;
+    public void setMenuPermissionEOList(List<MenuPermissionEO> menuPermissionEOList) {
+        this.menuPermissionEOList = menuPermissionEOList;
     }
 
     @Override

@@ -30,10 +30,15 @@ public class ResourceEO extends BaseEntity{
     }
 
     /**
-     * 资源名称，对应Controller RequestMapping
+     * 资源名称
      */
     @Column(nullable = false, unique = true)
     private String name;
+
+    /**
+     * 资源对应的控制器的RequestMapping, 比如:adminUser
+     */
+    private String controller;
 
     /**
      * 资源类型
@@ -45,12 +50,6 @@ public class ResourceEO extends BaseEntity{
      * 描述
      */
     private String remark;
-
-    /**
-     * 所有权限信息
-     */
-    @OneToMany(mappedBy = "resourceEO")
-    private List<PermissionEO> permissionEOList = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -68,20 +67,20 @@ public class ResourceEO extends BaseEntity{
         this.remark = remark;
     }
 
-    public List<PermissionEO> getPermissionEOList() {
-        return permissionEOList;
-    }
-
-    public void setPermissionEOList(List<PermissionEO> permissionEOList) {
-        this.permissionEOList = permissionEOList;
-    }
-
     public ResourceEOType getType() {
         return type;
     }
 
     public void setType(ResourceEOType type) {
         this.type = type;
+    }
+
+    public String getController() {
+        return controller;
+    }
+
+    public void setController(String controller) {
+        this.controller = controller;
     }
 
     @Override
