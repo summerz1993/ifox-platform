@@ -12,7 +12,7 @@ import java.util.Properties;
  * @author Yeager
  * 统一异常处理
  */
-@Configuration
+
 public class ExceptionResolverConfig {
 
     Logger logger = LoggerFactory.getLogger(getClass());
