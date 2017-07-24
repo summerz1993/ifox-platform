@@ -20,7 +20,6 @@ public class AdminUserDTO extends AdminUserBaseColumns{
     public String toString() {
         return "AdminUserDTO{" +
             "id='" + id + '\'' +
-            "super class='" + super.toString() + '\'' +
-            '}';
+            "} " + super.toString();
     }
 }

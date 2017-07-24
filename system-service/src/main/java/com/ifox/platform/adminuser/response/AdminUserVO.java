@@ -9,8 +9,6 @@ public class AdminUserVO extends AdminUserDTO{
 
     @Override
     public String toString() {
-        return "AdminUserVO{" +
-            "super class='" + super.toString() + '\'' +
-            "}";
+        return "AdminUserVO{} " + super.toString();
     }
 }

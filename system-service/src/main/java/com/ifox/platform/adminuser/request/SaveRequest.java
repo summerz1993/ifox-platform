@@ -26,7 +26,6 @@ public class SaveRequest extends AdminUserBaseColumns{
     public String toString() {
         return "SaveRequest{" +
             "password='" + password + '\'' +
-            "super class='" + super.toString() + '\'' +
-            '}';
+            "} " + super.toString();
     }
 }

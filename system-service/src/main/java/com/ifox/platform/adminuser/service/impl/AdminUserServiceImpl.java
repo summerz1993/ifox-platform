@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_ADMIN_USER_EXP;
+import static com.ifox.platform.common.constant.ExceptionStatusConstant.REPEATED_ADMIN_USER_EXP;
+
 @Service
 public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String> implements AdminUserService{
 
@@ -122,10 +125,10 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         QueryProperty queryProperty = new QueryProperty("loginName", EnumDao.Operation.EQUAL, loginName);
         List<AdminUserEO> adminUserEOList = listByQueryProperty(new QueryProperty[]{queryProperty});
         if (CollectionUtils.isEmpty(adminUserEOList)) {
-            throw new NotFoundAdminUserException("为找到此用户, loginName:" + loginName);
+            throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "为找到此用户, loginName:" + loginName);
         }
         if (adminUserEOList.size() > 1) {
-            throw new RepeatedAdminUserException("数据库存在重复用户名, loginName:" + loginName);
+            throw new RepeatedAdminUserException(REPEATED_ADMIN_USER_EXP, "数据库存在重复用户名, loginName:" + loginName);
         }
         return adminUserEOList.get(0);
     }

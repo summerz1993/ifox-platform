@@ -22,9 +22,9 @@ public final class RestStatusConstant {
     public static final Integer SERVER_EXCEPTION = 500;
 
     /**
-     * 以下为自定义异常
+     * 以下为自定义异常(从480开始排列)
      */
     // 用户名或者密码错误
-    public static final Integer USER_NAME_OR_PASSWORD_ERROR = 490;
+    public static final Integer USER_NAME_OR_PASSWORD_ERROR = 480;
 
 }

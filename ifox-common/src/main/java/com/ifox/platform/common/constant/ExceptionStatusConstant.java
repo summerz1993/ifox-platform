@@ -16,13 +16,14 @@
 package com.ifox.platform.common.constant;
 
 /**
- * 全局错误代码
+ * 全局异常状态码
  */
-public class GlobalErrorConstant {
+public final class ExceptionStatusConstant {
 
-	// Error Codes
-
-	// Global Error Codes 100 - 200
+    // NotFoundAdminUserException
+    public static final Integer NOT_FOUND_ADMIN_USER_EXP = 90001;
+    // RepeatedAdminUserException
+    public static final Integer REPEATED_ADMIN_USER_EXP = 90002;
 
 
 }
