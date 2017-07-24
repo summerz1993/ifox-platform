@@ -15,52 +15,15 @@
  */
 package com.ifox.platform.common.exception;
 
-
+/**
+ * 必须捕获的应用异常 - 自定义异常父类
+ * @author Yeager
+ */
 public class ApplicationException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	protected String errorCode;
-	protected Object obj;
-
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+	public ApplicationException(Integer expStatus, String message) {
+	    super("状态码:" + expStatus + "  内容:" + message);
 	}
 
-	public String getErrorCode() {
-		return this.errorCode;
-	}
-
-	public Object getObj() {
-		return obj;
-	}
-
-	public void setObj(Object obj) {
-		this.obj = obj;
-	}
-
-	public ApplicationException() {
-		super();
-	}
-
-	public ApplicationException(String message) {
-		super(message);
-	}
-
-	public ApplicationException(String message, Throwable cause) {
-		super(message, cause);
-		if (getCause() == null) {
-			initCause(cause);
-		}
-	}
-
-	public ApplicationException(Throwable cause) {
-		super(cause);
-		if (getCause() == null) {
-			initCause(cause);
-		}
-	}
-
-	public void printStackTrace() {
-		printStackTrace(System.err);
-	}
 }

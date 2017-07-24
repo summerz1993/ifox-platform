@@ -20,28 +20,7 @@ public class DBException extends ApplicationException {
 
 	private static final long serialVersionUID = 7050974795190193735L;
 
-	// This errorcode can be used to propagate to the biz layers
-	private String errorCode;
-
-	public String getErrorCode() {
-		return this.errorCode;
-	}
-
-	public DBException() {
-		super();
-	}
-
-	public DBException(String message) {
-		super(message);
-	}
-
-	public DBException(String errorCode, String message) {
-		super(message);
-		this.errorCode = errorCode;
-	}
-
-	public DBException(String errorCode, String message, Throwable cause) {
-		super(message, cause);
-		this.errorCode = errorCode;
-	}
+    public DBException(Integer expStatus, String message) {
+        super(expStatus, message);
+    }
 }

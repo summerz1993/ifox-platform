@@ -63,34 +63,34 @@ public class AdminUserController {
         try {
             validAdminUser = adminUserService.validLoginNameAndPassword(loginRequest.getLoginName(), loginRequest.getPassword());
         } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            e.printStackTrace();
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
             tokenResponse.setStatus(NOT_FOUND);
             tokenResponse.setDesc("用户不存在");
             logger.info("登陆异常 loginName:{}", loginRequest.getLoginName());
             return tokenResponse;
         }
 
-        if (validAdminUser) {
-            String secret = env.getProperty("jwt.secret");
-            try {
-                tokenResponse.setStatus(SUCCESS);
-                tokenResponse.setDesc("登陆成功");
-                String token = JWTUtil.generateJWT(new JWTHeader(), adminUserService.generatePayload(loginRequest.getLoginName()), secret);
-                tokenResponse.setToken(token);
-                logger.info("登陆成功 loginName:{}, token:{}", loginRequest.getLoginName(), token);
-            } catch (UnsupportedEncodingException e) {
-                tokenResponse.setStatus(SERVER_EXCEPTION);
-                tokenResponse.setDesc("服务器异常");
-                logger.error(ExceptionUtil.getStackTraceAsString(e));
-                logger.info("登陆异常 loginName:{}", loginRequest.getLoginName());
-            }
-            return tokenResponse;
-        } else {
+        if (!validAdminUser) {
             tokenResponse.setStatus(USER_NAME_OR_PASSWORD_ERROR);
             tokenResponse.setDesc("用户名或者密码错误");
             logger.info("用户名或者密码错误 loginName:{}", loginRequest.getLoginName());
             return tokenResponse;
         }
+
+        String secret = env.getProperty("jwt.secret");
+        try {
+            tokenResponse.setStatus(SUCCESS);
+            tokenResponse.setDesc("登陆成功");
+            String token = JWTUtil.generateJWT(new JWTHeader(), adminUserService.generatePayload(loginRequest.getLoginName()), secret);
+            tokenResponse.setToken(token);
+            logger.info("登陆成功 loginName:{}, token:{}", loginRequest.getLoginName(), token);
+        } catch (UnsupportedEncodingException e) {
+            tokenResponse.setStatus(SERVER_EXCEPTION);
+            tokenResponse.setDesc("服务器异常");
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.info("登陆异常 loginName:{}", loginRequest.getLoginName());
+        }
+        return tokenResponse;
     }
 
     @ApiOperation(value = "保存用户信息")

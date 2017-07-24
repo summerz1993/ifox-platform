@@ -1,10 +1,13 @@
 package com.ifox.platform.adminuser.exception;
 
+import com.ifox.platform.common.exception.ApplicationException;
+
 /**
  * 重复用户异常
+ * @author Yeager
  */
-public class RepeatedAdminUserException extends Exception {
-    public RepeatedAdminUserException(String message) {
-        super(message);
+public class RepeatedAdminUserException extends ApplicationException {
+    public RepeatedAdminUserException(Integer expStatus, String message) {
+        super(expStatus, message);
     }
 }
