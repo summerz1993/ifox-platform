@@ -23,7 +23,7 @@ import java.util.List;
 public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> implements GenericService<T, ID> {
 
 
-    @Resource(name = "genericHibernateDaoImpl")
+//    @Resource(name = "genericHibernateDaoImpl")
     protected GenericDao<T, ID> genericDao;
 
     @Override
