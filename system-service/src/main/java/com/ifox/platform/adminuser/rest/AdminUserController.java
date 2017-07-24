@@ -1,6 +1,5 @@
 package com.ifox.platform.adminuser.rest;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
 import com.ifox.platform.adminuser.request.LoginRequest;
@@ -16,10 +15,8 @@ import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
 import com.ifox.platform.utility.jwt.JWTHeader;
-import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.jsoniter.JsonIterator;
-import com.jsoniter.any.Any;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
