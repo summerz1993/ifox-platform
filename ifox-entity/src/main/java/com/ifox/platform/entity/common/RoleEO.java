@@ -56,7 +56,7 @@ public class RoleEO extends BaseEntity{
     /**
      * 对应的菜单权限
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ifox_common_role_menu_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "menu_permission")})
     private List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
 
@@ -112,11 +112,11 @@ public class RoleEO extends BaseEntity{
     @Override
     public String toString() {
         return "RoleEO{" +
-                "name='" + name + '\'' +
-                ", identifier='" + identifier + '\'' +
-                ", remark='" + remark + '\'' +
-                ", status=" + status +
-                ", buildinSystem=" + buildinSystem +
-                '}';
+            "name='" + name + '\'' +
+            ", identifier='" + identifier + '\'' +
+            ", remark='" + remark + '\'' +
+            ", status=" + status +
+            ", buildinSystem=" + buildinSystem +
+            "} " + super.toString();
     }
 }

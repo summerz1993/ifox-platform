@@ -86,7 +86,7 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 所属角色
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ifox_admin_user_role", joinColumns = {@JoinColumn(name = "admin_user")}, inverseJoinColumns = {@JoinColumn(name = "role")})
     private List<RoleEO> roleEOList = new ArrayList<>();
 
@@ -183,12 +183,15 @@ public class AdminUserEO extends BaseEntity {
     public String toString() {
         return "AdminUserEO{" +
             "loginName='" + loginName + '\'' +
+            ", password='" + password + '\'' +
+            ", salt='" + salt + '\'' +
             ", status=" + status +
             ", buildinSystem=" + buildinSystem +
             ", nickName='" + nickName + '\'' +
             ", email='" + email + '\'' +
             ", mobile='" + mobile + '\'' +
             ", remark='" + remark + '\'' +
-            '}';
+            ", creator='" + creator + '\'' +
+            "} " + super.toString();
     }
 }

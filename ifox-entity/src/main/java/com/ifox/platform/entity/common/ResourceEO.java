@@ -86,9 +86,10 @@ public class ResourceEO extends BaseEntity{
     @Override
     public String toString() {
         return "ResourceEO{" +
-                "name='" + name + '\'' +
-                ", type=" + type +
-                ", remark='" + remark + '\'' +
-                '}';
+            "name='" + name + '\'' +
+            ", controller='" + controller + '\'' +
+            ", type=" + type +
+            ", remark='" + remark + '\'' +
+            "} " + super.toString();
     }
 }

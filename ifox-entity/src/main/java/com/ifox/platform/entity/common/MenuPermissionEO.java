@@ -175,6 +175,6 @@ public class MenuPermissionEO extends BaseEntity {
             ", buildinSystem=" + buildinSystem +
             ", creator='" + creator + '\'' +
             ", resource='" + resource + '\'' +
-            '}';
+            "} " + super.toString();
     }
 }
