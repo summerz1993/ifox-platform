@@ -123,7 +123,9 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      */
     private AdminUserEO getAdminUserEOByLoginName(String loginName) throws NotFoundAdminUserException, RepeatedAdminUserException {
         QueryProperty queryProperty = new QueryProperty("loginName", EnumDao.Operation.EQUAL, loginName);
-        List<AdminUserEO> adminUserEOList = listByQueryProperty(new QueryProperty[]{queryProperty});
+        List<QueryProperty> queryPropertyList = new ArrayList<>();
+        queryPropertyList.add(queryProperty);
+        List<AdminUserEO> adminUserEOList = listByQueryProperty(queryPropertyList);
         if (CollectionUtils.isEmpty(adminUserEOList)) {
             throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "为找到此用户, loginName:" + loginName);
         }

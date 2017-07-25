@@ -23,9 +23,9 @@ public class QueryProperty {
     /**
      * 值
      */
-    private String value;
+    private Object value;
 
-    public QueryProperty(String property, EnumDao.Operation operation, String value) {
+    public QueryProperty(String property, EnumDao.Operation operation, Object value) {
         this.property = property;
         this.operation = operation;
         this.value = value;
@@ -41,11 +41,11 @@ public class QueryProperty {
         this.property = property;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

@@ -8,6 +8,8 @@ import com.ifox.platform.utility.converter.OperationConverter;
 import org.hibernate.Session;
 import org.hibernate.Query;
 
+import java.util.List;
+
 /**
  * @author Yeager
  *
@@ -27,7 +29,7 @@ public class HQLUtil {
      * @param simpleOrders 排序
      * @return HQL语句
      */
-    private static String generateFinalHQL(String[] propertyArray, String entityName, QueryProperty[] params, SimpleOrder[] simpleOrders){
+    private static String generateFinalHQL(String[] propertyArray, String entityName, List<QueryProperty> params, List<SimpleOrder> simpleOrders){
         return  //拼接查询字段
                 convertSelectPropertyToHQL(propertyArray) +
                 //拼接表
@@ -45,7 +47,7 @@ public class HQLUtil {
      * @return HQL语句
      */
     public static String generateFinalHQL(String entityName, QueryConditions queryConditions){
-        return generateFinalHQL(queryConditions.getProperties(), entityName, queryConditions.getQueryProperties(), queryConditions.getSimpleOrders());
+        return generateFinalHQL(queryConditions.getProperties(), entityName, queryConditions.getQueryPropertyList(), queryConditions.getSimpleOrderList());
     }
 
     /**
@@ -54,7 +56,7 @@ public class HQLUtil {
      * @param params 参数条件
      * @return HQL语句
      */
-    public static String generateFinalHQL(String entityName, QueryProperty[] params){
+    public static String generateFinalHQL(String entityName, List<QueryProperty> params){
         return generateFinalHQL(null, entityName, params, null);
     }
 
@@ -75,7 +77,7 @@ public class HQLUtil {
      * @param simpleOrders 排序
      * @return HQL语句
      */
-    private static String generateCountEntityHQL(String entityName, QueryProperty[] params, SimpleOrder[] simpleOrders){
+    private static String generateCountEntityHQL(String entityName, List<QueryProperty> params, List<SimpleOrder> simpleOrders){
         return  //拼接表
                 generateCountEntityHQL(entityName) +
                 //拼接WHERE条件
@@ -91,7 +93,7 @@ public class HQLUtil {
      * @return HQL语句
      */
     public static String generateCountEntityHQL(String entityName, QueryConditions queryConditions){
-        return generateCountEntityHQL(entityName, queryConditions.getQueryProperties(), queryConditions.getSimpleOrders());
+        return generateCountEntityHQL(entityName, queryConditions.getQueryPropertyList(), queryConditions.getSimpleOrderList());
     }
 
     /**
@@ -100,7 +102,7 @@ public class HQLUtil {
      * @param params 参数条件
      * @return HQL语句
      */
-    public static String generateCountEntityHQL(String entityName, QueryProperty[] params){
+    public static String generateCountEntityHQL(String entityName, List<QueryProperty> params){
         return generateCountEntityHQL(entityName, params, null);
     }
 
@@ -162,9 +164,9 @@ public class HQLUtil {
      * @param params QueryProperty对象
      * @return HQL语句
      */
-    private static String convertQueryPropertyToHQL(QueryProperty[] params){
+    private static String convertQueryPropertyToHQL(List<QueryProperty> params){
         StringBuilder whereHQL=new StringBuilder();
-        if (params != null && params.length > 0) {
+        if (params != null && params.size() > 0) {
             whereHQL.append(" WHERE 1 = 1 ");
             for (QueryProperty param : params) {
                 whereHQL.append(" AND ");
@@ -185,15 +187,15 @@ public class HQLUtil {
      * @param simpleOrders 排序对象
      * @return HQL语句
      */
-    private static String convertOrderToHQl(SimpleOrder[] simpleOrders){
+    private static String convertOrderToHQl(List<SimpleOrder> simpleOrders){
         StringBuilder orderByHQL = new StringBuilder();
-        if (simpleOrders != null && simpleOrders.length > 0) {
+        if (simpleOrders != null && simpleOrders.size() > 0) {
             orderByHQL.append(" ORDER BY ");
-            for (int i = 0; i < simpleOrders.length; i++) {
-                orderByHQL.append(ENTITY_ALIAS + ".").append(simpleOrders[i].getProperty());
+            for (int i = 0; i < simpleOrders.size(); i++) {
+                orderByHQL.append(ENTITY_ALIAS + ".").append(simpleOrders.get(i).getProperty());
                 orderByHQL.append(" ");
-                orderByHQL.append(simpleOrders[i].getOrderMode().toString());
-                if(i < simpleOrders.length - 1){
+                orderByHQL.append(simpleOrders.get(i).getOrderMode().toString());
+                if(i < simpleOrders.size() - 1){
                     orderByHQL.append(",");
                 }
             }

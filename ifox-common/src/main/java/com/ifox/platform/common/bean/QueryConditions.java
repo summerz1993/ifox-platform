@@ -2,6 +2,9 @@ package com.ifox.platform.common.bean;
 
 import com.ifox.platform.common.exception.ConstructorException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Yeager
  *
@@ -19,12 +22,12 @@ public class QueryConditions {
     /**
      * 查询条件
      */
-    private QueryProperty[] queryProperties;
+    private List<QueryProperty> queryPropertyList = new ArrayList<>();
 
     /**
      * 排序条件
      */
-    private SimpleOrder[] simpleOrders;
+    private List<SimpleOrder> simpleOrderList = new ArrayList<>();
 
     /**
      * 构造方法，必须指定查询的字段
@@ -45,20 +48,19 @@ public class QueryConditions {
         this.properties = properties;
     }
 
-
-    public SimpleOrder[] getSimpleOrders() {
-        return simpleOrders;
+    public List<QueryProperty> getQueryPropertyList() {
+        return queryPropertyList;
     }
 
-    public void setSimpleOrders(SimpleOrder[] simpleOrders) {
-        this.simpleOrders = simpleOrders;
+    public void setQueryPropertyList(List<QueryProperty> queryPropertyList) {
+        this.queryPropertyList = queryPropertyList;
     }
 
-    public QueryProperty[] getQueryProperties() {
-        return queryProperties;
+    public List<SimpleOrder> getSimpleOrderList() {
+        return simpleOrderList;
     }
 
-    public void setQueryProperties(QueryProperty[] queryProperties) {
-        this.queryProperties = queryProperties;
+    public void setSimpleOrderList(List<SimpleOrder> simpleOrderList) {
+        this.simpleOrderList = simpleOrderList;
     }
 }
