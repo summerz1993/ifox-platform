@@ -3,9 +3,15 @@ package com.ifox.platform.adminuser.service;
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
+import com.ifox.platform.adminuser.request.AdminUserQueryRequest;
+import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.baseservice.GenericService;
+import com.ifox.platform.common.page.Page;
+import com.ifox.platform.common.rest.PageRequest;
 import com.ifox.platform.entity.adminuser.AdminUserEO;
 import com.ifox.platform.utility.jwt.JWTPayload;
+
+import java.util.List;
 
 /**
  * Created by yezhang on 7/14/2017.
@@ -33,5 +39,20 @@ public interface AdminUserService extends GenericService<AdminUserEO, String>{
      * @return JWTPayload
      */
     JWTPayload generatePayload(String loginName);
+
+    /**
+     * 分页查询
+     * @param queryRequest 查询条件
+     * @param pageRequest 分页条件
+     * @return Page<AdminUserVO>
+     */
+    Page<AdminUserDTO> page(AdminUserQueryRequest queryRequest, PageRequest pageRequest);
+
+    /**
+     * 列表查询
+     * @param queryRequest 查询条件
+     * @return List<AdminUserDTO>
+     */
+    List<AdminUserDTO> list(AdminUserQueryRequest queryRequest);
 
 }

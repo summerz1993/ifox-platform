@@ -19,12 +19,6 @@ import java.util.List;
 public interface OperationsDao<T extends BaseEntity, ID extends Serializable> extends OperationsCommon<T, ID> {
 
     /**
-     * 删除entity
-     * @param entity 实体对象
-     */
-    void deleteByEntity(T entity);
-
-    /**
      * 只用于自定义复杂HQL查询 - 慎用
      * @param hql HQL语句
      * @param values 参数值

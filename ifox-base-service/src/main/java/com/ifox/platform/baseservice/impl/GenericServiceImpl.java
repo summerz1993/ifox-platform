@@ -32,6 +32,11 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
     }
 
     @Override
+    public void deleteByEntity(T entity) {
+        genericDao.deleteByEntity(entity);
+    }
+
+    @Override
     public void deleteByID(ID id) {
         genericDao.deleteByID(id);
     }

@@ -32,6 +32,14 @@ public class BaseResponse {
         this.desc = desc;
     }
 
+    public BaseResponse() {
+    }
+
+    public BaseResponse(Integer status, String desc) {
+        this.status = status;
+        this.desc = desc;
+    }
+
     @Override
     public String toString() {
         return "BaseResponse{" +

@@ -17,7 +17,7 @@ public class AdminUserQueryRequest {
     /**
      * 是否内置
      */
-    private Boolean buildinSystem = false;
+    private Boolean buildinSystem;
 
 
     public String getLoginName() {
