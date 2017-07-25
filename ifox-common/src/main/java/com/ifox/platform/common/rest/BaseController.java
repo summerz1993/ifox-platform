@@ -1,5 +1,8 @@
 package com.ifox.platform.common.rest;
 
+import com.ifox.platform.common.rest.response.BaseResponse;
+import com.ifox.platform.common.rest.response.OneResponse;
+
 import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
 
 /**

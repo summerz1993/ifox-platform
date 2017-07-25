@@ -1,4 +1,4 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.response;
 
 /**
  * 单条数据返回

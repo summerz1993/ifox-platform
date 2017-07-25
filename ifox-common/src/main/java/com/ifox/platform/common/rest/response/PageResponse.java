@@ -1,4 +1,6 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.response;
+
+import com.ifox.platform.common.rest.PageInfo;
 
 import java.util.List;
 
@@ -6,7 +8,7 @@ import java.util.List;
  * 分页数据对象
  * @author Yeager
  */
-public class PageResponse<T> extends BaseResponse{
+public class PageResponse<T> extends BaseResponse {
 
     private PageInfo pageInfo;
 

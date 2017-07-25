@@ -11,7 +11,7 @@ import com.ifox.platform.common.bean.QueryProperty;
 import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.common.rest.PageRequest;
+import com.ifox.platform.common.rest.request.PageRequest;
 import com.ifox.platform.dao.adminuser.AdminUserDao;
 import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.entity.sys.RoleEO;

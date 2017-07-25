@@ -1,4 +1,4 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.request;
 
 /**
  * 分页请求

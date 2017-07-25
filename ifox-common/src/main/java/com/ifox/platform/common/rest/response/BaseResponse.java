@@ -1,4 +1,4 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.response;
 
 /**
  * 返回客户端数据基类
