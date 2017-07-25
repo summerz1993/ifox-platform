@@ -1,6 +1,6 @@
 package com.ifox.platform.adminuser.request;
 
-import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.entity.sys.AdminUserEO;
 
 public class AdminUserQueryRequest {
 

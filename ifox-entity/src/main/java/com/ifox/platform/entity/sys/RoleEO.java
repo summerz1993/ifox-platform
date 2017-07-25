@@ -1,6 +1,7 @@
-package com.ifox.platform.entity.common;
+package com.ifox.platform.entity.sys;
 
 import com.ifox.platform.entity.base.BaseEntity;
+import com.ifox.platform.entity.sys.MenuPermissionEO;
 
 import javax.persistence.*;
 import java.util.ArrayList;

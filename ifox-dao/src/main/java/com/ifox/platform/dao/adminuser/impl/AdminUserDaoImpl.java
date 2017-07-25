@@ -2,7 +2,7 @@ package com.ifox.platform.dao.adminuser.impl;
 
 import com.ifox.platform.dao.adminuser.AdminUserDao;
 import com.ifox.platform.dao.common.impl.GenericHibernateDaoImpl;
-import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.entity.sys.AdminUserEO;
 import org.springframework.stereotype.Repository;
 
 /**

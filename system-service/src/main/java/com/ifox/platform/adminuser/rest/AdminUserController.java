@@ -8,7 +8,7 @@ import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.*;
-import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
