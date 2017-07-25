@@ -5,7 +5,7 @@ import com.ifox.platform.adminuser.dto.AdminUserBaseColumns;
 /**
  * Created by Administrator on 2017/7/15 0015.
  */
-public class SaveRequest extends AdminUserBaseColumns{
+public class AdminUserSaveRequest extends AdminUserBaseColumns{
 
     /**
      * 密码
@@ -24,7 +24,7 @@ public class SaveRequest extends AdminUserBaseColumns{
 
     @Override
     public String toString() {
-        return "SaveRequest{" +
+        return "AdminUserSaveRequest{" +
             "password='" + password + '\'' +
             "} " + super.toString();
     }

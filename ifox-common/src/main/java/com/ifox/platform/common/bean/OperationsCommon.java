@@ -61,10 +61,10 @@ public interface OperationsCommon<T, ID> {
 
     /**
      * 条件查询实体对象集合
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 实体对象集合
      */
-    List<T> listByQueryProperty(QueryProperty[] queryProperties);
+    List<T> listByQueryProperty(List<QueryProperty> queryPropertyList);
 
     /**
      * 条件查询实体对象集合
@@ -83,10 +83,10 @@ public interface OperationsCommon<T, ID> {
     /**
      * 条件查询最顶部集合
      * @param rows 行数
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 实体对象集合
      */
-    List<T> listTopRowsByQueryProperty(int rows, QueryProperty[] queryProperties);
+    List<T> listTopRowsByQueryProperty(int rows, List<QueryProperty> queryPropertyList);
 
     /**
      * 条件查询最顶部集合
@@ -104,10 +104,10 @@ public interface OperationsCommon<T, ID> {
 
     /**
      * 条件查询数据总数
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 总数
      */
-    int countByQueryProperty(QueryProperty[] queryProperties);
+    int countByQueryProperty(List<QueryProperty> queryPropertyList);
 
     /**
      * 条件查询数据总数
@@ -119,10 +119,10 @@ public interface OperationsCommon<T, ID> {
     /**
      * 分页条件查询
      * @param simplePage 分页数据
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 分页实体
      */
-    Page<T> pageByQueryProperty(SimplePage simplePage, QueryProperty[] queryProperties);
+    Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList);
 
     /**
      * 分页条件查询

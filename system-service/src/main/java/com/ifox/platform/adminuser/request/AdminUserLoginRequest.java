@@ -4,7 +4,7 @@ package com.ifox.platform.adminuser.request;
  * 登录请求
  * @author Yeager
  */
-public class LoginRequest {
+public class AdminUserLoginRequest {
 
     private String loginName;
 
@@ -28,7 +28,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRequest{" +
+        return "AdminUserLoginRequest{" +
             "loginName='" + loginName + '\'' +
             '}';
     }

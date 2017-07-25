@@ -57,8 +57,8 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
     }
 
     @Override
-    public List<T> listByQueryProperty(QueryProperty[] queryProperties) {
-        return genericDao.listByQueryProperty(queryProperties);
+    public List<T> listByQueryProperty(List<QueryProperty> queryPropertyList) {
+        return genericDao.listByQueryProperty(queryPropertyList);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
     }
 
     @Override
-    public List<T> listTopRowsByQueryProperty(int rows, QueryProperty[] queryProperties) {
-        return genericDao.listTopRowsByQueryProperty(rows, queryProperties);
+    public List<T> listTopRowsByQueryProperty(int rows, List<QueryProperty> queryPropertyList) {
+        return genericDao.listTopRowsByQueryProperty(rows, queryPropertyList);
     }
 
     @Override
@@ -87,8 +87,8 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
     }
 
     @Override
-    public int countByQueryProperty(QueryProperty[] queryProperties) {
-        return genericDao.countByQueryProperty(queryProperties);
+    public int countByQueryProperty(List<QueryProperty> queryPropertyList) {
+        return genericDao.countByQueryProperty(queryPropertyList);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
     }
 
     @Override
-    public Page<T> pageByQueryProperty(SimplePage simplePage, QueryProperty[] queryProperties) {
-        return genericDao.pageByQueryProperty(simplePage, queryProperties);
+    public Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList) {
+        return genericDao.pageByQueryProperty(simplePage, queryPropertyList);
     }
 
     @Override

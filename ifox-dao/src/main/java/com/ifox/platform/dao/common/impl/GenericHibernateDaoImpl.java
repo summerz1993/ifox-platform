@@ -128,13 +128,13 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
 
     /**
      * 条件查询实体对象集合
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 实体对象集合
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<T> listByQueryProperty(QueryProperty[] queryProperties) {
-        return getHibernateTemplate().execute(session -> (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryProperties), (Object[]) null).list());
+    public List<T> listByQueryProperty(List<QueryProperty> queryPropertyList) {
+        return getHibernateTemplate().execute(session -> (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryPropertyList), (Object[]) null).list());
     }
 
     /**
@@ -162,14 +162,14 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
     /**
      * 条件查询最顶部集合
      * @param rows 行数
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 实体对象集合
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<T> listTopRowsByQueryProperty(int rows, QueryProperty[] queryProperties) {
+    public List<T> listTopRowsByQueryProperty(int rows, List<QueryProperty> queryPropertyList) {
         return getHibernateTemplate().execute(session ->
-                (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryProperties), (Object[]) null)
+                (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryPropertyList), (Object[]) null)
                 .setFirstResult(0)
                 .setMaxResults(rows > MAX_ROWS ? MAX_ROWS : rows)
                 .list());
@@ -205,13 +205,13 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
 
     /**
      * 条件查询数据总数
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 总数
      */
     @Override
-    public int countByQueryProperty(QueryProperty[] queryProperties) {
+    public int countByQueryProperty(List<QueryProperty> queryPropertyList) {
         return getHibernateTemplate().execute(session -> {
-            Object result = HQLUtil.createQueryByHQL(session, HQLUtil.generateCountEntityHQL(entityClass.getName(), queryProperties)).uniqueResult();
+            Object result = HQLUtil.createQueryByHQL(session, HQLUtil.generateCountEntityHQL(entityClass.getName(), queryPropertyList)).uniqueResult();
             return result == null ? 0 : Integer.valueOf(result.toString());
         });
     }
@@ -232,14 +232,14 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
     /**
      * 分页条件查询
      * @param simplePage 分页数据
-     * @param queryProperties 查询条件
+     * @param queryPropertyList 查询条件
      * @return 分页实体
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Page<T> pageByQueryProperty(SimplePage simplePage, QueryProperty[] queryProperties) {
+    public Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList) {
         Page<T> page = new Page<>(simplePage);
-        List<T> content = getHibernateTemplate().execute(session -> (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryProperties), (Object[]) null)
+        List<T> content = getHibernateTemplate().execute(session -> (List<T>)HQLUtil.createQueryByHQL(session, HQLUtil.generateFinalHQL(entityClass.getName(), queryPropertyList), (Object[]) null)
                 .setFirstResult(simplePage.getFirstResult())
                 .setMaxResults(simplePage.getPageSize())
                 .list());
