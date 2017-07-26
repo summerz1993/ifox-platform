@@ -3,6 +3,7 @@ package com.ifox.platform.adminuser.service.impl;
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
+import com.ifox.platform.adminuser.request.AdminUserPageRequest;
 import com.ifox.platform.adminuser.request.AdminUserQueryRequest;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
@@ -124,16 +125,17 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
 
     /**
      * 分页查询
-     * @param queryRequest 查询条件
      * @param pageRequest 分页条件
      * @return Page<AdminUserVO>
      */
     @Override
-    public Page<AdminUserDTO> page(AdminUserQueryRequest queryRequest, PageRequest pageRequest) {
+    public Page<AdminUserDTO> page(AdminUserPageRequest pageRequest) {
         SimplePage simplePage = new SimplePage();
         simplePage.setPageNo(pageRequest.getPageNo());
         simplePage.setPageSize(pageRequest.getPageSize());
 
+        AdminUserQueryRequest queryRequest = new AdminUserQueryRequest();
+        BeanUtils.copyProperties(pageRequest, queryRequest);
         List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
 
         Page<AdminUserEO> adminUserEOPage = pageByQueryProperty(simplePage, queryPropertyList);

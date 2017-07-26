@@ -1,6 +1,7 @@
 package com.ifox.platform.adminuser.rest;
 
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
+import com.ifox.platform.adminuser.request.AdminUserPageRequest;
 import com.ifox.platform.adminuser.request.AdminUserQueryRequest;
 import com.ifox.platform.adminuser.request.AdminUserSaveRequest;
 import com.ifox.platform.adminuser.request.AdminUserUpdateRequest;
@@ -144,11 +145,11 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "分页查询用户")
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody
-    PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserQueryRequest queryRequest, @ApiParam @RequestBody PageRequest pageRequest) {
-        logger.info("分页查询用户:{} {}", queryRequest.toString(), pageRequest.toString());
+    PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserPageRequest pageRequest) {
+        logger.info("分页查询用户:{} {}", pageRequest.toString());
         PageResponse<AdminUserVO> pageResponse = new PageResponse<>();
 
-        Page<AdminUserDTO> page = adminUserService.page(queryRequest, pageRequest);
+        Page<AdminUserDTO> page = adminUserService.page(pageRequest);
         List<AdminUserDTO> adminUserDTOList = page.getContent();
         List<AdminUserVO> adminUserVOList = new ArrayList<>();
         for (AdminUserDTO dto :
