@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -13,13 +12,13 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({"com.ifox.platform"})
-public class AdminUserApplication {
+public class SystemServiceApplication {
 
-    static Logger logger = LoggerFactory.getLogger(AdminUserApplication.class);
+    static Logger logger = LoggerFactory.getLogger(SystemServiceApplication.class);
 
     public static void main(String[] args) {
         logger.info("admin-user-service 项目启动中");
-        SpringApplication.run(AdminUserApplication.class, args);
+        SpringApplication.run(SystemServiceApplication.class, args);
     }
 
 }

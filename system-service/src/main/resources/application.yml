@@ -34,6 +34,8 @@ spring:
         org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
       naming.physical-strategy:
         org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  aop:
+    proxy-target-class: true
 
 #==================== logging Setting =====================#
 logging:
