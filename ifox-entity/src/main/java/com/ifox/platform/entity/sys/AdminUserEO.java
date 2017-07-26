@@ -1,7 +1,6 @@
-package com.ifox.platform.entity.adminuser;
+package com.ifox.platform.entity.sys;
 
 import com.ifox.platform.entity.base.BaseEntity;
-import com.ifox.platform.entity.common.RoleEO;
 
 import javax.persistence.*;
 import java.util.ArrayList;

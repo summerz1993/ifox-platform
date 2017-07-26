@@ -1,17 +1,19 @@
 package com.ifox.platform.adminuser.rest;
 
+import com.ifox.platform.adminuser.dto.AdminUserDTO;
 import com.ifox.platform.adminuser.request.AdminUserQueryRequest;
 import com.ifox.platform.adminuser.request.AdminUserSaveRequest;
+import com.ifox.platform.adminuser.request.AdminUserUpdateRequest;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
-import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
-import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.common.rest.BaseResponse;
-import com.ifox.platform.common.rest.MultiResponse;
-import com.ifox.platform.common.rest.PageRequest;
-import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.common.rest.*;
+import com.ifox.platform.common.rest.request.PageRequest;
+import com.ifox.platform.common.rest.response.BaseResponse;
+import com.ifox.platform.common.rest.response.MultiResponse;
+import com.ifox.platform.common.rest.response.OneResponse;
+import com.ifox.platform.common.rest.response.PageResponse;
+import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
@@ -26,7 +28,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 @Api(description = "后台用户管理", basePath = "/")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0", "Authorization"})
-public class AdminUserController {
+public class AdminUserController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -78,13 +79,18 @@ public class AdminUserController {
     }
 
     @ApiOperation(value = "删除用户")
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    BaseResponse delete(@ApiParam @RequestBody String[] userIds){
-        logger.info("删除用户:{}", userIds);
+    BaseResponse delete(@ApiParam @PathVariable(name = "userId") String userId){
+        logger.info("删除用户:{}", userId);
         BaseResponse baseResponse = new BaseResponse();
+        AdminUserEO eo = adminUserService.get(userId);
+        if (eo == null) {
+            logger.info("此用户不存在");
+            return super.notFoundBaseResponse("此用户不存在");
+        }
 
-        adminUserService.deleteMulti(userIds);
+        adminUserService.deleteByEntity(eo);
 
         baseResponse.setStatus(SUCCESS);
         baseResponse.setDesc("删除成功");
@@ -92,57 +98,87 @@ public class AdminUserController {
         return baseResponse;
     }
 
-    @ApiOperation(value = "分页查询用户")
-    @RequestMapping(value = "/page", method = RequestMethod.GET)
+    @ApiOperation(value = "更新用户")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ResponseBody
-    BaseResponse page(@ApiParam @RequestBody AdminUserQueryRequest adminUserQueryRequest, @ApiParam @RequestBody PageRequest pageRequest) {
-        logger.info("分页查询用户:{} {}", adminUserQueryRequest.toString(), pageRequest.toString());
+    BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
         BaseResponse baseResponse = new BaseResponse();
-
-        SimplePage simplePage = new SimplePage();
-        simplePage.setPageNo(pageRequest.getPageNo());
-        simplePage.setPageSize(pageRequest.getPageSize());
-
-        List<QueryProperty> queryPropertyList = new ArrayList<>();
-
-        String loginName = adminUserQueryRequest.getLoginName();
-        if (!StringUtils.isEmpty(loginName)) {
-            QueryProperty queryLoginName = new QueryProperty("loginName", EnumDao.Operation.LIKE, loginName);
-            queryPropertyList.add(queryLoginName);
+        String id = updateRequest.getId();
+        AdminUserEO adminUserEO = adminUserService.get(id);
+        if (adminUserEO == null) {
+            logger.info("此用户不存在");
+            return super.notFoundBaseResponse("此用户不存在");
         }
-
-        AdminUserEO.AdminUserEOStatus status = adminUserQueryRequest.getStatus();
-        if (status != null) {
-            QueryProperty queryStatus = new QueryProperty("status", EnumDao.Operation.EQUAL, status);
-            queryPropertyList.add(queryStatus);
-        }
-
-        Boolean buildinSystem = adminUserQueryRequest.getBuildinSystem();
-        if (buildinSystem != null) {
-            QueryProperty queryBuildinSystem = new QueryProperty("buildinSystem", EnumDao.Operation.EQUAL, buildinSystem);
-            queryPropertyList.add(queryBuildinSystem);
-        }
-
-        Page<AdminUserEO> adminUserEOPage = adminUserService.pageByQueryProperty(simplePage, queryPropertyList);
-
+        BeanUtils.copyProperties(updateRequest, adminUserEO);
+        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
+        adminUserService.update(adminUserEO);
 
         baseResponse.setStatus(SUCCESS);
-        baseResponse.setDesc("分页查询成功");
-        logger.info("分页查询用户成功");
+        baseResponse.setDesc("更新成功");
         return baseResponse;
     }
 
-    @ApiOperation(value = "获取所有用户信息", notes = "获取所有用户信息接口")
-    @RequestMapping(value = "/listAll", method = RequestMethod.GET)
+    @ApiOperation(value = "单个用户信息查询")
+    @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET)
     @ResponseBody
-    MultiResponse<AdminUserVO> listAll(){
-        logger.info("获取所有用户信息");
-        List<AdminUserEO> adminUserEOList = adminUserService.listAll();
+    @SuppressWarnings("unchecked")
+    OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId){
+        logger.info("单个用户信息查询:{}", userId);
+        OneResponse<AdminUserVO> oneResponse = new OneResponse<>();
+        AdminUserEO eo = adminUserService.get(userId);
+        if (eo == null) {
+            logger.info("此用户不存在");
+            return super.notFoundOneResponse("此用户不存在");
+        }
+
+        AdminUserVO vo = new AdminUserVO();
+        BeanUtils.copyProperties(eo, vo);
+
+        oneResponse.setData(vo);
+        oneResponse.setStatus(SUCCESS);
+        oneResponse.setDesc("单个用户信息查询成功");
+        logger.info("单个用户信息查询成功");
+        return oneResponse;
+    }
+
+    @ApiOperation(value = "分页查询用户")
+    @RequestMapping(value = "/page", method = RequestMethod.POST)
+    @ResponseBody
+    PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserQueryRequest queryRequest, @ApiParam @RequestBody PageRequest pageRequest) {
+        logger.info("分页查询用户:{} {}", queryRequest.toString(), pageRequest.toString());
+        PageResponse<AdminUserVO> pageResponse = new PageResponse<>();
+
+        Page<AdminUserDTO> page = adminUserService.page(queryRequest, pageRequest);
+        List<AdminUserDTO> adminUserDTOList = page.getContent();
         List<AdminUserVO> adminUserVOList = new ArrayList<>();
-        for (int i = 0; i < adminUserEOList.size(); i ++) {
-            AdminUserEO adminUserEO = adminUserEOList.get(i);
+        for (AdminUserDTO dto :
+            adminUserDTOList) {
+            AdminUserVO vo = new AdminUserVO();
+            BeanUtils.copyProperties(dto, vo);
+            adminUserVOList.add(vo);
+        }
+
+        pageResponse.setPageInfo(new PageInfo(page.getTotalCount(), page.getPageSize(), page.getPageNo()));
+        pageResponse.setData(adminUserVOList);
+        pageResponse.setStatus(SUCCESS);
+        pageResponse.setDesc("分页查询成功");
+        logger.info("分页查询用户成功");
+        return pageResponse;
+    }
+
+    @ApiOperation(value = "获取所有用户信息", notes = "获取所有用户信息接口")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ResponseBody
+    MultiResponse<AdminUserVO> list(@ApiParam @RequestBody AdminUserQueryRequest queryRequest){
+        logger.info("获取所有用户信息:{}", queryRequest.toString());
+
+        List<AdminUserDTO> adminUserDTOList = adminUserService.list(queryRequest);
+
+        List<AdminUserVO> adminUserVOList = new ArrayList<>();
+        for (int i = 0; i < adminUserDTOList.size(); i ++) {
+            AdminUserDTO adminUserDTO = adminUserDTOList.get(i);
             AdminUserVO adminUserVO = new AdminUserVO();
-            BeanUtils.copyProperties(adminUserEO, adminUserVO);
+            BeanUtils.copyProperties(adminUserDTO, adminUserVO);
             adminUserVOList.add(adminUserVO);
         }
 

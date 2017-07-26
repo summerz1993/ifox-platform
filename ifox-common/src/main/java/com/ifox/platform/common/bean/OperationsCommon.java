@@ -29,6 +29,12 @@ public interface OperationsCommon<T, ID> {
     ID save(T bean);
 
     /**
+     * 删除entity
+     * @param entity 实体对象
+     */
+    void deleteByEntity(T entity);
+
+    /**
      * 通过主键删除实体对象
      * @param id 主键
      */

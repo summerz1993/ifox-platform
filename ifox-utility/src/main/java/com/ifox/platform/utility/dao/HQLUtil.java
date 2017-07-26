@@ -172,10 +172,14 @@ public class HQLUtil {
                 whereHQL.append(" AND ");
                 whereHQL.append(ENTITY_ALIAS + ".").append(param.getProperty());
                 whereHQL.append(" ").append(OperationConverter.convertOperation(param.getOperation())).append(" ");
-                if (param.getValue() == null) {
-                    whereHQL.append(" ").append(param.getValue()).append(" ");
+                Object value = param.getValue();
+                if (value == null) {
+                    whereHQL.append(" ").append((Object) null).append(" ");
+                } else if (value instanceof Boolean) {
+                    Boolean v = (Boolean) value;
+                    whereHQL.append(" ").append(v ? 1 : 0).append(" ");
                 } else {
-                    whereHQL.append("'").append(param.getValue()).append("'");
+                    whereHQL.append("'").append(value).append("'");
                 }
             }
         }

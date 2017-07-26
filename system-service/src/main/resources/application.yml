@@ -88,4 +88,4 @@ jwt:
   secret: 123456
   payload:
     iss: www.yeager.vip
-    exp: 10
+    exp: 100

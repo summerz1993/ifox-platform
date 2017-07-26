@@ -1,6 +1,6 @@
 package com.ifox.platform.adminuser.request;
 
-import com.ifox.platform.entity.adminuser.AdminUserEO;
+import com.ifox.platform.entity.sys.AdminUserEO;
 
 public class AdminUserQueryRequest {
 
@@ -17,7 +17,7 @@ public class AdminUserQueryRequest {
     /**
      * 是否内置
      */
-    private Boolean buildinSystem = false;
+    private Boolean buildinSystem;
 
 
     public String getLoginName() {

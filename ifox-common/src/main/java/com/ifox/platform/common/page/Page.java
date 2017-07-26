@@ -26,7 +26,9 @@ public class Page<T> extends SimplePage implements java.io.Serializable{
 	}
 
 	public Page(SimplePage simplePage){
-		super(simplePage.getPageNo(), simplePage.getPageSize(), simplePage.getTotalCount());
+	    setPageNo(simplePage.getPageNo());
+	    setPageSize(simplePage.getPageSize());
+	    setTotalCount(simplePage.getTotalCount());
 	}
 
 	public List<T> getContent() {

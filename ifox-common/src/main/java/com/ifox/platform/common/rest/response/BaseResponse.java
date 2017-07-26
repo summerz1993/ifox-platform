@@ -1,4 +1,4 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.response;
 
 /**
  * 返回客户端数据基类
@@ -29,6 +29,14 @@ public class BaseResponse {
     }
 
     public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public BaseResponse() {
+    }
+
+    public BaseResponse(Integer status, String desc) {
+        this.status = status;
         this.desc = desc;
     }
 

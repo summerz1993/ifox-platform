@@ -1,4 +1,4 @@
-package com.ifox.platform.entity.common;
+package com.ifox.platform.entity.sys;
 
 import com.ifox.platform.entity.base.BaseEntity;
 

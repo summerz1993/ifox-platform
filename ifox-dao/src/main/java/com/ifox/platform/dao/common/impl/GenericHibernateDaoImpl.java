@@ -76,7 +76,8 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
      */
     @Override
     public void deleteByID(ID id) {
-        getHibernateTemplate().delete(id);
+        T entity = get(id);
+        getHibernateTemplate().delete(entity);
         getHibernateTemplate().flush();
     }
 
@@ -91,7 +92,8 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
             return;
         }
         for (ID id : ids) {
-            getHibernateTemplate().delete(id);
+            T entity = get(id);
+            getHibernateTemplate().delete(entity);
         }
         getHibernateTemplate().flush();
     }
@@ -243,7 +245,10 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
                 .setFirstResult(simplePage.getFirstResult())
                 .setMaxResults(simplePage.getPageSize())
                 .list());
+        int totalCount = countByQueryProperty(queryPropertyList);
+
         page.setContent(content);
+        page.setTotalCount(totalCount);
         return page;
     }
 
@@ -262,7 +267,10 @@ public class GenericHibernateDaoImpl<T extends BaseEntity, ID extends Serializab
                 .setFirstResult(simplePage.getFirstResult())
                 .setMaxResults(simplePage.getPageSize())
                 .list());
+        int totalCount = countByQueryProperty(queryConditions.getQueryPropertyList());
+
         page.setContent(content);
+        page.setTotalCount(totalCount);
         return page;
     }
 
