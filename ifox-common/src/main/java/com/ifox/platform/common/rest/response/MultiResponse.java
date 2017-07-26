@@ -20,4 +20,11 @@ public class MultiResponse<T> extends BaseResponse {
         this.data = data;
     }
 
+    public MultiResponse() {
+    }
+
+    public MultiResponse(Integer status, String desc, List<T> data) {
+        super(status, desc);
+        this.data = data;
+    }
 }

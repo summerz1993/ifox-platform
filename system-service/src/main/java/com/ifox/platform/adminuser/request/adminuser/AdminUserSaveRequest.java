@@ -1,4 +1,4 @@
-package com.ifox.platform.adminuser.request;
+package com.ifox.platform.adminuser.request.adminuser;
 
 import com.ifox.platform.adminuser.dto.AdminUserBaseColumns;
 
