@@ -12,9 +12,6 @@ import com.ifox.platform.utility.jwt.JWTPayload;
 
 import java.util.List;
 
-/**
- * Created by yezhang on 7/14/2017.
- */
 public interface AdminUserService extends GenericService<AdminUserEO, String>{
 
     /**
