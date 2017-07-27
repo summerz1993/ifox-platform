@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 import static com.ifox.platform.common.constant.RestStatusConstant.UNAUTHORIZED;
 
 /**
@@ -32,6 +33,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("认证拦截器 AuthenticationInterceptor --> preHandle, IP:{}, URL:{}", request.getRemoteHost(), request.getRequestURI());
+
+        //预检请求(用于处理跨域访问的复杂请求)
+        String method = request.getMethod();
+        if ("OPTIONS".equals(method)) {
+            response.setStatus(SUCCESS);
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Method", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS,TRACE");
+            response.setHeader("Access-Control-Allow-Headers", "api-version,authorization,content-type");
+            logger.info("OPTIONS预检请求通过");
+            return false;
+        }
 
         // 1 检查token是否有效
         String token = request.getHeader("Authorization");
