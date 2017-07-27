@@ -2,7 +2,7 @@ package com.ifox.platform.adminuser.rest;
 
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
-import com.ifox.platform.adminuser.request.AdminUserLoginRequest;
+import com.ifox.platform.adminuser.request.adminuser.AdminUserLoginRequest;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.common.rest.response.TokenResponse;
 import com.ifox.platform.utility.common.ExceptionUtil;

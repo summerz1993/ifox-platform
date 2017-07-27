@@ -1,9 +1,8 @@
-package com.ifox.platform.adminuser.request;
+package com.ifox.platform.adminuser.request.adminuser;
 
-import com.ifox.platform.common.rest.request.PageRequest;
 import com.ifox.platform.entity.sys.AdminUserEO;
 
-public class AdminUserPageRequest extends PageRequest {
+public class AdminUserQueryRequest {
 
     /**
      * 登陆名
@@ -19,6 +18,7 @@ public class AdminUserPageRequest extends PageRequest {
      * 是否内置
      */
     private Boolean buildinSystem;
+
 
     public String getLoginName() {
         return loginName;
@@ -46,10 +46,10 @@ public class AdminUserPageRequest extends PageRequest {
 
     @Override
     public String toString() {
-        return "AdminUserPageRequest{" +
+        return "AdminUserQueryRequest{" +
             "loginName='" + loginName + '\'' +
             ", status=" + status +
             ", buildinSystem=" + buildinSystem +
-            "} " + super.toString();
+            '}';
     }
 }

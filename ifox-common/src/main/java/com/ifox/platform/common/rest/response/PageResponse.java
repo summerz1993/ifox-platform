@@ -30,4 +30,12 @@ public class PageResponse<T> extends BaseResponse {
         this.data = data;
     }
 
+    public PageResponse() {
+    }
+
+    public PageResponse(Integer status, String desc, PageInfo pageInfo, List<T> data) {
+        super(status, desc);
+        this.pageInfo = pageInfo;
+        this.data = data;
+    }
 }
