@@ -17,6 +17,7 @@ import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
+import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.jsoniter.JsonIterator;
 import io.swagger.annotations.Api;
@@ -176,4 +177,5 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         logger.info(successQuery);
         return successQueryMultiResponse(adminUserVOList);
     }
+
 }
