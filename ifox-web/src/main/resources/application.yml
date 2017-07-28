@@ -14,3 +14,10 @@ spring:
 
 ifox-web:
   admin-user-service-base-url: http://localhost:8081/
+
+#==================== logging Setting =====================#
+logging:
+  level:
+    org.springframework: info
+    com.ifox.platform: debug
+  file: logs/ifox-web.log
