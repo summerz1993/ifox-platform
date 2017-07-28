@@ -55,7 +55,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
             .addPathPatterns("/**")
-            .excludePathPatterns("/adminUser/login", "/error", "/swagger-resources/**");
+            .excludePathPatterns("/adminUser/login", "/adminUser/verifyToken/**", "/error", "/swagger-resources/**");
         super.addInterceptors(registry);
     }
 }
