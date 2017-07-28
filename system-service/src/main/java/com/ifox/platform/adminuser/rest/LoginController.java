@@ -4,6 +4,8 @@ import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
 import com.ifox.platform.adminuser.request.adminuser.AdminUserLoginRequest;
 import com.ifox.platform.adminuser.service.AdminUserService;
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.TokenResponse;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.jwt.JWTHeader;
@@ -16,10 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 
@@ -28,7 +27,7 @@ import static com.ifox.platform.common.constant.RestStatusConstant.*;
 @Api(description = "后台用户登陆", basePath = "/")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0"})
-public class LoginController {
+public class LoginController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -77,6 +76,22 @@ public class LoginController {
             logger.info("登陆异常 loginName:{}", adminUserLoginRequest.getLoginName());
         }
         return tokenResponse;
+    }
+
+    @ApiOperation("校验Token")
+    @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
+    @ResponseBody
+    BaseResponse verifyToken(@ApiParam String token) {
+        logger.info("校验Token : {}", token);
+        try {
+            JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
+        } catch (Exception e) {
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.info("Token校验失败");
+            return new BaseResponse(TOKEN_ERROR, "Token校验失败");
+        }
+        logger.info("Token校验成功");
+        return successBaseResponse("Token校验成功");
     }
 
 }

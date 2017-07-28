@@ -39,6 +39,11 @@ public class AdminUserBaseColumns {
      */
     private String remark;
 
+    /**
+     * 头像
+     */
+    private String headPortrait;
+
 
     public String getLoginName() {
         return loginName;
@@ -96,6 +101,14 @@ public class AdminUserBaseColumns {
         this.remark = remark;
     }
 
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
+    }
+
     @Override
     public String toString() {
         return "AdminUserBaseColumns{" +
@@ -106,6 +119,7 @@ public class AdminUserBaseColumns {
             ", email='" + email + '\'' +
             ", mobile='" + mobile + '\'' +
             ", remark='" + remark + '\'' +
+            ", headPortrait='" + headPortrait + '\'' +
             '}';
     }
 }

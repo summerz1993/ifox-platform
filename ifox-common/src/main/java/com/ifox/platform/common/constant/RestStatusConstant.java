@@ -26,5 +26,7 @@ public final class RestStatusConstant {
      */
     // 用户名或者密码错误
     public static final Integer USER_NAME_OR_PASSWORD_ERROR = 480;
+    //Token校验失败
+    public static final Integer TOKEN_ERROR = 481;
 
 }

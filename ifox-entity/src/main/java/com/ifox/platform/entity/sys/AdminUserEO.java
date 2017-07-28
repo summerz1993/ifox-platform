@@ -78,6 +78,11 @@ public class AdminUserEO extends BaseEntity {
     private String remark;
 
     /**
+     * 头像
+     */
+    private String headPortrait;
+
+    /**
      * 创建人
      */
     private String creator;
@@ -178,6 +183,14 @@ public class AdminUserEO extends BaseEntity {
         this.creator = creator;
     }
 
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
+    }
+
     @Override
     public String toString() {
         return "AdminUserEO{" +
@@ -190,6 +203,7 @@ public class AdminUserEO extends BaseEntity {
             ", email='" + email + '\'' +
             ", mobile='" + mobile + '\'' +
             ", remark='" + remark + '\'' +
+            ", headPortrait='" + headPortrait + '\'' +
             ", creator='" + creator + '\'' +
             "} " + super.toString();
     }

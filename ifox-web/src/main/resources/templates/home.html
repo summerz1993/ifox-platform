@@ -27,7 +27,7 @@
 <div class="wrapper">
 
   <!-- Main Header -->
-  <div th:replace="fragments/header :: header"></div>
+  <div id="header" th:replace="fragments/header :: header"></div>
 
   <!-- Left side column. contains the logo and sidebar -->
   <div th:replace="fragments/left-side :: left-side"></div>
@@ -60,6 +60,12 @@
 <script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
 <!-- AdminLTE App -->
 <script th:src="@{/dist/js/adminlte.min.js}"></script>
+<!-- vue -->
+<script th:src="@{/bower_components/vue/vue2.4.1.js}"></script>
+<!-- axios -->
+<script th:src="@{/bower_components/axios/axios.min.js}"></script>
+
+<script th:src="@{/dist/js/pages/home.js}"></script>
 
 </body>
 </html>
