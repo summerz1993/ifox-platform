@@ -26,4 +26,11 @@ public class WebController {
         return "/home";
     }
 
+    @RequestMapping(value = "/adminUserList", method = RequestMethod.GET)
+    public String adminUserList(String token){
+        logger.info("进入用户列表页面");
+        //TODO:token校验
+        return "/adminUser/adminUserList";
+    }
+
 }
