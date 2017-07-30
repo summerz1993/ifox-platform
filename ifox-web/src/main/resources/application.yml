@@ -9,6 +9,7 @@ spring:
     cache-period: 0
     encoding: UTF-8
     mode: LEGACYHTML5
+    prefix: classpath:/templates
   template:
     cache: false
 
