@@ -22,31 +22,7 @@ var loginApp = new Vue({
                         sessionStorage.token = token;
 
                         var homeURL = webServiceURL + 'web/home';
-                        var tokenParam = {
-                            'token': token
-                        };
-                        var homeConfig = {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            transformRequest: [function (data) {
-                                // Do whatever you want to transform the data
-                                var ret = '';
-                                for (var it in data) {
-                                    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
-                                }
-                                return ret;
-                            }]
-                        };
-                        axios.post(homeURL, tokenParam, homeConfig)
-                            .then(function (res) {
-                                console.log(res);
-                            })
-                            .catch(function (err) {
-                                console.log(err);
-                            });
-
-                        // window.location = homeURL + '?token=' + token;
+                        window.location = homeURL + '?token=' + token;
                     } else {
                         alert(res.data.desc);
                     }

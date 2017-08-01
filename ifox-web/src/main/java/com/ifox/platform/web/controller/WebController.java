@@ -33,7 +33,7 @@ public class WebController {
         return "/login";
     }
 
-    @RequestMapping(value = "/home", method = RequestMethod.POST)
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(String token, Model model, HttpServletResponse response) throws UnsupportedEncodingException {
         logger.info("进入主页");
 
