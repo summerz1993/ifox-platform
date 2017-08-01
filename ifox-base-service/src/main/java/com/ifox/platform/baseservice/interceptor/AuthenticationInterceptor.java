@@ -39,8 +39,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if ("OPTIONS".equals(method)) {
             response.setStatus(SUCCESS);
             response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Method", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS,TRACE");
-            response.setHeader("Access-Control-Allow-Headers", "api-version,authorization,content-type");
+            response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,PUT,OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "api-version, Authorization, Content-Type");
             logger.info("OPTIONS预检请求通过");
             return false;
         }
