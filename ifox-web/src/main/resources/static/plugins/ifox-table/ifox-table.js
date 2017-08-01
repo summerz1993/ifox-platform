@@ -398,34 +398,6 @@ function getShowColumns(res){
 }
 
 /**
- *
- * @param res
- */
-function initQuery(res){
-	var res_key = Object.keys(res);
-	
-	var html_ = '';
-	for(var i = 0; i < res_key.length; i ++){
-		var key = res_key[i];
-		var col = res[key];
-		
-		if(col.query == true){
-			var search_ = "<div class='form-group col-xs-3 col-md-3'>" + 
-								"<input type='text' class='form-control' id='" + key + "' placeholder='" + col.value + "'>" + 
-						  "</div>";
-			
-			html_ += search_;	
-		}
-	}
-	
-	var sear_btn = "<button id='search' class='btn btn-info' disabled>" + 
-						"<i class='glyphicon glyphicon-search'></i> 搜索" + 
-				   "</button>";
-	html_ += sear_btn;
-	$("#search-group").append(html_);
-}
-
-/**
  * 数组排序，按照键值长度排序
  * @param arr1
  * @param arr2
