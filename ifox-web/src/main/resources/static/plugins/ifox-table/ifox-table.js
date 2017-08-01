@@ -157,18 +157,18 @@ function initComponent(){
 		});
 		
 		$add.click(function () {
-			$('#addModal').modal(options);
-			
+			$('#addModal').modal('show');
+			$('#save').click(function () {
+                table_oper.add();
+                $("#addModal").modal('hide');
+            });
+
 			$table.bootstrapTable('refresh', {silent: true});
 		});
 		
 		$remove.click(function () {
 			var ids = getIdSelections();
-			$table.bootstrapTable('remove', {
-				field: 'id',
-				values: ids
-			});
-			
+			table_oper.delete(ids);
 			$table.bootstrapTable('refresh', {silent: true});
 			$remove.prop('disabled', true);
 		});
@@ -295,14 +295,14 @@ function detailFormatter(index, row) {
 	$.each(row, function (key, value) {
 		if(key != 'state'){
 			var col_ = columns[key];
-			var col_key = col_.value;
-			
-			if(col_.hasOwnProperty('formatter')){
-				var col_formatter = col_.formatter;
-				html.push('<p><b>' + col_.value + ':</b> ' + col_formatter(value, row, index) + '</p>');
-			}else{
-				html.push('<p><b>' + col_.value + ':</b> ' + value + '</p>');
-			}
+			if (col_ != null && col_ != undefined && col_.hasOwnProperty('value')){
+                if(col_.hasOwnProperty('formatter')){
+                    var col_formatter = col_.formatter;
+                    html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + col_formatter(value, row, index) + '</p>');
+                }else{
+                    html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + value + '</p>');
+                }
+            }
 		}
 	});
 	return html.join('');
@@ -345,14 +345,14 @@ function initColumns(res){
 			'align': 'center',
 			'events': {
 				'click .edit': function (e, value, row, index) {
-					$('#editModal').modal(options);
+					$('#editModal').modal('show');
 				},
 				'click .remove': function (e, value, row, index) {
-					$table.bootstrapTable('remove', {
-						field: 'id',
-						values: [row.id]
-					});
-					
+					// $table.bootstrapTable('remove', {
+					// 	field: 'id',
+					// 	values: [row.id]
+					// });
+					table_oper.delete(row.id);
 					$table.bootstrapTable('refresh', {silent: true});
 				}
 			},
