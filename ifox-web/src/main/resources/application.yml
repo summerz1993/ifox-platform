@@ -15,6 +15,7 @@ spring:
 
 ifox-web:
   admin-user-service-base-url: http://localhost:8081/
+  login-url: http://localhost:8080/web/login
 
 #==================== logging Setting =====================#
 logging:

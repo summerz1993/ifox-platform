@@ -24,10 +24,10 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
+<div class="wrapper" id="wrapper">
 
   <!-- Main Header -->
-  <div id="header" th:replace="/fragments/header :: header"></div>
+  <div th:replace="/fragments/header :: header"></div>
 
   <!-- Left side column. contains the logo and sidebar -->
   <div th:replace="/fragments/left-side :: left-side"></div>
@@ -39,7 +39,7 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-
+        <button value="test delete" @click="testDelete">test delete</button>
     </section>
     <!-- /.content -->
 

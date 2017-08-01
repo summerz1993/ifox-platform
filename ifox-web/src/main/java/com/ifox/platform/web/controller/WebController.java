@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
@@ -33,11 +34,10 @@ public class WebController {
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String home(String token, Model model) throws UnsupportedEncodingException {
+    public String home(String token, Model model, HttpServletResponse response) throws UnsupportedEncodingException {
         logger.info("进入主页");
 
         String verifyTokenUrl = "adminUser/verifyToken";
-        String userInfo = "adminUser/get/";
 
         String url = env.getProperty("ifox-web.admin-user-service-base-url") + verifyTokenUrl;
         HttpRequest httpRequest = HttpRequest.post(url).header("api-version", "1.0").form("token", token);
@@ -52,6 +52,8 @@ public class WebController {
         if ( SUCCESS != code || SUCCESS != status) {
             logger.info("token校验失败");
             model.addAttribute("error", "无效请求");
+            model.addAttribute("URL", env.getProperty("ifox-web.login-url"));
+            model.addAttribute("URLName", "请重新登陆");
             return "/error";
         }
         //token校验通过
