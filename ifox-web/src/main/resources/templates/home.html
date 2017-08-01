@@ -27,15 +27,15 @@
 <div class="wrapper">
 
   <!-- Main Header -->
-  <div id="header" th:replace="fragments/header :: header"></div>
+  <div id="header" th:replace="/fragments/header :: header"></div>
 
   <!-- Left side column. contains the logo and sidebar -->
-  <div th:replace="fragments/left-side :: left-side"></div>
+  <div th:replace="/fragments/left-side :: left-side"></div>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <div th:replace="fragments/content-header :: content-header"></div>
+    <div th:replace="/fragments/content-header :: content-header"></div>
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -47,7 +47,7 @@
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
-  <div th:replace="fragments/footer :: footer"></div>
+  <div th:replace="/fragments/footer :: footer"></div>
 
 </div>
 <!-- ./wrapper -->
