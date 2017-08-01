@@ -28,6 +28,10 @@ public class ErrorViewResolverConfig implements ErrorViewResolver {
             modelAndView = new ModelAndView("/404");
             modelAndView.addObject("error", "反正我没有找到");
             return modelAndView;
+        } else if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+            modelAndView = new ModelAndView("/500");
+            modelAndView.addObject("error", "我错了");
+            return modelAndView;
         }
 
         modelAndView = new ModelAndView("/error");
