@@ -4,26 +4,11 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	
+
     <title>Admin User List</title>
-    <link rel="stylesheet"  th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap3-editable/css/bootstrap-editable.css}">
-    <script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
-    <script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
-	<script th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
-	<script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
-    <!--<script src="ga.js"></script>-->
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20140204/json2.min.js"></script>
-    <![endif]-->
 </head>
 <body>
-<div class="container">
+<aside class="list-sidebar" th:fragment="list-modal">
     <div id="toolbar">
         <div id="button-group">
 			<button id="add" class="btn btn-info">
@@ -33,7 +18,7 @@
 				<i class="glyphicon glyphicon-remove"></i> 删除
 			</button>
 		</div>
-		
+
 		<div id="search-group" style="margin-left: -2%;margin-top: 1%;">
             <div class="form-group col-xs-3 col-md-3">
 				<input type="text" class="form-control" id="loginName" placeholder="登录名">
@@ -53,91 +38,6 @@
 		</div>
     </div>
     <table id="tableId"></table>
-</div>
-
-<!-- add modal -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="addModalLabel">
-					用户添加
-				</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form-horizontal" role="form">
-				  <div class="form-group">
-					<label for="firstname1" class="col-sm-2 control-label">登录名</label>
-					<div class="col-sm-10">
-					  <input type="text" class="form-control" id="firstname1" placeholder="请输入登录名">
-					</div>
-				  </div>
-				  <div class="form-group">
-					<label for="lastname1" class="col-sm-2 control-label">密码</label>
-					<div class="col-sm-10">
-					  <input type="password" class="form-control" id="lastname1" placeholder="请输入密码">
-					</div>
-				  </div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					关闭
-				</button>
-				<button type="button" class="btn btn-primary">
-					保存
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- add modal -->
-
-<!-- edit modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="editModalLabel">
-					用户编辑
-				</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form-horizontal" role="form">
-				  <div class="form-group">
-					<label for="firstname2" class="col-sm-2 control-label">登录名</label>
-					<div class="col-sm-10">
-					  <input type="text" class="form-control" id="firstname2" placeholder="请输入登录名">
-					</div>
-				  </div>
-				  <div class="form-group">
-					<label for="lastname2" class="col-sm-2 control-label">密码</label>
-					<div class="col-sm-10">
-					  <input type="password" class="form-control" id="lastname2" placeholder="请输入密码">
-					</div>
-				  </div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					关闭
-				</button>
-				<button type="button" class="btn btn-primary">
-					保存
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- edit modal -->
-<script th:src="@{/plugins/ifox-table/ifox-table-oper.js}"></script>
-<script th:src="@{/dist/js/pages/adminUser/admin-user-oper.js}"></script>
-<script th:src="@{/plugins/ifox-table/ifox-table.js}"></script>
+</aside>
 </body>
 </html>

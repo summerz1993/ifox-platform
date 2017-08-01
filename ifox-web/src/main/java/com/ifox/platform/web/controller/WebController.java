@@ -79,7 +79,7 @@ public class WebController {
     public String adminUserList(String token){
         logger.info("进入用户列表页面");
         //TODO:token校验
-        return "/adminUser/list";
+        return "/adminUser/admin-user";
     }
 
 }

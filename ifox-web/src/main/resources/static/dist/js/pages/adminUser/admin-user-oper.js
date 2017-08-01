@@ -19,6 +19,63 @@ function searchParams(params) {
     return temp;
 }
 
+function addUser() {
+    var data = {
+        "buildinSystem": true,
+        "email": "string",
+        "headPortrait": "string",
+        "loginName": "test23",
+        "mobile": "string",
+        "nickName": "test23",
+        "password": "12345678z",
+        "remark": "string",
+        "status": "ACTIVE"
+    }
+
+    $.ajax({
+        url: 'http://localhost:8081/adminUser/save',
+        type: 'post',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        headers: {
+            Accept: "*/*",
+            'content-type': 'application/json',
+            Authorization: sessionStorage.token,
+            'api-version': '1.0'
+        },
+        success: function () {
+
+        },
+        error: function () {
+
+        }
+    })
+}
+
+/**
+ * 删除用户
+ * @param ids
+ */
+function deleteUsers(ids) {
+    $.ajax({
+        url: 'http://localhost:8081/adminUser/delete/' + ids,
+        type: 'DELETE',
+        dataType: 'json',
+        withCredentials:true,
+        headers: {
+            'content-type': 'application/json',
+            Authorization: sessionStorage.token,
+            'api-version': '1.0'
+        },
+        success: function () {
+            
+        },
+        error: function () {
+            
+        }
+    });
+}
+
 $(function () {
     columns = {
         'id': {
@@ -75,12 +132,15 @@ $(function () {
 
     var ajaxOptions = {
         'headers': {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlSWRMaXN0IjpbXSwibG9naW5OYW1lIjoiYWRtaW4iLCJpc3MiOiJ3d3cueWVhZ2VyLnZpcCIsImV4cCI6MTUwMTI0MDcwMiwiaWF0IjoxNTAxMjM0NzAyLCJ1c2VySWQiOiI4YWIyYThjNTVkNjM1ZDZiMDE1ZDYzNWU1MjIyMDAwMCIsImp0aSI6IjIwZDU2MjFhNzZmYjQwMmZhZTIzNWRkZjU0YTQ2NTZiIn0.QcdpR-jh6MWihexKI_B-iKM7L-7a5PZwNPwPTx3E2Tw",
+            "Authorization": sessionStorage.token,
             'api-version': '1.0'
         }
     };
 
     table_oper.searchParams = searchParams;
+    table_oper.delete = deleteUsers;
+    table_oper.add = addUser;
+
     TableComponent.setAjaxOptions(ajaxOptions);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
     TableComponent.init('tableId', 'http://localhost:8081/adminUser/page', 'post');
