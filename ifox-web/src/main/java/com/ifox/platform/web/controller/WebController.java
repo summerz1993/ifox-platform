@@ -88,7 +88,7 @@ public class WebController {
     public String adminUser(String token){
         logger.info("进入后台用户管理");
         //TODO:token校验
-        return "/adminUser/admin-user";
+        return "/admin-user/admin-user";
     }
 
 }
