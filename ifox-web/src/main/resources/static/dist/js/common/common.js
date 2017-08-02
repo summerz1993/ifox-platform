@@ -1,5 +1,16 @@
-var systemServiceURL = 'http://localhost:8081/';
-var webServiceURL = 'http://localhost:8080/';
+var system_service_URL = 'http://localhost:8081/';
+var web_service_URL = 'http://localhost:8080/';
+
+var admin_user_page_URL = system_service_URL + 'adminUser/page';
+var admin_user_save_URL = system_service_URL + 'adminUser/save';
+var admin_user_delete_URL = system_service_URL + 'adminUser/delete';
+
+var ifox_table_ajax_options = {
+    'headers': {
+        "Authorization": sessionStorage.token,
+        'api-version': '1.0'
+    }
+};
 
 // 获取URL中的参数
 function getURLQueryString(name) {

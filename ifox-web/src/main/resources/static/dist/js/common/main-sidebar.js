@@ -34,7 +34,7 @@ var mainSidebar = new Vue({
             window.location = this.generateURL(name);
         },
         generateURL: function (menuName) {
-            return webServiceURL + this.action + '?menu=' + menuName + '&token=' + this.token;
+            return web_service_URL + this.action + '?menu=' + menuName + '&token=' + this.token;
         }
     }
 });

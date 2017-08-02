@@ -52,15 +52,15 @@
     <!-- Main content -->
     <section class="content container-fluid">
         <!--list-->
-        <div th:replace="/adminUser/list::list-modal"></div>
+        <div th:replace="/admin-user/list::list-modal"></div>
         <!--list-->
 
         <!--add modal-->
-        <div th:replace="/adminUser/add::add-modal"></div>
+        <div th:replace="/admin-user/add::add-modal"></div>
         <!--add modal-->
 
         <!--edit modal-->
-        <div th:replace="/adminUser/edit::edit-modal"></div>
+        <div th:replace="/admin-user/edit::edit-modal"></div>
         <!--edit modal-->
     </section>
     <!-- /.content -->
@@ -86,19 +86,20 @@
 <script th:src="@{/bower_components/vue/vue2.4.1.js}"></script>
 <!-- axios -->
 <script th:src="@{/bower_components/axios/axios.min.js}"></script>
-<!--home-->
-<script th:src="@{/dist/js/pages/home.js}"></script>
 
 <!--bootstrap table-->
 <script th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
 <!--bootstrap table zn-->
 <script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
 
-<!--ifox table operate-->
-<script th:src="@{/plugins/ifox-table/ifox-table-oper.js}"></script>
-<!--admin user operate-->
-<script th:src="@{/dist/js/pages/adminUser/admin-user-oper.js}"></script>
+<script th:src="@{/dist/js/common/common.js}"></script>
+<script th:src="@{/dist/js/common/main-header.js}"></script>
+<script th:src="@{/dist/js/common/main-sidebar.js}"></script>
+
 <!--ifox table-->
-<script th:src="@{/plugins/ifox-table/ifox-table.js}"></script>
+<script th:src="@{/dist/js/ifox-table/ifox-table.js}"></script>
+<!--admin user operate-->
+<script th:src="@{/dist/js/pages/admin-user/admin-user.js}"></script>
+
 </body>
 </html>

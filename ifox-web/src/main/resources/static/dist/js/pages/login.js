@@ -7,7 +7,7 @@ var loginApp = new Vue({
     methods: {
         login: function () {
 
-            var loginURL = systemServiceURL + 'adminUser/login';
+            var loginURL = system_service_URL + 'adminUser/login';
             var loginParams = {
                 "loginName": this.userName,
                 "password": this.password
@@ -21,7 +21,7 @@ var loginApp = new Vue({
                         var token = res.data.token;
                         sessionStorage.token = token;
 
-                        var homeURL = webServiceURL + 'web/home';
+                        var homeURL = web_service_URL + 'web/home';
                         window.location = homeURL + '?menu=home&token=' + token;
                     } else {
                         alert(res.data.desc);

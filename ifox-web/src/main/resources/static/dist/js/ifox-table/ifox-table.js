@@ -1,4 +1,47 @@
 /**
+ *	table operate
+ *  提供列表的基本操作
+ *	调用仅需要实现
+ * 	添加、修改、删除、查询、查询参数
+ */
+var ifox_table = {
+    add:function () {
+
+    },
+    edit: function () {
+
+    },
+    /**
+     * 删除用户
+     * @param ids
+     */
+    delete:function (ids) {
+
+    },
+    /**
+     *  扩展bootstrap搜索，自定义搜索条件
+     */
+    search: function () {
+
+    },
+    /**
+     *	用于bootstrap table查询，返回查询参数
+     * 其中params为bootstrap table默认查询参数
+     *	@param Object
+     * 	{
+	  *	    	limit:10
+	  *			offset:0
+	  *			order:"asc"
+	  *			search:undefined
+	  *			sort:"nickName"
+	  *		}
+     */
+    searchParams: function (params) {
+
+    }
+};
+
+/**
  *	#table为列表的页面控件id
  */
 var $table = $('#table');
@@ -130,7 +173,7 @@ var options =  {
  * table依赖的相关js
  */ 
 var scripts = [
-	location.search.substring(1) || '../plugins/bootstrap-table/bootstrap-table.js',
+	'../plugins/bootstrap-table/bootstrap-table.js',
 	'../plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js',
 	'../plugins/bootstrap3-editable/js/bootstrap-editable.js',
 	'../plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js'
@@ -316,7 +359,8 @@ function detailFormatter(index, row) {
  */
 function initColumns(res){
 	var column_key = Object.keys(res);
-	column_key.sort(sortByLength);
+	//自动排序列
+	// column_key.sort(sortByLength);
 	var col = [
 			{
 				'field': 'state',

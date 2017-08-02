@@ -33,7 +33,7 @@ function addUser() {
     }
 
     $.ajax({
-        url: 'http://localhost:8081/adminUser/save',
+        url: admin_user_save_URL,
         type: 'post',
         dataType: 'json',
         data: JSON.stringify(data),
@@ -58,7 +58,7 @@ function addUser() {
  */
 function deleteUsers(ids) {
     $.ajax({
-        url: 'http://localhost:8081/adminUser/delete/' + ids,
+        url: admin_user_delete_URL + ids,
         type: 'DELETE',
         dataType: 'json',
         withCredentials:true,
@@ -119,8 +119,8 @@ $(function () {
             value:'状态',
             disabled: false,
             formatter: function(value, row, index){
-                if(value != undefined && value != null && value != 'null'){
-                    if(value == "ACTIVE"){
+                if(value !== undefined && value !== null && value !== 'null'){
+                    if(value === "ACTIVE"){
                         return "有效";
                     }else{
                         return "无效";
@@ -130,19 +130,11 @@ $(function () {
         }
     };
 
-    var ajaxOptions = {
-        'headers': {
-            "Authorization": sessionStorage.token,
-            'api-version': '1.0'
-        }
-    };
+    ifox_table.searchParams = searchParams;
+    ifox_table.delete = deleteUsers;
+    ifox_table.add = addUser;
 
-    table_oper.searchParams = searchParams;
-    table_oper.delete = deleteUsers;
-    table_oper.add = addUser;
-
-    TableComponent.setAjaxOptions(ajaxOptions);
+    TableComponent.setAjaxOptions(ifox_table_ajax_options);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
-    TableComponent.init('tableId', 'http://localhost:8081/adminUser/page', 'post');
+    TableComponent.init('admin_user_table', admin_user_page_URL, 'POST');
 });
- 
