@@ -144,5 +144,31 @@ $(function () {
     TableComponent.setAjaxOptions(ajaxOptions);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
     TableComponent.init('tableId', 'http://localhost:8081/adminUser/page', 'post');
+
+    $("#headPortrait").fileinput({
+        language: 'zh',
+        uploadUrl: "/site/image-upload",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+        maxFileCount: 1,
+        maxImageWidth: 160,
+        maxImageHeight: 100,
+        resizePreference: 'width',
+        previewClass: 'preview-size',
+        previewSettings:{
+            image: {width: "50%", height: "110px"}
+        },
+        previewZoomSettings:{
+            image: {width: "50%", height: "110px"}
+        },
+        resizeImage: true,
+        resizeImage: true,
+        showCaption: false,
+        showRemove: false,
+        showUpload: false,
+        autoReplace: true,
+        showUploadedThumbs: true,
+        showBrowse: false,
+        browseOnZoneClick: true
+    });
 });
  

@@ -1,7 +1,21 @@
-.p_left{
-    float: left;
+
+.preview-size{
+    font-size: 1px;
 }
 
-.p_right{
-    float: right;
+.file-input .file-preview {
+    width: 160px;
+    height: 200px;
 }
+
+.file-input .file-preview .file-drop-zone .clickable{
+    width: 120px;
+    height: 160px;
+}
+
+.file-input .file-preview .file-drop-zone .clickable .file-drop-zone-title{
+    width: 110px;
+    height: 100px;
+    padding: 25px;
+}
+
