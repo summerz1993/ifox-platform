@@ -136,8 +136,7 @@ $(function () {
 
     TableComponent.setAjaxOptions(ifox_table_ajax_options);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
-<<<<<<< HEAD:ifox-web/src/main/resources/static/dist/js/pages/adminUser/admin-user-oper.js
-    TableComponent.init('tableId', 'http://localhost:8081/adminUser/page', 'post');
+    TableComponent.init('admin_user_table', admin_user_page_URL, 'POST');
 
     $("#headPortrait").fileinput({
         language: 'zh',
@@ -164,7 +163,4 @@ $(function () {
         showBrowse: false,
         browseOnZoneClick: true
     });
-=======
-    TableComponent.init('admin_user_table', admin_user_page_URL, 'POST');
->>>>>>> 9493aebdba2496a2a72ff609ba6425c566f4412b:ifox-web/src/main/resources/static/dist/js/pages/admin-user/admin-user.js
 });

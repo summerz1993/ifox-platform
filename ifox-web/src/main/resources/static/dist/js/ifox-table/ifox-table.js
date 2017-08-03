@@ -202,16 +202,16 @@ function initComponent(){
 		$add.click(function () {
 			$('#addModal').modal('show');
 			$('#save').click(function () {
-                table_oper.add();
+                ifox_table.add();
                 $("#addModal").modal('hide');
             });
 
-			$table.bootstrapTable('refresh', {silent: true});
+			// $table.bootstrapTable('refresh', {silent: true});
 		});
 		
 		$remove.click(function () {
 			var ids = getIdSelections();
-			table_oper.delete(ids);
+            ifox_table.delete(ids);
 			$table.bootstrapTable('refresh', {silent: true});
 			$remove.prop('disabled', true);
 		});
@@ -297,10 +297,10 @@ function getIdSelections() {
 /**
  * 自定义查询参数
  * @param params
- * @returns {{buildinSystem: string, loginName: (*|jQuery), pageNo: number, pageSize: *, status: string}}
+ * @returns {*}
  */
 function queryParams(params) {
-    var temp = table_oper.searchParams(params);
+    var temp = ifox_table.searchParams(params);
     return temp;
 }
 
@@ -396,7 +396,7 @@ function initColumns(res){
 					// 	field: 'id',
 					// 	values: [row.id]
 					// });
-					table_oper.delete(row.id);
+                    ifox_table.delete(row.id);
 					$table.bootstrapTable('refresh', {silent: true});
 				}
 			},
