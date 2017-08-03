@@ -10,7 +10,7 @@
 
     <!-- add modal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width:900px">
+        <div class="modal-dialog" style="width:800px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
-                        <table class="table">
+                        <table class="table no-border">
                             <tbody>
                                 <tr>
                                     <td>
@@ -33,9 +33,9 @@
                                     </td>
 
                                     <td rowspan="5">
-                                        <label for="headPortrait" class="col-sm-2 text-center">头像</label>
+                                        <label for="headPortrait-add" class="col-sm-4 text-center">头像</label>
                                         <div class="col-sm-6">
-                                            <input id="headPortrait" name="input-image" type="file" class="file-loading" accept="image/*">
+                                            <input id="headPortrait-add" name="input-image" type="file" class="file-loading" accept="image/*">
                                             <div id="kv-success-modal" class="modal fade">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -92,38 +92,26 @@
                                     <td>
                                         <label class="col-sm-4 text-center">系统内置</label>
                                         <div class="col-sm-8">
-                                            <button type="button" class="btn btn-default">否</button>
-                                            <button type="button" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">切换下拉菜单</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>是</li>
-                                                <li>否</li>
-                                            </ul>
+                                            <select id="buildinSystem" name="buildinSystem" class="selectpicker">
+                                                <option value="true">是</option>
+                                                <option value="false">否</option>
+                                            </select>
                                         </div>
                                     </td>
                                     <td>
                                         <label class="col-sm-4 text-center">账号状态</label>
                                         <div class="col-sm-8">
-                                            <button type="button" class="btn btn-default">有效</button>
-                                            <button type="button" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">切换下拉菜单</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>有效</li>
-                                                <li>无效</li>
-                                            </ul>
+                                            <select id="status" name="status" class="selectpicker">
+                                                <option value="ACTIVE">有效</option>
+                                                <option value="INVALID">无效</option>
+                                            </select>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <label for="remark" class="col-sm-4 text-center">备注</label>
-                                        <div class="col-sm-8">
+                                        <label for="remark" class="col-sm-2 text-center">备注</label>
+                                        <div class="col-sm-10">
                                             <textarea class="form-control" rows="3" id="remark"></textarea>
                                         </div>
                                     </td>

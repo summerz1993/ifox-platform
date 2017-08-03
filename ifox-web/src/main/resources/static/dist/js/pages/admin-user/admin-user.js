@@ -136,25 +136,14 @@ $(function () {
 
     TableComponent.setAjaxOptions(ifox_table_ajax_options);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
-    TableComponent.init('admin_user_table', admin_user_page_URL, 'POST');
+    TableComponent.init('admin_user_table', admin_user_page_URL, 'post');
 
-    $("#headPortrait").fileinput({
+    $("#headPortrait-add").fileinput({
         language: 'zh',
         uploadUrl: "/site/image-upload",
         allowedFileExtensions: ["jpg", "png", "gif"],
         maxFileCount: 1,
-        maxImageWidth: 160,
-        maxImageHeight: 100,
-        resizePreference: 'width',
         previewClass: 'preview-size',
-        previewSettings:{
-            image: {width: "50%", height: "110px"}
-        },
-        previewZoomSettings:{
-            image: {width: "50%", height: "110px"}
-        },
-        resizeImage: true,
-        resizeImage: true,
         showCaption: false,
         showRemove: false,
         showUpload: false,
@@ -162,5 +151,58 @@ $(function () {
         showUploadedThumbs: true,
         showBrowse: false,
         browseOnZoneClick: true
+    });
+
+    $("#addModal .file-preview").attr("style", "width:160px;height:230px;");
+    $("#addModal .clickable").attr('style', 'width:120px;height:195px;');
+    $("#addModal .file-drop-zone-title").css('padding', '45px 10px');
+
+    $('#headPortrait-add').on('fileloaded', function(event, file, previewId, index, reader) {
+        $('.kv-file-content').css('height', '100px');
+        $('.krajee-default.file-preview-frame').css('margin', '1px');
+        $('.file-footer-caption').css('width', '110px');
+    });
+
+    $('#headPortrait-add').on('fileremoved', function(event, id, index) {
+        $('.file-drop-zone-title').css('padding', '45px 10px');
+    });
+
+    $('#headPortrait-add').on('fileuploaderror', function(event, data, msg) {
+        $('.text-success').remove();
+        $('.file-error-message').remove();
+    });
+
+    $("#headPortrait-edit").fileinput({
+        language: 'zh',
+        uploadUrl: "/site/image-upload",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+        maxFileCount: 1,
+        previewClass: 'preview-size',
+        showCaption: false,
+        showRemove: false,
+        showUpload: false,
+        autoReplace: true,
+        showUploadedThumbs: true,
+        showBrowse: false,
+        browseOnZoneClick: true
+    });
+
+    $("#editModal .file-preview").attr("style", "width:160px;height:230px;");
+    $("#editModal .clickable").attr('style', 'width:120px;height:195px;');
+    $("#editModal .file-drop-zone-title").css('padding', '45px 10px');
+
+    $('#headPortrait-edit').on('fileloaded', function(event, file, previewId, index, reader) {
+        $('.kv-file-content').css('height', '100px');
+        $('.krajee-default.file-preview-frame').css('margin', '1px');
+        $('.file-footer-caption').css('width', '110px');
+    });
+
+    $('#headPortrait-edit').on('fileremoved', function(event, id, index) {
+        $('.file-drop-zone-title').css('padding', '45px 10px');
+    });
+
+    $('#headPortrait-edit').on('fileuploaderror', function(event, data, msg) {
+        $('.text-success').remove();
+        $('.file-error-message').remove();
     });
 });
