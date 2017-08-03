@@ -33,6 +33,10 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20140204/json2.min.js"></script>
   <![endif]-->
+
+  <!--file input-->
+  <link th:href="@{/bower_components/bootstrap-fileinput/css/fileinput.css}" rel="stylesheet" />
+  <!--file input-->
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -101,5 +105,10 @@
 <!--admin user operate-->
 <script th:src="@{/dist/js/pages/admin-user/admin-user.js}"></script>
 
+<!--file input-->
+<script type="text/javascript" th:src="@{/bower_components/bootstrap-fileinput/js/fileinput.min.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/bootstrap-fileinput/js/locales/zh.js}"></script>
+<script type="text/javascript" th:src="@{/bower_components/bootstrap-fileinput/js/plugins/piexif.js}"></script>
+<!--file input-->
 </body>
 </html>

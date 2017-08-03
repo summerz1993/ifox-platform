@@ -137,4 +137,30 @@ $(function () {
     TableComponent.setAjaxOptions(ifox_table_ajax_options);
     TableComponent.setColumns(initColumns(getShowColumns(columns)));
     TableComponent.init('admin_user_table', admin_user_page_URL, 'POST');
+
+    $("#headPortrait").fileinput({
+        language: 'zh',
+        uploadUrl: "/site/image-upload",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+        maxFileCount: 1,
+        maxImageWidth: 160,
+        maxImageHeight: 100,
+        resizePreference: 'width',
+        previewClass: 'preview-size',
+        previewSettings:{
+            image: {width: "50%", height: "110px"}
+        },
+        previewZoomSettings:{
+            image: {width: "50%", height: "110px"}
+        },
+        resizeImage: true,
+        resizeImage: true,
+        showCaption: false,
+        showRemove: false,
+        showUpload: false,
+        autoReplace: true,
+        showUploadedThumbs: true,
+        showBrowse: false,
+        browseOnZoneClick: true
+    });
 });
