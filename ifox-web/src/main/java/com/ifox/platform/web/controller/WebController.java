@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -29,8 +30,16 @@ public class WebController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(){
-        logger.info("进入登录页面");
+        logger.info("登陆");
         return "/login";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public @ResponseBody Integer logout(String token){
+        logger.info("登出, token:{}", token);
+        //TODO:销毁token
+
+        return SUCCESS;
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
@@ -75,11 +84,11 @@ public class WebController {
 
     }
 
-    @RequestMapping(value = "/adminUserList", method = RequestMethod.GET)
-    public String adminUserList(String token){
-        logger.info("进入用户列表页面");
+    @RequestMapping(value = "/adminUser", method = RequestMethod.GET)
+    public String adminUser(String token){
+        logger.info("进入后台用户管理");
         //TODO:token校验
-        return "/adminUser/admin-user";
+        return "/admin-user/admin-user";
     }
 
 }

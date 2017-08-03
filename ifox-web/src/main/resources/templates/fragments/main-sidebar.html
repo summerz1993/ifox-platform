@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>footer</title>
 </head>
 <body>
 
-<aside class="main-sidebar" th:fragment="left-side">
+<aside id="main-sidebar" class="main-sidebar" th:fragment="main-sidebar">
 
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -27,18 +27,18 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">菜单</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>首页</span></a></li>
-            <li class="treeview">
+            <li v-bind:class="{ active: homeActive }"><a href="#" @click="menu('home')"><i class="fa fa-link"></i> <span>首页</span></a></li>
+            <li class="treeview" v-bind:class="{ active: systemServiceActive }">
                 <a href="#"><i class="fa fa-link"></i> <span>系统管理</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="http://localhost:8080/web/adminUserList">后台用户管理</a></li>
-                    <li><a href="#">角色管理</a></li>
-                    <li><a href="#">菜单权限管理</a></li>
-                    <li><a href="#">资源管理</a></li>
+                    <li v-bind:class="{ active: adminUserActive }"><a href="#" @click="menu('adminUser')">后台用户管理</a></li>
+                    <li v-bind:class="{ active: roleActive }"><a href="#">角色管理</a></li>
+                    <li v-bind:class="{ active: menuPermissionActive }"><a href="#">菜单权限管理</a></li>
+                    <li v-bind:class="{ active: resourceActive }"><a href="#">资源管理</a></li>
                 </ul>
             </li>
         </ul>
