@@ -1,9 +1,6 @@
 var header = new Vue({
-   el: '#wrapper',
+   el: '#content-wrapper',
    methods: {
-       logout: function () {
-           console.log('logout method');
-       },
        testDelete: function () {
            var deleteUrl = 'http://localhost:8081/adminUser/delete/397wfj2937r293r23r';
            var token = sessionStorage.token;

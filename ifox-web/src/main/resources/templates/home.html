@@ -24,16 +24,16 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper" id="wrapper">
+<div class="wrapper">
 
   <!-- Main Header -->
   <div th:replace="/fragments/header :: header"></div>
 
   <!-- Left side column. contains the logo and sidebar -->
-  <div th:replace="/fragments/left-side :: left-side"></div>
+  <div th:replace="/fragments/main-sidebar :: main-sidebar"></div>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="content-wrapper">
     <!-- Content Header (Page header) -->
     <div th:replace="/fragments/content-header :: content-header"></div>
 
@@ -65,6 +65,9 @@
 <!-- axios -->
 <script th:src="@{/bower_components/axios/axios.min.js}"></script>
 
+<script th:src="@{/dist/js/common/common.js}"></script>
+<script th:src="@{/dist/js/common/main-header.js}"></script>
+<script th:src="@{/dist/js/common/main-sidebar.js}"></script>
 <script th:src="@{/dist/js/pages/home.js}"></script>
 
 </body>
