@@ -5,17 +5,34 @@
  * 	添加、修改、删除、查询、查询参数
  */
 var ifox_table = {
-    add:function () {
+    /**
+     * table添加操作，callback为操作成功回调函数。
+     * 这个的callback为refresh（）函数，即操作成功刷新table
+     * 定义时只需要添加callback参数，指定调用位置即可。
+     * @param callback
+     */
+    add:function (callback) {
 
     },
-    edit: function () {
+    getDetail: function (id) {
 
     },
     /**
-     * 删除用户
-     * @param ids
+     * table编辑操作，callback为操作成功回调函数。
+     * 这个的callback为refresh（）函数，即操作成功刷新table
+     * 定义时只需要添加callback参数，指定调用位置即可。
+     * @param callback
      */
-    delete:function (ids) {
+    edit: function (callback) {
+
+    },
+    /**
+     * table删除操作，callback为操作成功回调函数。
+     * 这个的callback为refresh（）函数，即操作成功刷新table
+     * 定义时只需要添加callback参数，指定调用位置即可。
+     * @param callback
+     */
+    delete:function (ids, callback) {
 
     },
     /**
@@ -201,18 +218,14 @@ function initComponent(){
 		
 		$add.click(function () {
 			$('#addModal').modal('show');
-			$('#save').click(function () {
-                ifox_table.add();
-                $("#addModal").modal('hide');
+			$('#save-add').click(function () {
+                ifox_table.add(refresh);
             });
-
-			// $table.bootstrapTable('refresh', {silent: true});
 		});
 		
 		$remove.click(function () {
 			var ids = getIdSelections();
-            ifox_table.delete(ids);
-			$table.bootstrapTable('refresh', {silent: true});
+            ifox_table.delete(ids, refresh);
 			$remove.prop('disabled', true);
 		});
 				
@@ -286,6 +299,14 @@ function getScript(url, callback) {
 }
 
 /**
+ * 刷新table
+ */
+function refresh() {
+    $('.modal').modal('hide');
+    $table.bootstrapTable('refresh', {silent: true});
+}
+
+/**
  * 获取被选中列
  */
 function getIdSelections() {
@@ -336,7 +357,7 @@ function responseHandler(res){
 function detailFormatter(index, row) {
 	var html = [];
 	$.each(row, function (key, value) {
-		if(key != 'state'){
+		if(key != 'state' && key != 'headPortrait'){
 			var col_ = columns[key];
 			if (col_ != null && col_ != undefined && col_.hasOwnProperty('value')){
                 if(col_.hasOwnProperty('formatter')){
@@ -390,14 +411,14 @@ function initColumns(res){
 			'events': {
 				'click .edit': function (e, value, row, index) {
 					$('#editModal').modal('show');
+                    ifox_table.getDetail(row.id);
+                    $('#save-edit').click(function () {
+                        ifox_table.edit(refresh);
+                        $("#editModal").modal('hide');
+                    });
 				},
 				'click .remove': function (e, value, row, index) {
-					// $table.bootstrapTable('remove', {
-					// 	field: 'id',
-					// 	values: [row.id]
-					// });
-                    ifox_table.delete(row.id);
-					$table.bootstrapTable('refresh', {silent: true});
+                    ifox_table.delete(row.id, refresh);
 				}
 			},
 			'formatter': function(value, row, index) {

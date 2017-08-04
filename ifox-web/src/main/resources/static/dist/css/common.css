@@ -6,3 +6,16 @@
 .no-border {
     border: 1px solid transparent !important;
 }
+
+.error {
+    color: red;
+    border-color:red;
+}
+
+.valid {
+    color: black;
+}
+
+.tooltip-inner {
+    background-color: #f00;
+}
