@@ -142,10 +142,9 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         Page<AdminUserDTO> page = adminUserService.page(pageRequest);
         List<AdminUserDTO> adminUserDTOList = page.getContent();
 
-        ModelMapper modelMapper = new ModelMapper();
-        List<AdminUserVO> adminUserVOList = modelMapper.map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
+        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
-        PageInfo pageInfo = modelMapper.map(page, PageInfo.class);
+        PageInfo pageInfo = page.convertPageInfo();
 
         logger.info(successQuery);
         return successQueryPageResponse(pageInfo, adminUserVOList);

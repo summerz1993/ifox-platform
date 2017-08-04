@@ -115,10 +115,8 @@ public class RoleController extends BaseController<RoleVO> {
         Page<RoleDTO> page = roleService.page(pageRequest);
         List<RoleDTO> roleDTOList = page.getContent();
 
-        ModelMapper modelMapper = new ModelMapper();
-
-        PageInfo pageInfo = modelMapper.map(page, PageInfo.class);
-        List<RoleVO> roleVOList = modelMapper.map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
+        PageInfo pageInfo = page.convertPageInfo();
+        List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
 
         logger.info(successQuery);
         return successQueryPageResponse(pageInfo, roleVOList);

@@ -1,5 +1,7 @@
 package com.ifox.platform.common.page;
 
+import com.ifox.platform.common.rest.PageInfo;
+
 /**
  * @author Yeager
  *
@@ -167,5 +169,9 @@ public class SimplePage implements Pageable {
 			pageNo = totalPage;
 		}
 	}
+
+	public PageInfo convertPageInfo() {
+	    return new PageInfo(getTotalCount(), getPageSize(), getPageNo());
+    }
 
 }

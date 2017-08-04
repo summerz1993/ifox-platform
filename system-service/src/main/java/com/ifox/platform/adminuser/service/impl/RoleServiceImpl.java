@@ -6,7 +6,9 @@ import com.ifox.platform.adminuser.request.role.RolePageRequest;
 import com.ifox.platform.adminuser.request.role.RoleQueryRequest;
 import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
+import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
@@ -39,8 +41,11 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
         SimplePage simplePage = pageRequest.convertSimplePage();
 
         List<QueryProperty> queryPropertyList = getQueryPropertyList(pageRequest);
+        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
 
-        Page<RoleEO> roleEOPage = pageByQueryProperty(simplePage, queryPropertyList);
+        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
+
+        Page<RoleEO> roleEOPage = pageByQueryConditions(simplePage, queryConditions);
 
         return RoleEOMapDTO.mapPage(roleEOPage);
     }
