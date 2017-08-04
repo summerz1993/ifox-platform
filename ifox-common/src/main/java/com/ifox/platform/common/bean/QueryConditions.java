@@ -1,7 +1,5 @@
 package com.ifox.platform.common.bean;
 
-import com.ifox.platform.common.exception.ConstructorException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +11,7 @@ import java.util.List;
 public class QueryConditions {
 
     /**
-     * 查询的字段
-     * 不能为空，为了规范查询结果
-     * 不能查询集合属性
+     * 查询的字段,可以为Null
      */
     private String[] properties;
 
@@ -29,15 +25,13 @@ public class QueryConditions {
      */
     private List<SimpleOrder> simpleOrderList = new ArrayList<>();
 
-    /**
-     * 构造方法，必须指定查询的字段
-     * @param properties 查询的字段
-     */
-    public QueryConditions(String[] properties) {
-        if (properties == null || properties.length == 0){
-            throw new ConstructorException("QueryConditions class 初始化构造方法异常, 必须传入propertys");
-        }
+    public QueryConditions() {
+    }
+
+    public QueryConditions(String[] properties, List<QueryProperty> queryPropertyList, List<SimpleOrder> simpleOrderList) {
         this.properties = properties;
+        this.queryPropertyList = queryPropertyList;
+        this.simpleOrderList = simpleOrderList;
     }
 
     public String[] getProperties() {

@@ -1,7 +1,11 @@
 package com.ifox.platform.adminuser.request.adminuser;
 
+import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.rest.request.PageRequest;
 import com.ifox.platform.entity.sys.AdminUserEO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminUserPageRequest extends PageRequest {
 
@@ -19,6 +23,11 @@ public class AdminUserPageRequest extends PageRequest {
      * 是否内置
      */
     private Boolean buildinSystem;
+
+    /**
+     * 排序条件
+     */
+    private List<SimpleOrder> simpleOrderList = new ArrayList<>();
 
     public String getLoginName() {
         return loginName;
@@ -44,12 +53,21 @@ public class AdminUserPageRequest extends PageRequest {
         this.buildinSystem = buildinSystem;
     }
 
+    public List<SimpleOrder> getSimpleOrderList() {
+        return simpleOrderList;
+    }
+
+    public void setSimpleOrderList(List<SimpleOrder> simpleOrderList) {
+        this.simpleOrderList = simpleOrderList;
+    }
+
     @Override
     public String toString() {
         return "AdminUserPageRequest{" +
             "loginName='" + loginName + '\'' +
             ", status=" + status +
             ", buildinSystem=" + buildinSystem +
+            ", simpleOrderList=" + simpleOrderList +
             "} " + super.toString();
     }
 }

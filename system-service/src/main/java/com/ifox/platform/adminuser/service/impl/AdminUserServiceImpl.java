@@ -3,12 +3,14 @@ package com.ifox.platform.adminuser.service.impl;
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
+import com.ifox.platform.adminuser.modelmapper.AdminUserEOMapDTO;
 import com.ifox.platform.adminuser.request.adminuser.AdminUserPageRequest;
 import com.ifox.platform.adminuser.request.adminuser.AdminUserQueryRequest;
-import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
+import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
@@ -20,9 +22,11 @@ import com.ifox.platform.utility.common.PasswordUtil;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.datetime.DateTimeUtil;
 import com.ifox.platform.utility.jwt.JWTPayload;
+import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
+import org.modelmapper.*;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -43,6 +47,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
 
     @Autowired
     private Environment env;
+
 
     @Autowired
     public void setGenericDao(AdminUserDao adminUserDao){
@@ -76,15 +81,14 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      */
     @Override
     public AdminUserDTO getByLoginName(String loginName) {
-        AdminUserDTO adminUserDTO = null;
         try {
             AdminUserEO adminUserEO = getAdminUserEOByLoginName(loginName);
-            adminUserDTO = new AdminUserDTO();
-            BeanUtils.copyProperties(adminUserEO, adminUserDTO);
+            return ModelMapperUtil.get().map(adminUserEO, AdminUserDTO.class);
         } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
+            logger.error("根据登陆名查询AdminUser异常");
             logger.error(ExceptionUtil.getStackTraceAsString(e));
         }
-        return adminUserDTO;
+        return null;
     }
 
     /**
@@ -129,31 +133,18 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      */
     @Override
     public Page<AdminUserDTO> page(AdminUserPageRequest pageRequest) {
-        SimplePage simplePage = new SimplePage();
-        simplePage.setPageNo(pageRequest.getPageNo());
-        simplePage.setPageSize(pageRequest.getPageSize());
+        SimplePage simplePage = pageRequest.convertSimplePage();
 
-        AdminUserQueryRequest queryRequest = new AdminUserQueryRequest();
-        BeanUtils.copyProperties(pageRequest, queryRequest);
+        AdminUserQueryRequest queryRequest = ModelMapperUtil.get().map(pageRequest, AdminUserQueryRequest.class);
         List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
 
-        Page<AdminUserEO> adminUserEOPage = pageByQueryProperty(simplePage, queryPropertyList);
-        List<AdminUserEO> adminUserEOList = adminUserEOPage.getContent();
-        List<AdminUserDTO> adminUserDTOList = new ArrayList<>();
-        for (AdminUserEO userEO :
-            adminUserEOList) {
-            AdminUserDTO adminUserDTO = new AdminUserVO();
-            BeanUtils.copyProperties(userEO, adminUserDTO);
-            adminUserDTOList.add(adminUserDTO);
-        }
+        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
 
-        Page<AdminUserDTO> adminUserDTOPage = new Page<>();
-        adminUserDTOPage.setContent(adminUserDTOList);
-        adminUserDTOPage.setTotalCount(adminUserEOPage.getTotalCount());
-        adminUserDTOPage.setPageSize(adminUserEOPage.getPageSize());
-        adminUserDTOPage.setPageNo(adminUserEOPage.getPageNo());
+        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
 
-        return adminUserDTOPage;
+        Page<AdminUserEO> adminUserEOPage = pageByQueryConditions(simplePage, queryConditions);
+
+        return AdminUserEOMapDTO.mapPage(adminUserEOPage);
     }
 
     /**
@@ -165,14 +156,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
     public List<AdminUserDTO> list(AdminUserQueryRequest queryRequest) {
         List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
         List<AdminUserEO> adminUserEOList = listByQueryProperty(queryPropertyList);
-        List<AdminUserDTO> adminUserDTOList = new ArrayList<>();
-        for (AdminUserEO userEO :
-            adminUserEOList) {
-            AdminUserDTO adminUserDTO = new AdminUserVO();
-            BeanUtils.copyProperties(userEO, adminUserDTO);
-            adminUserDTOList.add(adminUserDTO);
-        }
-        return adminUserDTOList;
+        return ModelMapperUtil.get().map(adminUserEOList, new TypeToken<List<AdminUserDTO>>() {}.getType());
     }
 
     /**
