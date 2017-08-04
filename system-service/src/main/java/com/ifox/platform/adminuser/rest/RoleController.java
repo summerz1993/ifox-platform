@@ -13,9 +13,12 @@ import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.sys.RoleEO;
+import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -42,8 +45,7 @@ public class RoleController extends BaseController<RoleVO> {
     BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
         logger.info("保存角色信息:{}", saveRequest.toString());
 
-        RoleEO roleEO = new RoleEO();
-        BeanUtils.copyProperties(saveRequest, roleEO);
+        RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
         roleService.save(roleEO);
 
         logger.info(successSave);
@@ -80,7 +82,7 @@ public class RoleController extends BaseController<RoleVO> {
             logger.info("角色不存在:{}", id);
             return super.notFoundBaseResponse("角色不存在");
         }
-        BeanUtils.copyProperties(updateRequest, roleEO);
+        ModelMapperUtil.get().map(updateRequest, roleEO);
         roleService.update(roleEO);
 
         logger.info(successUpdate);
@@ -98,8 +100,7 @@ public class RoleController extends BaseController<RoleVO> {
             logger.info("角色不存在:{}", roleId);
             return super.notFoundOneResponse("角色不存在");
         }
-        RoleVO vo = new RoleVO();
-        BeanUtils.copyProperties(roleEO, vo);
+        RoleVO vo = ModelMapperUtil.get().map(roleEO, RoleVO.class);
 
         logger.info(successQuery);
         return successQueryOneResponse(vo);
@@ -113,15 +114,11 @@ public class RoleController extends BaseController<RoleVO> {
 
         Page<RoleDTO> page = roleService.page(pageRequest);
         List<RoleDTO> roleDTOList = page.getContent();
-        List<RoleVO> roleVOList = new ArrayList<>();
-        for (RoleDTO dto :
-            roleDTOList) {
-            RoleVO vo = new RoleVO();
-            BeanUtils.copyProperties(dto, vo);
-            roleVOList.add(vo);
-        }
 
-        PageInfo pageInfo = new PageInfo(page.getTotalCount(), page.getPageSize(), page.getPageNo());
+        ModelMapper modelMapper = new ModelMapper();
+
+        PageInfo pageInfo = modelMapper.map(page, PageInfo.class);
+        List<RoleVO> roleVOList = modelMapper.map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
 
         logger.info(successQuery);
         return successQueryPageResponse(pageInfo, roleVOList);

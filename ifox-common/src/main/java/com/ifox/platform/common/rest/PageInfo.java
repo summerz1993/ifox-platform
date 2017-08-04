@@ -17,6 +17,9 @@ public class PageInfo {
      */
     private int pageNo;
 
+    public PageInfo() {
+    }
+
     public PageInfo(int totalCount, int pageSize, int pageNo) {
         this.totalCount = totalCount;
         this.pageSize = pageSize;

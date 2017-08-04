@@ -42,10 +42,23 @@ public class SimplePage implements Pageable {
 	 */
 	private int pageNo = DEFAULT_PAGE_NO;
 
+    /**
+     * 无参构造器
+     */
 	public SimplePage() {
 	}
 
-	/**
+    /**
+     * 构造器
+     * @param pageSize 每页数量
+     * @param pageNo 页码
+     */
+    public SimplePage(int pageSize, int pageNo) {
+        setPageSize(pageSize);
+        setPageNo(pageNo);
+    }
+
+    /**
 	 * 构造器
 	 * 
 	 * @param pageNo 页码

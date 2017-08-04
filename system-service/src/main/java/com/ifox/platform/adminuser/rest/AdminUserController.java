@@ -8,7 +8,8 @@ import com.ifox.platform.adminuser.request.adminuser.AdminUserUpdateRequest;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.common.page.Page;
-import com.ifox.platform.common.rest.*;
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.PageInfo;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
@@ -17,24 +18,22 @@ import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
-import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.jwt.JWTUtil;
+import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
 @Api(description = "后台用户管理", basePath = "/")
 @Controller
@@ -59,8 +58,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
 
-        AdminUserEO adminUserEO = new AdminUserEO();
-        BeanUtils.copyProperties(adminUserSaveRequest, adminUserEO);
+        AdminUserEO adminUserEO = ModelMapperUtil.get().map(adminUserSaveRequest, AdminUserEO.class);
 
         adminUserEO.setCreator(userId);
 
@@ -106,7 +104,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             logger.info("此用户不存在");
             return super.notFoundBaseResponse("此用户不存在");
         }
-        BeanUtils.copyProperties(updateRequest, adminUserEO);
+        ModelMapperUtil.get().map(updateRequest, adminUserEO);
         adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
         adminUserService.update(adminUserEO);
 
@@ -128,7 +126,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         }
 
         AdminUserVO vo = new AdminUserVO();
-        BeanUtils.copyProperties(eo, vo);
+        ModelMapperUtil.get().map(eo, vo);
 
         logger.info(successQuery);
         return successQueryOneResponse(vo);
@@ -143,15 +141,11 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         Page<AdminUserDTO> page = adminUserService.page(pageRequest);
         List<AdminUserDTO> adminUserDTOList = page.getContent();
-        List<AdminUserVO> adminUserVOList = new ArrayList<>();
-        for (AdminUserDTO dto :
-            adminUserDTOList) {
-            AdminUserVO vo = new AdminUserVO();
-            BeanUtils.copyProperties(dto, vo);
-            adminUserVOList.add(vo);
-        }
 
-        PageInfo pageInfo = new PageInfo(page.getTotalCount(), page.getPageSize(), page.getPageNo());
+        ModelMapper modelMapper = new ModelMapper();
+        List<AdminUserVO> adminUserVOList = modelMapper.map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
+
+        PageInfo pageInfo = modelMapper.map(page, PageInfo.class);
 
         logger.info(successQuery);
         return successQueryPageResponse(pageInfo, adminUserVOList);
@@ -165,14 +159,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         logger.info("获取多条用户信息:{}", queryRequest.toString());
 
         List<AdminUserDTO> adminUserDTOList = adminUserService.list(queryRequest);
-
-        List<AdminUserVO> adminUserVOList = new ArrayList<>();
-        for (int i = 0; i < adminUserDTOList.size(); i ++) {
-            AdminUserDTO adminUserDTO = adminUserDTOList.get(i);
-            AdminUserVO adminUserVO = new AdminUserVO();
-            BeanUtils.copyProperties(adminUserDTO, adminUserVO);
-            adminUserVOList.add(adminUserVO);
-        }
+        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
         logger.info(successQuery);
         return successQueryMultiResponse(adminUserVOList);
