@@ -8,7 +8,9 @@ import com.ifox.platform.adminuser.request.adminuser.AdminUserQueryRequest;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
+import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
@@ -137,7 +139,12 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         BeanUtils.copyProperties(pageRequest, queryRequest);
         List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
 
-        Page<AdminUserEO> adminUserEOPage = pageByQueryProperty(simplePage, queryPropertyList);
+        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
+        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
+        Page<AdminUserEO> adminUserEOPage = pageByQueryConditions(simplePage, queryConditions);
+
+//        Page<AdminUserEO> adminUserEOPage = pageByQueryProperty(simplePage, queryPropertyList);
+
         List<AdminUserEO> adminUserEOList = adminUserEOPage.getContent();
         List<AdminUserDTO> adminUserDTOList = new ArrayList<>();
         for (AdminUserEO userEO :

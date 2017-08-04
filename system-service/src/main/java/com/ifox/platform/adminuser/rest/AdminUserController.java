@@ -139,7 +139,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ResponseBody
     @SuppressWarnings("unchecked")
     PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserPageRequest pageRequest) {
-        logger.info("分页查询用户:{} {}", pageRequest.toString());
+        logger.info("分页查询用户:{}", pageRequest.toString());
 
         Page<AdminUserDTO> page = adminUserService.page(pageRequest);
         List<AdminUserDTO> adminUserDTOList = page.getContent();
