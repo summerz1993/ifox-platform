@@ -35,8 +35,9 @@
   <![endif]-->
 
   <!--file input-->
-  <link th:href="@{/bower_components/bootstrap-fileinput/css/fileinput.css}" rel="stylesheet" />
-  <!--file input-->
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap-fileinput/css/fileinput.css}" rel="stylesheet" />
+  <!--bootstrap select-->
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css}">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -110,5 +111,13 @@
 <script type="text/javascript" th:src="@{/bower_components/bootstrap-fileinput/js/locales/zh.js}"></script>
 <script type="text/javascript" th:src="@{/bower_components/bootstrap-fileinput/js/plugins/piexif.js}"></script>
 <!--file input-->
+
+<!--bootstrap select-->
+<!-- Latest compiled and minified JavaScript -->
+<script th:src="@{/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js}"></script>
+
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script th:src="@{/bower_components/bootstrap-select/dist//js/i18n/defaults-zh_CN.js}"></script>
+<!--bootstrap select-->
 </body>
 </html>
