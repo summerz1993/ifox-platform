@@ -1,5 +1,7 @@
 package com.ifox.platform.common.rest.request;
 
+import com.ifox.platform.common.page.SimplePage;
+
 /**
  * 分页请求
  */
@@ -29,6 +31,10 @@ public class PageRequest {
 
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
+    }
+
+    public SimplePage convertSimplePage() {
+        return new SimplePage(this.pageSize, this.pageNo);
     }
 
     @Override

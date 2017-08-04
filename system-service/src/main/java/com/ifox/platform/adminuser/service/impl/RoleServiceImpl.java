@@ -1,16 +1,20 @@
 package com.ifox.platform.adminuser.service.impl;
 
 import com.ifox.platform.adminuser.dto.RoleDTO;
+import com.ifox.platform.adminuser.modelmapper.RoleEOMapDTO;
 import com.ifox.platform.adminuser.request.role.RolePageRequest;
 import com.ifox.platform.adminuser.request.role.RoleQueryRequest;
 import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
+import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.sys.RoleDao;
 import com.ifox.platform.entity.sys.RoleEO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,13 +38,24 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
      */
     @Override
     public Page<RoleDTO> page(RolePageRequest pageRequest) {
-        SimplePage simplePage = new SimplePage();
-        simplePage.setPageNo(pageRequest.getPageNo());
-        simplePage.setPageSize(pageRequest.getPageSize());
+        SimplePage simplePage = pageRequest.convertSimplePage();
 
-        RoleQueryRequest queryRequest = new RoleQueryRequest();
-        BeanUtils.copyProperties(pageRequest, queryRequest);
+        List<QueryProperty> queryPropertyList = getQueryPropertyList(pageRequest);
+        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
 
+        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
+
+        Page<RoleEO> roleEOPage = pageByQueryConditions(simplePage, queryConditions);
+
+        return RoleEOMapDTO.mapPage(roleEOPage);
+    }
+
+    /**
+     * 根据page请求生成查询参数
+     * @param pageRequest 分页请求
+     * @return List<QueryProperty>
+     */
+    private List<QueryProperty> getQueryPropertyList(RolePageRequest pageRequest) {
         List<QueryProperty> queryPropertyList = new ArrayList<>();
 
         String name = pageRequest.getName();
@@ -54,26 +69,7 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
             QueryProperty statusQuery = new QueryProperty("status", EnumDao.Operation.EQUAL, status);
             queryPropertyList.add(statusQuery);
         }
-
-        Page<RoleEO> roleEOPage = pageByQueryProperty(simplePage, queryPropertyList);
-
-        Page<RoleDTO> roleDTOPage = new Page<>();
-
-        List<RoleEO> roleEOList = roleEOPage.getContent();
-        List<RoleDTO> roleDTOList = new ArrayList<>();
-        for (RoleEO eo :
-            roleEOList) {
-            RoleDTO dto = new RoleDTO();
-            BeanUtils.copyProperties(eo, dto);
-            roleDTOList.add(dto);
-        }
-
-        roleDTOPage.setContent(roleDTOList);
-        roleDTOPage.setPageNo(roleEOPage.getPageNo());
-        roleDTOPage.setPageSize(roleEOPage.getPageSize());
-        roleDTOPage.setTotalCount(roleEOPage.getTotalCount());
-
-        return roleDTOPage;
+        return queryPropertyList;
     }
 
 }

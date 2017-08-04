@@ -47,4 +47,12 @@ public class SimpleOrder {
     public void setOrderMode(EnumDao.OrderMode orderMode) {
         this.orderMode = orderMode;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleOrder{" +
+            "property='" + property + '\'' +
+            ", orderMode=" + orderMode +
+            '}';
+    }
 }
