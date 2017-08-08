@@ -105,7 +105,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             return super.notFoundBaseResponse("此用户不存在");
         }
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
-        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
+//        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
         adminUserService.update(adminUserEO);
 
         logger.info(successUpdate);

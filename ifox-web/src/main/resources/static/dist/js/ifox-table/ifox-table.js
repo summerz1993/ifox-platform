@@ -200,40 +200,87 @@ var scripts = [
  * table初始化，操作声明
  */
 function initComponent(){
-		$table.bootstrapTable(options);
+    $table.bootstrapTable(options);
+
+    // sometimes footer render error.
+    setTimeout(function () {
+        $table.bootstrapTable('resetView');
+    }, 200);
+
+    $table.on('check.bs.table uncheck.bs.table ' +
+        'check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+
+        // save your data, here just save the current page
+        selections = getIdSelections();
+        // push or splice the selections if you want to save all data selections
+    });
 		
-		// sometimes footer render error.
-		setTimeout(function () {
-			$table.bootstrapTable('resetView');
-		}, 200);
+    $add.click(function () {
+        $('#addModal').modal('show');
+        $('#save-add').click(function () {
+            ifox_table.add(refresh);
+        });
+    });
 		
-		$table.on('check.bs.table uncheck.bs.table ' +
-			'check-all.bs.table uncheck-all.bs.table', function () {
-			$remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-			
-			// save your data, here just save the current page
-			selections = getIdSelections();
-			// push or splice the selections if you want to save all data selections
-		});
-		
-		$add.click(function () {
-			$('#addModal').modal('show');
-			$('#save-add').click(function () {
-                ifox_table.add(refresh);
-            });
-		});
-		
-		$remove.click(function () {
-			var ids = getIdSelections();
-            ifox_table.delete(ids, refresh);
-			$remove.prop('disabled', true);
-		});
+    $remove.click(function () {
+        var ids = getIdSelections();
+        ifox_table.delete(ids, refresh);
+        $remove.prop('disabled', true);
+    });
 				
-		$(window).resize(function () {
-			$table.bootstrapTable('resetView', {
-				height: $(window).height()-110
-			});
-		});
+    $(window).resize(function () {
+        $table.bootstrapTable('resetView', {
+            height: $(window).height()-110
+        });
+    });
+
+    var $search_group = $("#toolbar #search-group").find("input,select,textarea");
+    $.each($search_group, function (index, value) {
+        var $search_ = $(value);
+        $search_.bind({
+            blur: function () {
+                checkSearchInvalid();
+            },
+            keyup: function () {
+                checkSearchInvalid();
+            },
+            change: function () {
+                checkSearchInvalid();
+            }
+        });
+    });
+}
+
+/**
+ * 确认搜索框是否有查询条件可用
+ * 有：启用搜索按钮
+ * 无：禁用搜索按钮
+ * @returns {boolean}
+ */
+function checkSearchInvalid() {
+    var invalid_num = 0;
+    var searchIsInvalid = false;
+
+    var $search_group = $("#toolbar #search-group").find("input,select,textarea");
+    $.each($search_group, function (index, value) {
+        var search_value = $.trim($(value).val());
+        if (!isEmpty(search_value)){
+            invalid_num ++;
+        }
+    });
+
+    searchIsInvalid = searchIsInvalid || (invalid_num > 0);
+
+    if(searchIsInvalid){
+        $("#search-btn").attr("disabled", false);
+        $("#search-btn").click(function () {
+            refresh();
+        });
+    }else{
+        $("#search-btn").attr("disabled", true);
+        $("#search-btn").unbind("click");
+    }
 }
 
 /**

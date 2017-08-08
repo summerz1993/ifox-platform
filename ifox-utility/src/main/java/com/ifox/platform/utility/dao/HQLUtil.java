@@ -178,7 +178,9 @@ public class HQLUtil {
                 } else if (value instanceof Boolean) {
                     Boolean v = (Boolean) value;
                     whereHQL.append(" ").append(v ? 1 : 0).append(" ");
-                } else {
+                } else if(value instanceof Enum){
+                    whereHQL.append("'").append(((Enum) value).ordinal()).append("'");
+                }else{
                     whereHQL.append("'").append(value).append("'");
                 }
             }
