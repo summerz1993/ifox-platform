@@ -21,21 +21,21 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" id="add-user">
                         <table class="table no-border">
                             <tbody>
                                 <tr>
                                     <td>
-                                        <label for="email" class="col-sm-4 text-center">邮箱</label>
+                                        <label for="email-add" class="col-sm-4 text-center">邮箱</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="email" placeholder="请输入邮箱">
+                                            <input class="form-control" id="email-add" name="email" placeholder="请输入邮箱">
                                         </div>
                                     </td>
 
                                     <td rowspan="5">
                                         <label for="headPortrait-add" class="col-sm-4 text-center">头像</label>
                                         <div class="col-sm-6">
-                                            <input id="headPortrait-add" name="input-image" type="file" class="file-loading" accept="image/*">
+                                            <input id="headPortrait-add" name="headPortrait" type="file" class="file-loading" accept="image/*">
                                             <div id="kv-success-modal" class="modal fade">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -54,54 +54,54 @@
 
                                 <tr>
                                     <td>
-                                        <label for="mobile" class="col-sm-4 text-center">联系电话</label>
+                                        <label for="mobile-add" class="col-sm-4 text-center">联系电话</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="mobile" placeholder="请输入联系电话">
+                                            <input class="form-control" id="mobile-add" name="mobile" placeholder="请输入联系电话">
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <label for="loginName" class="col-sm-4 text-center">登录名</label>
+                                        <label for="loginName-add" class="col-sm-4 text-center">登录名</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="loginName" placeholder="请输入登录名">
+                                            <input class="form-control" id="loginName-add" name="loginName" placeholder="请输入登录名">
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <label for="nickName" class="col-sm-4 text-center">昵称</label>
+                                        <label for="nickName-add" class="col-sm-4 text-center">昵称</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="nickName" placeholder="请输入昵称">
+                                            <input class="form-control" id="nickName-add" name="nickName" placeholder="请输入昵称">
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <label for="password" class="col-sm-4 text-center">密码</label>
+                                        <label for="password-add" class="col-sm-4 text-center">密码</label>
                                         <div class="col-sm-8">
-                                            <input type="password" class="form-control" id="password" placeholder="请输入密码">
+                                            <input type="password" class="form-control" id="password-add" name="password" placeholder="请输入密码">
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <label class="col-sm-4 text-center">系统内置</label>
+                                        <label for="buildinSystem-add" class="col-sm-4 text-center">系统内置</label>
                                         <div class="col-sm-8">
-                                            <select id="buildinSystem" name="buildinSystem" class="selectpicker">
+                                            <select id="buildinSystem-add" name="buildinSystem" class="selectpicker">
                                                 <option value="true">是</option>
                                                 <option value="false">否</option>
                                             </select>
                                         </div>
                                     </td>
                                     <td>
-                                        <label class="col-sm-4 text-center">账号状态</label>
+                                        <label for="status-add" class="col-sm-4 text-center">账号状态</label>
                                         <div class="col-sm-8">
-                                            <select id="status" name="status" class="selectpicker">
+                                            <select id="status-add" name="status" class="selectpicker">
                                                 <option value="ACTIVE">有效</option>
                                                 <option value="INVALID">无效</option>
                                             </select>
@@ -110,9 +110,9 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <label for="remark" class="col-sm-2 text-center">备注</label>
+                                        <label for="remark-add" class="col-sm-2 text-center">备注</label>
                                         <div class="col-sm-10">
-                                            <textarea class="form-control" rows="3" id="remark"></textarea>
+                                            <textarea class="form-control" rows="3" id="remark-add" name="remark" placeholder="请输入。。。"></textarea>
                                         </div>
                                     </td>
                                 </tr>
@@ -124,7 +124,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
-                    <button type="button" class="btn btn-primary" id="save">
+                    <button type="button" class="btn btn-primary" id="save-add">
                         保存
                     </button>
                 </div>

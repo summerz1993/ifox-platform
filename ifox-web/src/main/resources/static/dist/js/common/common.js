@@ -4,6 +4,8 @@ var web_service_URL = 'http://localhost:8080/';
 var admin_user_page_URL = system_service_URL + 'adminUser/page';
 var admin_user_save_URL = system_service_URL + 'adminUser/save';
 var admin_user_delete_URL = system_service_URL + 'adminUser/delete';
+var admin_user_get_URL = system_service_URL + 'adminUser/get';
+var admin_user_update_URL = system_service_URL + '/adminUser/update';
 
 var ifox_table_ajax_options = {
     'headers': {
