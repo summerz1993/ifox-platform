@@ -4,13 +4,35 @@
  * @returns {{buildinSystem: string, loginName: (*|jQuery), pageNo: number, pageSize: *, status: string}}
  */
 function searchParams(params) {
-    var temp = {
-        "buildinSystem": "",
-        "loginName": $("#loginName").val(),
-        "pageNo": params.offset/params.limit + 1,
-        "pageSize": params.limit,
-        "status": "ACTIVE"
+    var simpleOrderList = new Array();
+    if (params.sort != null && params.sort != "null" && params.sort != undefined && params.sort != ""){
+        var simpleOrder = {};
+        simpleOrder.property = params.sort;
+        simpleOrder.orderMode = params.order.toUpperCase();
+        simpleOrderList.push(simpleOrder);
     }
+
+    var temp = {
+        "pageNo": params.offset/params.limit + 1,
+        "pageSize": params.limit
+    }
+
+    if (!isEmpty($("#buildinSystem").val())){
+        temp.buildinSystem = $("#buildinSystem").val();
+    }
+
+    if(!isEmpty($("#loginName").val())){
+        temp.loginName = $("#loginName").val();
+    }
+
+    if(!isEmpty($("#status").val())){
+        temp.status = $("#status").val();
+    }
+
+    if (simpleOrderList.length > 0){
+        temp.simpleOrderList = simpleOrderList;
+    }
+
     return temp;
 }
 
@@ -26,7 +48,7 @@ $(function () {
             value:'内置',
             disabled: false,
             formatter: function(value, row, index){
-                if(value != undefined && value != null && value != 'null'){
+                if(!isEmpty(value)){
                     if(value == true || value == 'true'){
                         return "是";
                     }else{
@@ -59,7 +81,7 @@ $(function () {
             value:'状态',
             disabled: false,
             formatter: function(value, row, index){
-                if(value !== undefined && value !== null && value !== 'null'){
+                if(!isEmpty(value)){
                     if(value === "ACTIVE"){
                         return "有效";
                     }else{

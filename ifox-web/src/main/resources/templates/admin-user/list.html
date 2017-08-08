@@ -20,19 +20,25 @@
 		</div>
 
 		<div id="search-group" style="margin-left: -2%;margin-top: 1%;">
-            <div class="form-group col-xs-3 col-md-3">
-				<input type="text" class="form-control" id="loginName" placeholder="登录名">
+            <div class="form-group col-xs-4 col-md-4">
+				<input type="text" class="form-control search_value" id="loginName" placeholder="登录名">
 			</div>
 
 			<div class="form-group col-xs-3 col-md-3">
-				<input type="text" class="form-control" id="email" placeholder="邮箱">
+                <select id="status" name="status" class="form-control selectpicker search_value" title="账号状态">
+                    <option value="ACTIVE">有效</option>
+                    <option value="INVALID">无效</option>
+                </select>
 			</div>
 
 			<div class="form-group col-xs-3 col-md-3">
-				<input type="text" class="form-control" id="nickName" placeholder="昵称">
+                <select id="buildinSystem" name="buildinSystem" class="form-control selectpicker search_value" title="系统内置">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
 			</div>
 
-			<button id="search" class="btn btn-info" disabled>
+			<button id="search-btn" class="btn btn-info" disabled>
 				<i class="glyphicon glyphicon-search"></i> 搜索
 			</button>
 		</div>
