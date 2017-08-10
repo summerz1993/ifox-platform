@@ -21,9 +21,7 @@ import com.ifox.platform.utility.common.PasswordUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -35,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "后台用户管理", basePath = "/")
+@Api(tags = "后台用户管理")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0", "Authorization"})
 public class AdminUserController extends BaseController<AdminUserVO> {
@@ -49,10 +47,9 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     private AdminUserService adminUserService;
 
 
-    @ApiOperation(value = "保存用户信息")
+    @ApiOperation("保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-    BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
+    public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
         logger.info("保存用户信息:{}", adminUserSaveRequest);
 
         String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
@@ -74,10 +71,10 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successSaveBaseResponse();
     }
 
-    @ApiOperation(value = "删除用户")
+    @ApiOperation("删除用户")
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    BaseResponse delete(@ApiParam @PathVariable(name = "userId") String userId){
+    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
+    public @ResponseBody BaseResponse delete(@ApiParam @PathVariable(name = "userId") String userId){
         logger.info("删除用户:{}", userId);
 
         AdminUserEO eo = adminUserService.get(userId);
@@ -92,10 +89,10 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successDeleteBaseResponse();
     }
 
-    @ApiOperation(value = "更新用户")
+    @ApiOperation("更新用户")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @ResponseBody
-    BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
+    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
         logger.info("更新用户信息:{}", updateRequest.toString());
 
         String id = updateRequest.getId();
@@ -112,11 +109,11 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successUpdateBaseResponse();
     }
 
-    @ApiOperation(value = "单个用户信息查询")
+    @ApiOperation("单个用户信息查询")
     @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET)
-    @ResponseBody
+    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
     @SuppressWarnings("unchecked")
-    OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId){
+    public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId){
         logger.info("单个用户信息查询:{}", userId);
 
         AdminUserEO eo = adminUserService.get(userId);
@@ -132,11 +129,11 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successQueryOneResponse(vo);
     }
 
-    @ApiOperation(value = "分页查询用户")
+    @ApiOperation("分页查询用户")
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody
     @SuppressWarnings("unchecked")
-    PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserPageRequest pageRequest) {
+    public PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserPageRequest pageRequest) {
         logger.info("分页查询用户:{}", pageRequest.toString());
 
         Page<AdminUserDTO> page = adminUserService.page(pageRequest);
@@ -150,11 +147,11 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successQueryPageResponse(pageInfo, adminUserVOList);
     }
 
-    @ApiOperation(value = "获取所有用户信息", notes = "获取所有用户信息接口")
+    @ApiOperation("获取所有用户信息接口")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     @SuppressWarnings("unchecked")
-    MultiResponse<AdminUserVO> list(@ApiParam @RequestBody AdminUserQueryRequest queryRequest){
+    public MultiResponse<AdminUserVO> list(@ApiParam @RequestBody AdminUserQueryRequest queryRequest){
         logger.info("获取多条用户信息:{}", queryRequest.toString());
 
         List<AdminUserDTO> adminUserDTOList = adminUserService.list(queryRequest);

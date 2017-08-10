@@ -49,5 +49,8 @@ subprojects{
 
         //http://modelmapper.org/getting-started/
         compile "org.modelmapper:modelmapper:$modelMapperVersion"
+
+        // https://github.com/kevinsawicki/http-request
+        compile "com.github.kevinsawicki:http-request:6.0"
     }
 }

@@ -8,10 +8,6 @@ server:
 sessionFactory:
   package.scan: com.ifox.platform.entity
 
-#==================== swagger Setting =====================#
-swagger2:
-  apis.base.package: com.ifox.platform
-
 #==================== spring Setting =====================#
 spring:
   http:

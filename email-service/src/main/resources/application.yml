@@ -1,0 +1,21 @@
+#==================== Tomcat Setting =====================#
+server:
+  port: 8084
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  mail:
+    host: smtp.163.com
+    username: m18280068114@163.com
+    password: 123456summer
+#    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          startssl.enable: true
+          startssl.required: true
+
+email-service:
+  token: 1234567890Yeager

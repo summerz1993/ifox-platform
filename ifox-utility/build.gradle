@@ -20,8 +20,10 @@ dependencies {
     compile "org.hibernate:hibernate-core:$hibernateVersion"
     compile "com.auth0:java-jwt:$javaJWTVersion"
 
-    // https://github.com/kevinsawicki/http-request
-    compile "com.github.kevinsawicki:http-request:6.0"
+
+
+    // test
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

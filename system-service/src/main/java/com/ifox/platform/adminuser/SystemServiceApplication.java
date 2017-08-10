@@ -17,7 +17,7 @@ public class SystemServiceApplication {
     static Logger logger = LoggerFactory.getLogger(SystemServiceApplication.class);
 
     public static void main(String[] args) {
-        logger.info("admin-user-service 项目启动中");
+        logger.info("system-service 项目启动中");
         SpringApplication.run(SystemServiceApplication.class, args);
     }
 

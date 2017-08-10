@@ -7,3 +7,5 @@ include 'ifox-dao'
 include 'ifox-base-service'
 include 'system-service'
 include 'template-service'
+include 'email-service'
+

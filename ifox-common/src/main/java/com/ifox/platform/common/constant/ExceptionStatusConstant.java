@@ -24,6 +24,8 @@ public final class ExceptionStatusConstant {
     public static final Integer NOT_FOUND_ADMIN_USER_EXP = 90001;
     // RepeatedAdminUserException
     public static final Integer REPEATED_ADMIN_USER_EXP = 90002;
+    // EmailException
+    public static final Integer EMAIL_EXP = 90003;
 
 
 }

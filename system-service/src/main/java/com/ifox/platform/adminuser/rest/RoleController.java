@@ -14,9 +14,7 @@ import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.sys.RoleEO;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "角色管理", basePath = "/")
+@Api(tags = "角色管理")
 @Controller
 @RequestMapping(value = "/role", headers = {"api-version=1.0", "Authorization"})
 public class RoleController extends BaseController<RoleVO> {
@@ -38,8 +36,7 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("保存角色信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-    BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
+    public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
         logger.info("保存角色信息:{}", saveRequest.toString());
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
@@ -51,8 +48,8 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("删除角色信息")
     @RequestMapping(value = "/delete/{roleId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    BaseResponse delete(@ApiParam @PathVariable(name = "roleId") String roleId) {
+    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
+    public @ResponseBody BaseResponse delete(@ApiParam @PathVariable(name = "roleId") String roleId) {
         logger.info("删除角色信息:{}", roleId);
 
         RoleEO roleEO = roleService.get(roleId);
@@ -69,8 +66,8 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("更新角色信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @ResponseBody
-    BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest) {
+    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest) {
         logger.info("更新用户信息:{}", updateRequest);
 
         String id = updateRequest.getId();
@@ -88,8 +85,8 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("查询单个角色信息")
     @RequestMapping(value = "/get/{roleId}", method = RequestMethod.PUT)
-    @ResponseBody
-    OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId) {
+    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
+    public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId) {
         logger.info("查询单个角色信息:{}", roleId);
 
         RoleEO roleEO = roleService.get(roleId);
@@ -103,10 +100,9 @@ public class RoleController extends BaseController<RoleVO> {
         return successQueryOneResponse(vo);
     }
 
-    @ApiOperation(value = "分页查询角色")
+    @ApiOperation("分页查询角色")
     @RequestMapping(value = "/page", method = RequestMethod.POST)
-    @ResponseBody
-    PageResponse page(@ApiParam @RequestBody RolePageRequest pageRequest) {
+    public @ResponseBody PageResponse page(@ApiParam @RequestBody RolePageRequest pageRequest) {
         logger.info("分页查询角色:{}", pageRequest);
 
         Page<RoleDTO> page = roleService.page(pageRequest);
