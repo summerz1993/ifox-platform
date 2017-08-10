@@ -10,9 +10,7 @@ import com.ifox.platform.common.rest.response.TokenResponse;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.jwt.JWTHeader;
 import com.ifox.platform.utility.jwt.JWTUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
-@Api(description = "后台用户登陆", basePath = "/")
+@Api(tags = "后台用户登陆")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0"})
 public class LoginController extends BaseController {
@@ -38,12 +36,15 @@ public class LoginController extends BaseController {
     private AdminUserService adminUserService;
 
 
-    @ApiOperation(value = "后台用户登录", notes = "后台用户登录接口")
+    @ApiOperation("登录接口")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ResponseBody
-    TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest){
+    @ApiResponses({ @ApiResponse(code = 200, message = "登陆成功"),
+                    @ApiResponse(code = 500, message = "服务器异常"),
+                    @ApiResponse(code = 404, message = "用户不存在"),
+                    @ApiResponse(code = 480, message = "用户名或者密码错误") })
+    public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest){
         logger.info("用户登陆:{}", adminUserLoginRequest);
-        Boolean validAdminUser = false;
+        Boolean validAdminUser;
         TokenResponse tokenResponse = new TokenResponse();
         try {
             validAdminUser = adminUserService.validLoginNameAndPassword(adminUserLoginRequest.getLoginName(), adminUserLoginRequest.getPassword());
@@ -78,10 +79,11 @@ public class LoginController extends BaseController {
         return tokenResponse;
     }
 
-    @ApiOperation("校验Token")
+    @ApiOperation("校验Token接口")
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
-    @ResponseBody
-    BaseResponse verifyToken(@ApiParam String token) {
+    @ApiResponses({ @ApiResponse(code = 200, message = "Token校验成功"),
+                    @ApiResponse(code = 481, message = "Token校验失败")})
+    public @ResponseBody BaseResponse verifyToken(@ApiParam String token) {
         logger.info("校验Token : {}", token);
         try {
             JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
