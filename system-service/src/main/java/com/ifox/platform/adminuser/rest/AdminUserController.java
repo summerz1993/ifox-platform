@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(description = "后台用户管理", basePath = "/")
+@Api(description = "后台用户管理", value = "/adminUser")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0", "Authorization"})
 public class AdminUserController extends BaseController<AdminUserVO> {

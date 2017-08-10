@@ -7,8 +7,7 @@ import com.ifox.platform.common.rest.response.PageResponse;
 
 import java.util.List;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
-import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 /**
  * Created by yezhang on 7/14/2017.
@@ -22,6 +21,8 @@ public class BaseController<T> {
     protected String successUpdate = "更新成功";
 
     protected String successQuery = "查询成功";
+
+    //--------------- success ----------------
 
     protected BaseResponse successSaveBaseResponse(){
         return new BaseResponse(SUCCESS, successSave);
@@ -58,6 +59,20 @@ public class BaseController<T> {
         return new BaseResponse(SUCCESS, desc);
     }
 
+    //--------------- token error ----------------
+
+    protected BaseResponse tokenErrorBaseResponse() {
+        return new BaseResponse(TOKEN_ERROR, "token错误");
+    }
+
+    //--------------- token error ----------------
+
+    protected BaseResponse serverExceptionBaseResponse() {
+        return new BaseResponse(SERVER_EXCEPTION, "服务器异常");
+    }
+
+    //--------------- not found ----------------
+
     protected BaseResponse notFoundBaseResponse(String desc){
         return new BaseResponse(NOT_FOUND, desc);
     }
@@ -66,5 +81,7 @@ public class BaseController<T> {
     protected OneResponse notFoundOneResponse(String desc){
         return new OneResponse(NOT_FOUND, desc, null);
     }
+
+
 
 }
