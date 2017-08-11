@@ -57,7 +57,8 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
 
         String name = pageRequest.getName();
         if (!StringUtils.isEmpty(name)) {
-            QueryProperty nameQuery = new QueryProperty("name", EnumDao.Operation.EQUAL, name);
+            String appendName = "%" + name + "%";
+            QueryProperty nameQuery = new QueryProperty("name", EnumDao.Operation.LIKE, appendName);
             queryPropertyList.add(nameQuery);
         }
 
