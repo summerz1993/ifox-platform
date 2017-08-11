@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>modal</title>
+</head>
+<body>
+
+<aside class="add-modal-sidebar" th:fragment="add-modal">
+
+    <!-- add modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="addModalLabel">
+                        角色添加
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="add-role-form">
+                        <table class="table no-border">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label for="name-add" class="col-sm-4 text-center">名称</label>
+                                        <div class="col-sm-8">
+                                            <input class="form-control" id="name-add" name="name" placeholder="请输入角色名称">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label for="identifier-add" class="col-sm-4 text-center">标识符</label>
+                                        <div class="col-sm-8">
+                                            <input class="form-control" id="identifier-add" name="identifier" placeholder="请输入角色标识符(易于记忆的英文字符)">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="buildinSystem-add" class="col-sm-4 text-center">系统内置</label>
+                                        <div class="col-sm-8">
+                                            <select id="buildinSystem-add" name="buildinSystem" class="selectpicker">
+                                                <option value="true">是</option>
+                                                <option value="false">否</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label for="status-add" class="col-sm-4 text-center">账号状态</label>
+                                        <div class="col-sm-8">
+                                            <select id="status-add" name="status" class="selectpicker">
+                                                <option value="ACTIVE">有效</option>
+                                                <option value="INVALID">无效</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <label for="remark-add" class="col-sm-2 text-center">备注</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" rows="3" id="remark-add" name="remark" placeholder="请输入。。。"></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="save-add">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- add modal -->
+</aside>
+
+</body>
+</html>

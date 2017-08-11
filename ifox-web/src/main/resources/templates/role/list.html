@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title>Admin User List</title>
+</head>
+<body>
+<aside class="list-sidebar" th:fragment="list-modal">
+    <div id="toolbar">
+        <div id="button-group">
+			<button id="add" class="btn btn-info">
+				<i class="glyphicon glyphicon-plus"></i> 添加
+			</button>
+			<button id="remove" class="btn btn-info" disabled>
+				<i class="glyphicon glyphicon-remove"></i> 删除
+			</button>
+		</div>
+
+		<div id="search-group" style="margin-left: -2%;margin-top: 1%;">
+            <div class="form-group col-xs-4 col-md-4">
+				<input type="text" class="form-control search_value" id="loginName" placeholder="登录名">
+			</div>
+
+			<div class="form-group col-xs-3 col-md-3">
+                <select id="status" name="status" class="form-control selectpicker search_value" title="账号状态">
+                    <option value="ACTIVE">有效</option>
+                    <option value="INVALID">无效</option>
+                </select>
+			</div>
+
+			<div class="form-group col-xs-3 col-md-3">
+                <select id="buildinSystem" name="buildinSystem" class="form-control selectpicker search_value" title="系统内置">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select>
+			</div>
+
+			<button id="search-btn" class="btn btn-info" disabled>
+				<i class="glyphicon glyphicon-search"></i> 搜索
+			</button>
+		</div>
+    </div>
+    <table id="admin_user_table"></table>
+</aside>
+</body>
+</html>
