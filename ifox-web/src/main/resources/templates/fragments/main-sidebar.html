@@ -36,7 +36,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li v-bind:class="{ active: adminUserActive }"><a href="#" @click="menu('adminUser')">后台用户管理</a></li>
-                    <li v-bind:class="{ active: roleActive }"><a href="#">角色管理</a></li>
+                    <li v-bind:class="{ active: roleActive }"><a href="#" @click="menu('role')">角色管理</a></li>
                     <li v-bind:class="{ active: menuPermissionActive }"><a href="#">菜单权限管理</a></li>
                     <li v-bind:class="{ active: resourceActive }"><a href="#">资源管理</a></li>
                 </ul>

@@ -1,11 +1,19 @@
 var system_service_URL = 'http://localhost:8081/';
 var web_service_URL = 'http://localhost:8080/';
 
-var admin_user_page_URL = system_service_URL + 'adminUser/page';
+<!-- admin user -->
 var admin_user_save_URL = system_service_URL + 'adminUser/save';
 var admin_user_delete_URL = system_service_URL + 'adminUser/delete';
-var admin_user_get_URL = system_service_URL + 'adminUser/get';
 var admin_user_update_URL = system_service_URL + '/adminUser/update';
+var admin_user_get_URL = system_service_URL + 'adminUser/get';
+var admin_user_page_URL = system_service_URL + 'adminUser/page';
+
+<!-- role -->
+var role_save_URL = system_service_URL + 'role/save';
+var role_delete_URL = system_service_URL + 'role/delete';
+var role_update_URL = system_service_URL + '/role/update';
+var role_get_URL = system_service_URL + 'role/get';
+var role_page_URL = system_service_URL + 'role/page';
 
 var ifox_table_ajax_options = {
     'headers': {

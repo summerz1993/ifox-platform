@@ -22,6 +22,9 @@ var mainSidebar = new Vue({
         } else if ('adminUser' === menu) {
             this.systemServiceActive = true;
             this.adminUserActive = true;
+        } else if ('role' === menu) {
+            this.systemServiceActive = true;
+            this.roleActive = true;
         }
     },
     methods: {
@@ -30,6 +33,8 @@ var mainSidebar = new Vue({
                 this.action = 'web/home';
             } else if ('adminUser' === name) {
                 this.action = 'web/adminUser';
+            } else if ('role' === name) {
+                this.action = 'web/role';
             }
             window.location = this.generateURL(name);
         },
