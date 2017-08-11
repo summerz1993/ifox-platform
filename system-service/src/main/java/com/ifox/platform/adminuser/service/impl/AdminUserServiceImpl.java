@@ -169,7 +169,8 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
 
         String loginName = queryRequest.getLoginName();
         if (!StringUtils.isEmpty(loginName)) {
-            QueryProperty queryLoginName = new QueryProperty("loginName", EnumDao.Operation.LIKE, loginName);
+            String appendLoginName = "%" + loginName + "%";
+            QueryProperty queryLoginName = new QueryProperty("loginName", EnumDao.Operation.LIKE, appendLoginName);
             queryPropertyList.add(queryLoginName);
         }
 
