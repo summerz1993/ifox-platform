@@ -4,7 +4,7 @@ new Vue({
         loginName: '',
         status: '',
         buildinSystem: '',
-        columns: {
+        responseColumns: {
             'id': {
                 value:'ID',
                 disabled: true
@@ -63,33 +63,18 @@ new Vue({
          * @bootstrap_table_params bootstrap-table的params
          */
         searchParams: function (bootstrap_table_params) {
-            var simpleOrderList = [];
-            if (!isEmpty(bootstrap_table_params.sort && !isEmpty(bootstrap_table_params.order))){
-                var simpleOrder = {};
-                simpleOrder.property = bootstrap_table_params.sort;
-                simpleOrder.orderMode = bootstrap_table_params.order.toUpperCase();
-                simpleOrderList.push(simpleOrder);
-            }
+            var params = initParams(bootstrap_table_params);
 
-            var search = {
-                "pageNo": bootstrap_table_params.offset/bootstrap_table_params.limit + 1,
-                "pageSize": bootstrap_table_params.limit
-            };
+            if (!isEmpty(this.buildinSystem)) params.buildinSystem = this.buildinSystem;
+            if (!isEmpty(this.status)) params.status = this.status;
+            if (!isEmpty(this.loginName)) params.loginName = this.loginName;
 
-            if (!isEmpty(this.buildinSystem)) search.buildinSystem = this.buildinSystem;
-            if (!isEmpty(this.status)) search.status = this.status;
-            if (!isEmpty(this.loginName)) search.loginName = this.loginName;
-            if (simpleOrderList.length > 0) search.simpleOrderList = simpleOrderList;
-
-            return search;
+            return params;
         }
     },
-    created: function () {
-        ifox_table.searchParams = this.searchParams;
-
-        TableComponent.setAjaxOptions(ifox_table_ajax_options);
-        TableComponent.setColumns(initColumns(getShowColumns(this.columns), this.columns));
-        TableComponent.init('admin_user_table', admin_user_page_URL, 'post');
-
+    mounted: function () {
+        ifox_table_delegate.searchParams = this.searchParams;
+        ifox_table_setting.setColumns(this.responseColumns);
+        ifox_table_setting.launch('admin_user_table', admin_user_page_URL, 'post');
     }
 });

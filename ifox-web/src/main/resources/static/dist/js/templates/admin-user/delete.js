@@ -23,5 +23,5 @@ function deleteUsers(ids, callback) {
 }
 
 $(function () {
-    ifox_table.delete = deleteUsers;
+    ifox_table_delegate.delete = deleteUsers;
 });

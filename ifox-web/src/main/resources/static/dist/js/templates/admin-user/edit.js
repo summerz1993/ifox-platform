@@ -136,7 +136,7 @@ function initEditUserUploadFile() {
 }
 
 $(function () {
-    ifox_table.getDetail = getUser;
-    ifox_table.edit = editUser;
+    ifox_table_delegate.getDetail = getUser;
+    ifox_table_delegate.edit = editUser;
     initEditUserUploadFile();
 });
