@@ -1,67 +1,61 @@
-/**
- * 自定义查询参数
- * @param params
- * @returns {{buildinSystem: string, loginName: (*|jQuery), pageNo: number, pageSize: *, status: string}}
- */
-function searchParams(params) {
-    var simpleOrderList = new Array();
-    if (params.sort != null && params.sort != "null" && params.sort != undefined && params.sort != ""){
+new Vue({
+    el: '#list-modal',
+    data: {
+        loginName: '',
+        status: '',
+        buildinSystem: ''
+    }
+});
+
+function searchParams(bootstrap_table_params) {
+    var simpleOrderList = [];
+    if (!isEmpty(bootstrap_table_params.sort && !isEmpty(bootstrap_table_params.order))){
         var simpleOrder = {};
-        simpleOrder.property = params.sort;
-        simpleOrder.orderMode = params.order.toUpperCase();
+        simpleOrder.property = bootstrap_table_params.sort;
+        simpleOrder.orderMode = bootstrap_table_params.order.toUpperCase();
         simpleOrderList.push(simpleOrder);
     }
 
-    var temp = {
-        "pageNo": params.offset/params.limit + 1,
-        "pageSize": params.limit
-    }
+    var search = {
+        "pageNo": bootstrap_table_params.offset/bootstrap_table_params.limit + 1,
+        "pageSize": bootstrap_table_params.limit
+    };
 
-    if (!isEmpty($("#buildinSystem").val())){
-        temp.buildinSystem = $("#buildinSystem").val();
-    }
+    if (!isEmpty(this.buildinSystem)) search.buildinSystem = this.buildinSystem;
+    if (!isEmpty(this.status)) search.status = this.status;
+    if (!isEmpty(this.loginName)) search.loginName = this.loginName;
+    if (simpleOrderList.length > 0) search.simpleOrderList = simpleOrderList;
 
-    if(!isEmpty($("#loginName").val())){
-        temp.loginName = $("#loginName").val();
-    }
-
-    if(!isEmpty($("#status").val())){
-        temp.status = $("#status").val();
-    }
-
-    if (simpleOrderList.length > 0){
-        temp.simpleOrderList = simpleOrderList;
-    }
-
-    return temp;
+    return search;
 }
 
 $(function () {
-    ifox_table.searchParams = searchParams;
 
-    columns = {
+    ifox_table.searchParams = searchParams;
+    
+    var columns = {
         'id': {
             value:'ID',
-            disabled: true
+                disabled: true
         },
         'loginName': {
             value:'登陆名',
-            disabled: false
+                disabled: false
         },
         'nickName': {
             value:'昵称',
-            disabled: false
+                disabled: false
         },
         'mobile': {
             value:'手机号',
-            disabled: false
+                disabled: false
         },
         'buildinSystem': {
             value:'内置',
-            disabled: false,
-            formatter: function(value, row, index){
+                disabled: false,
+                formatter: function(value, row, index){
                 if(!isEmpty(value)){
-                    if(value == true || value == 'true'){
+                    if(value === true || value === 'true'){
                         return "是";
                     }else{
                         return "否";
@@ -71,16 +65,16 @@ $(function () {
         },
         'email': {
             value:'邮箱',
-            disabled: true
+                disabled: true
         },
         'remark': {
             value:'备注',
-            disabled: true
+                disabled: true
         },
         'status': {
             value:'状态',
-            disabled: false,
-            formatter: function(value, row, index){
+                disabled: false,
+                formatter: function(value, row, index){
                 if(!isEmpty(value)){
                     if(value === "ACTIVE"){
                         return "有效";
@@ -90,9 +84,10 @@ $(function () {
                 }
             }
         }
-    };
+    }
 
     TableComponent.setAjaxOptions(ifox_table_ajax_options);
-    TableComponent.setColumns(initColumns(getShowColumns(columns)));
+    TableComponent.setColumns(initColumns(getShowColumns(columns), columns));
     TableComponent.init('admin_user_table', admin_user_page_URL, 'post');
+    
 });
