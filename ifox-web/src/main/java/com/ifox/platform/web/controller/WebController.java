@@ -43,9 +43,14 @@ public class WebController extends BaseWebController {
     public String adminUser(String token, Model model){
         logger.info("进入后台用户管理");
 
-        return verifyToken(token, model, "/admin-user/admin-user");
+        return verifyToken(token, model, "/admin-user/main");
     }
 
+    @RequestMapping(value = "/role", method = RequestMethod.GET)
+    public String role(String token, Model model){
+        logger.info("进入角色管理");
 
+        return verifyToken(token, model, "/role/main");
+    }
 
 }

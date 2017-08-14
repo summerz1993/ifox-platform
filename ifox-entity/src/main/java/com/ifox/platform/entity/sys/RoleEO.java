@@ -19,10 +19,10 @@ public class RoleEO extends BaseEntity{
      * 角色状态
      */
     public enum RoleEOStatus {
-        //有效的
-        ACTIVE,
         //无效的
-        INVALID
+        INVALID,
+        //有效的
+        ACTIVE
     }
 
     /**

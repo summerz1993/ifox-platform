@@ -18,10 +18,11 @@ public class MenuPermissionEO extends BaseEntity {
      * 菜单状态
      */
     public enum MenuEOStatus {
-        //有效的
-        ACTIVE,
         //无效的
-        INVALID
+        INVALID,
+        //有效的
+        ACTIVE
+
     }
 
     /**

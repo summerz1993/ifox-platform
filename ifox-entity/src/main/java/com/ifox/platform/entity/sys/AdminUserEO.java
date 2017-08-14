@@ -19,10 +19,10 @@ public class AdminUserEO extends BaseEntity {
      * 用户状态
      */
     public enum AdminUserEOStatus {
-        //有效的
-        ACTIVE,
         //无效的
-        INVALID
+        INVALID,
+        //有效的
+        ACTIVE
     }
 
     /**

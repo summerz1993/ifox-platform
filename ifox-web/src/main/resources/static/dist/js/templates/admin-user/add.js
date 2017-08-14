@@ -1,5 +1,5 @@
 function validate() {
-   return $('#add-user').validate({
+   return $('#add-user-form').validate({
         rules: {
             email:{
                 required: true,
@@ -28,7 +28,7 @@ function validate() {
             loginName: "请输入4-6位有效的登录名",
             nickName: "请输入4-6位有效的昵称",
             password: "请输入至少8位，包含数字及字母的有效密码"
-        },
+        }
    });
 }
 
@@ -46,7 +46,7 @@ function addUser(callback) {
         "password":  $("#password-add").val(),
         "remark":  $("#remark-add").val(),
         "status": $("#status-add").val()
-    }
+    };
 
     $.ajax({
         url: admin_user_save_URL,

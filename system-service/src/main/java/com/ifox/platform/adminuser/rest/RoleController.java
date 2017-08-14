@@ -84,7 +84,7 @@ public class RoleController extends BaseController<RoleVO> {
     }
 
     @ApiOperation("查询单个角色信息")
-    @RequestMapping(value = "/get/{roleId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/get/{roleId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
     public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId) {
         logger.info("查询单个角色信息:{}", roleId);

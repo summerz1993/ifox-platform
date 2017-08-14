@@ -41,8 +41,20 @@ $(function () {
 
     columns = {
         'id': {
-            value:'编号',
+            value:'ID',
             disabled: true
+        },
+        'loginName': {
+            value:'登陆名',
+            disabled: false
+        },
+        'nickName': {
+            value:'昵称',
+            disabled: false
+        },
+        'mobile': {
+            value:'手机号',
+            disabled: false
         },
         'buildinSystem': {
             value:'内置',
@@ -59,19 +71,7 @@ $(function () {
         },
         'email': {
             value:'邮箱',
-            disabled: false
-        },
-        'loginName': {
-            value:'登陆名',
-            disabled: false
-        },
-        'mobile': {
-            value:'手机号',
-            disabled: false
-        },
-        'nickName': {
-            value:'昵称',
-            disabled: false
+            disabled: true
         },
         'remark': {
             value:'备注',

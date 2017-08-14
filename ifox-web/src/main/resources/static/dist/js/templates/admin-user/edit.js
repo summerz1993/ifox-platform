@@ -1,5 +1,5 @@
 function validate() {
-    return $('#edit-user').validate({
+    return $('#edit-user-form').validate({
         rules: {
             email:{
                 required: true,
