@@ -12,7 +12,7 @@ import java.util.List;
  * 后台用户信息类
  */
 @Entity
-@Table(name = "ifox_admin_user")
+@Table(name = "ifox_sys_admin_user")
 public class AdminUserEO extends BaseEntity {
 
     /**
@@ -91,7 +91,7 @@ public class AdminUserEO extends BaseEntity {
      * 所属角色
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ifox_admin_user_role", joinColumns = {@JoinColumn(name = "admin_user")}, inverseJoinColumns = {@JoinColumn(name = "role")})
+    @JoinTable(name = "ifox_sys_admin_user_role", joinColumns = {@JoinColumn(name = "admin_user")}, inverseJoinColumns = {@JoinColumn(name = "role")})
     private List<RoleEO> roleEOList = new ArrayList<>();
 
 
