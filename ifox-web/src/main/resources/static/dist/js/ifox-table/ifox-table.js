@@ -194,6 +194,7 @@ var scripts = [
  * table初始化，操作声明
  */
 function initComponent(){
+    debugger;
     $table.bootstrapTable(options);
 
     // sometimes footer render error.
@@ -209,14 +210,14 @@ function initComponent(){
         selections = getIdSelections();
         // push or splice the selections if you want to save all data selections
     });
-		
+
     $add.click(function () {
-        $('#addModal').modal('show');
+        $('#add-modal').modal('show');
         $('#save-add').click(function () {
             ifox_table_delegate.add(refresh);
         });
     });
-		
+
     $remove.click(function () {
         var ids = getIdSelections();
         ifox_table_delegate.delete(ids, refresh);
@@ -457,11 +458,11 @@ function initColumns(response_columns){
 			'align': 'center',
 			'events': {
 				'click .edit': function (e, value, row, index) {
-					$('#editModal').modal('show');
+					$('#edit-modal').modal('show');
                     ifox_table_delegate.getDetail(row.id);
                     $('#save-edit').click(function () {
                         ifox_table_delegate.edit(refresh);
-                        $("#editModal").modal('hide');
+                        $("#edit-modal").modal('hide');
                     });
 				},
 				'click .remove': function (e, value, row, index) {
