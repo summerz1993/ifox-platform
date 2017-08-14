@@ -89,13 +89,13 @@ var	selections = [];
  *	 }
  *	 columns结构为key-value形式，key对应服务器返回数据key，value包含table中显示值，是否显示，格式化规则，其中formatter为函数
  */
-var columns = {
-	'id': {
-			value:'编号',
-			disabled: true,
-			formatter: ''
-		}
-}
+// var columns = {
+// 	'id': {
+// 			value:'编号',
+// 			disabled: true,
+// 			formatter: ''
+// 		}
+// }
 
 /**
  *	#table为列表的页面控件中 bootstrap table相关初始化配置参数
@@ -382,8 +382,8 @@ function responseHandler(res){
 		rows: [],
 		total: '',
 		pageNo: '',
-		pageSize: '',
-	}
+		pageSize: ''
+	};
 	table_res.rows = res.data;
 	table_res.total = res.pageInfo.totalCount;
 	table_res.pageNo = res.pageInfo.pageNo;
@@ -423,9 +423,10 @@ function detailFormatter(index, row) {
  *  初始化列
  *	res：{'row1':'row1','row2':'row2','row3':'row3'}
  * @param res
+ * @param columns
  * @returns {[*]}
  */
-function initColumns(res){
+function initColumns(res, columns){
 	var column_key = Object.keys(res);
 	//自动排序列
 	// column_key.sort(sortByLength);
@@ -437,16 +438,18 @@ function initColumns(res){
 				'valign': 'middle'
 			}
 	];
-	
+    debugger;
 	for(var i = 0; i < column_key.length; i ++){
-		var col_formatter = columns[column_key[i]].formatter;
+	    var key = column_key[i];
+	    var value = columns[key];
+		var col_formatter = value.formatter;
 		var col_opt = {
-				'field': column_key[i],
-				'title': res[column_key[i]],
+				'field': key,
+				'title': res[key],
 				'sortable': true,
 				'align': 'center',
 				'formatter': col_formatter
-			}
+			};
 		
 		col.push(col_opt);	
 	}
@@ -478,7 +481,7 @@ function initColumns(res){
 					'</a>'
 				].join('');
 			}
-		}
+		};
 	col.push(operate);
 	return col;
 }
@@ -504,9 +507,7 @@ function getShowColumns(res){
 		}
 	}
 	opt_str += "}";
-	var opt = eval("(" + opt_str + ")");
-	
-	return opt;
+    return eval("(" + opt_str + ")");
 }
 
 /**

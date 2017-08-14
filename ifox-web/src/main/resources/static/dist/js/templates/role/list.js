@@ -85,6 +85,6 @@ $(function () {
     };
 
     TableComponent.setAjaxOptions(ifox_table_ajax_options);
-    TableComponent.setColumns(initColumns(getShowColumns(columns)));
+    TableComponent.setColumns(initColumns(getShowColumns(columns), columns));
     TableComponent.init('role_table', role_page_URL, 'post');
 });

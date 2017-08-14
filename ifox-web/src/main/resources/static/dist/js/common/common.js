@@ -26,12 +26,9 @@ var ifox_table_ajax_options = {
 function getURLQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
+    if (r !== null) return unescape(r[2]); return null;
 }
 
 function isEmpty(val) {
-    if (val === null || val === "null" || val === "" || val === undefined){
-        return true;
-    }
-    return false;
+    return val === null || val === "null" || val === "" || val === undefined;
 }
