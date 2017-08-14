@@ -12,7 +12,7 @@ import java.util.List;
  * @author Yeager
  */
 @Entity
-@Table(name = "ifox_common_role")
+@Table(name = "ifox_sys_role")
 public class RoleEO extends BaseEntity{
 
     /**
@@ -58,7 +58,7 @@ public class RoleEO extends BaseEntity{
      * 对应的菜单权限
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ifox_common_role_menu_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "menu_permission")})
+    @JoinTable(name = "ifox_sys_role_menu_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "menu_permission")})
     private List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
 
 

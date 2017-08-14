@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * @author Yeager
  */
 @Entity
-@Table(name = "ifox_common_menu_permission")
+@Table(name = "ifox_sys_menu_permission")
 public class MenuPermissionEO extends BaseEntity {
 
     /**
@@ -49,7 +49,7 @@ public class MenuPermissionEO extends BaseEntity {
     private Integer level;
 
     /**
-     * 是否为按钮(不在菜单中显示)
+     * 是否为按钮(不在左侧菜单中显示)
      */
     @Column(nullable = false)
     private Boolean button;
