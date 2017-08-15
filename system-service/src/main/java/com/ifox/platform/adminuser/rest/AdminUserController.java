@@ -109,11 +109,15 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             logger.info("此用户不存在");
             return super.notFoundBaseResponse("此用户不存在");
         }
+
         String loginName = updateRequest.getLoginName();
-        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
-        if (byLoginName != null) {
-            return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+        if (!adminUserEO.getLoginName().equals(loginName)) {
+            AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+            if (byLoginName != null) {
+                return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+            }
         }
+
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
 //        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
         adminUserService.update(adminUserEO);

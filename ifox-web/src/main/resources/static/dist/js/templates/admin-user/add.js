@@ -59,11 +59,16 @@ function addUser(callback) {
             Authorization: sessionStorage.token,
             'api-version': '1.0'
         },
-        success: function () {
-            callback();
+        success: function (res) {
+            if (res.status === 200) {
+                callback();
+            } else {
+                artAlert(res.desc);
+            }
+
         },
         error: function () {
-
+            artAlert("服务器异常");
         }
     })
 }

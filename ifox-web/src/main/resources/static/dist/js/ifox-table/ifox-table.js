@@ -211,7 +211,19 @@ function initComponent(){
     };
 
     document.getElementById('remove-btn').onclick = function () {
-        clickRemove();
+        var d = dialog({
+            title: '提示',
+            content: '确认删除？',
+            ok: function () {
+                this.title('正在提交..');
+                clickRemove();
+                return true;
+            },
+            cancel: function () {
+                return true;
+            }
+        });
+        d.showModal();
     };
 
     document.getElementById('search-btn').onclick = function () {

@@ -55,3 +55,15 @@ function initParams(bootstrap_table_params) {
     if (simpleOrderList.length > 0) params.simpleOrderList = simpleOrderList;
     return params;
 }
+
+// art dialog 提示框
+function artAlert(content) {
+    var d = dialog({
+        title: '提示',
+        content: content,
+        zIndex: 9999,
+        cancel: false,
+        ok: function () {}
+    });
+    d.focus();
+}
