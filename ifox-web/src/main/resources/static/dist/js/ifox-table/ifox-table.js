@@ -194,6 +194,7 @@ var scripts = [
  * table初始化，操作声明
  */
 function initComponent(){
+
     $table.bootstrapTable(options);
 
     // sometimes footer render error.
@@ -203,31 +204,29 @@ function initComponent(){
 
     $table.on('check.bs.table uncheck.bs.table ' +
         'check-all.bs.table uncheck-all.bs.table', function () {
-        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-
+        if (!$table.bootstrapTable('getSelections').length){
+            document.getElementById('remove').disabled=true;
+        } else {
+            document.getElementById('remove').disabled=false;
+        }
         // save your data, here just save the current page
         selections = getIdSelections();
         // push or splice the selections if you want to save all data selections
     });
-		
-    $add.click(function () {
-        $('#addModal').modal('show');
-        $('#save-add').click(function () {
-            ifox_table_delegate.add(refresh);
-        });
-    });
-		
-    $remove.click(function () {
-        var ids = getIdSelections();
-        ifox_table_delegate.delete(ids, refresh);
-        $remove.prop('disabled', true);
-    });
-				
+
     $(window).resize(function () {
         $table.bootstrapTable('resetView', {
             height: $(window).height()-110
         });
     });
+
+    document.getElementById('add').onclick = function () {
+        showAddModal();
+    };
+
+    document.getElementById('remove').onclick = function () {
+        clickRemove();
+    };
 
     var $search_group = $("#toolbar #search-group").find("input,select,textarea");
     $.each($search_group, function (index, value) {
@@ -244,6 +243,19 @@ function initComponent(){
             }
         });
     });
+}
+
+function showAddModal() {
+    $('#add-modal').modal('show');
+    $('#save-add').click(function () {
+        ifox_table_delegate.add(refresh);
+    });
+}
+
+function clickRemove() {
+    var ids = getIdSelections();
+    ifox_table_delegate.delete(ids, refresh);
+    $remove.prop('disabled', true);
 }
 
 /**
@@ -457,11 +469,10 @@ function initColumns(response_columns){
 			'align': 'center',
 			'events': {
 				'click .edit': function (e, value, row, index) {
-					$('#editModal').modal('show');
+					$('#edit-modal').modal('show');
                     ifox_table_delegate.getDetail(row.id);
                     $('#save-edit').click(function () {
                         ifox_table_delegate.edit(refresh);
-                        $("#editModal").modal('hide');
                     });
 				},
 				'click .remove': function (e, value, row, index) {

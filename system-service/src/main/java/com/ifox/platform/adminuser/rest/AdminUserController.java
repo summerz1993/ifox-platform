@@ -22,7 +22,6 @@ import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
 import io.swagger.annotations.*;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.ifox.platform.common.constant.RestStatusConstant.EXISTED_LOGIN_NAME;
 
 @Api(tags = "后台用户管理")
 @Controller
@@ -91,7 +92,8 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
     @ApiOperation("更新用户")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
+    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在"),
+                    @ApiResponse(code = 482, message = "登录名已经存在")})
     public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
         logger.info("更新用户信息:{}", updateRequest.toString());
 
@@ -100,6 +102,11 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         if (adminUserEO == null) {
             logger.info("此用户不存在");
             return super.notFoundBaseResponse("此用户不存在");
+        }
+        String loginName = updateRequest.getLoginName();
+        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+        if (byLoginName != null) {
+            return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
         }
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
 //        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
