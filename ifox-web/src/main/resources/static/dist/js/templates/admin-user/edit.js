@@ -97,11 +97,11 @@ function editUser(callback) {
             if (res.status === 200){
                 callback();
             } else {
-                artAlert(res.desc);
+                layer.msg(res.desc);
             }
         },
         error: function () {
-            artAlert('服务器异常');
+            layer.msg('服务器异常');
         }
     })
 }
