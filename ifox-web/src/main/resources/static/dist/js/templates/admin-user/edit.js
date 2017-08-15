@@ -122,9 +122,9 @@ function initEditUserUploadFile() {
         browseOnZoneClick: true
     });
 
-    $("#editModal .file-preview").attr("style", "width:160px;height:230px;");
-    $("#editModal .clickable").attr('style', 'width:120px;height:195px;');
-    $("#editModal .file-drop-zone-title").css('padding', '45px 10px');
+    $("#edit-modal .file-preview").attr("style", "width:160px;height:230px;");
+    $("#edit-modal .clickable").attr('style', 'width:120px;height:195px;');
+    $("#edit-modal .file-drop-zone-title").css('padding', '45px 10px');
 
     $('#headPortrait-edit').on('fileloaded', function(event, file, previewId, index, reader) {
         $('.kv-file-content').css('height', '100px');

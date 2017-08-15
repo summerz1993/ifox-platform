@@ -89,9 +89,9 @@ function initAddUserFileUpload() {
         browseOnZoneClick: true
     });
 
-    $("#addModal .file-preview").attr("style", "width:160px;height:230px;");
-    $("#addModal .clickable").attr('style', 'width:120px;height:195px;');
-    $("#addModal .file-drop-zone-title").css('padding', '45px 10px');
+    $("#add-modal .file-preview").attr("style", "width:160px;height:230px;");
+    $("#add-modal .clickable").attr('style', 'width:120px;height:195px;');
+    $("#add-modal .file-drop-zone-title").css('padding', '45px 10px');
 
     $('#headPortrait-add').on('fileloaded', function(event, file, previewId, index, reader) {
         $('.kv-file-content').css('height', '100px');
