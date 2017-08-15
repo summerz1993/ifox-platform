@@ -28,7 +28,7 @@ function validate() {
             loginName: "请输入4-6位有效的登录名",
             nickName: "请输入4-6位有效的昵称",
             password: "请输入至少8位，包含数字及字母的有效密码"
-        },
+        }
     });
 }
 
@@ -44,7 +44,7 @@ function getUser(id) {
             'api-version': '1.0'
         },
         success: function (res) {
-            if (res.status == "200"){
+            if (res.status === 200){
                 $("#id-edit").val(res.data.id);
                 $("#buildinSystem-edit").selectpicker('val', new Object(res.data.buildinSystem).toString());
                 $("#email-edit").val(res.data.email);
@@ -54,15 +54,18 @@ function getUser(id) {
                 $("#nickName-edit").val(res.data.nickName);
                 $("#remark-edit").val(res.data.remark);
                 $("#status-edit").selectpicker('val', new Object(res.data.status).toString());
+            } else {
+                alert(res.desc);
             }
         },
         error: function (res) {
-
+            alert('服务器异常');
         }
     });
 }
 
 function editUser(callback) {
+
     if(!validate().form())
         return;
 
@@ -90,11 +93,15 @@ function editUser(callback) {
             Authorization: sessionStorage.token,
             'api-version': '1.0'
         },
-        success: function () {
-            callback();
+        success: function (res) {
+            if (res.status === 200){
+                callback();
+            } else {
+                alert(res.desc);
+            }
         },
         error: function () {
-
+            alert('服务器异常');
         }
     })
 }
@@ -136,7 +143,7 @@ function initEditUserUploadFile() {
 }
 
 $(function () {
-    ifox_table.getDetail = getUser;
-    ifox_table.edit = editUser;
+    ifox_table_delegate.getDetail = getUser;
+    ifox_table_delegate.edit = editUser;
     initEditUserUploadFile();
 });

@@ -4,7 +4,7 @@
  *	调用仅需要实现
  * 	添加、修改、删除、查询、查询参数
  */
-var ifox_table = {
+var ifox_table_delegate = {
     /**
      * table添加操作，callback为操作成功回调函数。
      * 这个的callback为refresh（）函数，即操作成功刷新table
@@ -80,7 +80,7 @@ var	selections = [];
 
 /**
  *	自定义table列
- *   {
+ *   var columns = {
  *		'id': {
  *				value:'编号',
  *				disabled: true,
@@ -89,13 +89,7 @@ var	selections = [];
  *	 }
  *	 columns结构为key-value形式，key对应服务器返回数据key，value包含table中显示值，是否显示，格式化规则，其中formatter为函数
  */
-var columns = {
-	'id': {
-			value:'编号',
-			disabled: true,
-			formatter: ''
-		}
-}
+
 
 /**
  *	#table为列表的页面控件中 bootstrap table相关初始化配置参数
@@ -200,6 +194,7 @@ var scripts = [
  * table初始化，操作声明
  */
 function initComponent(){
+
     $table.bootstrapTable(options);
 
     // sometimes footer render error.
@@ -209,31 +204,29 @@ function initComponent(){
 
     $table.on('check.bs.table uncheck.bs.table ' +
         'check-all.bs.table uncheck-all.bs.table', function () {
-        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-
+        if (!$table.bootstrapTable('getSelections').length){
+            document.getElementById('remove').disabled=true;
+        } else {
+            document.getElementById('remove').disabled=false;
+        }
         // save your data, here just save the current page
         selections = getIdSelections();
         // push or splice the selections if you want to save all data selections
     });
-		
-    $add.click(function () {
-        $('#addModal').modal('show');
-        $('#save-add').click(function () {
-            ifox_table.add(refresh);
-        });
-    });
-		
-    $remove.click(function () {
-        var ids = getIdSelections();
-        ifox_table.delete(ids, refresh);
-        $remove.prop('disabled', true);
-    });
-				
+
     $(window).resize(function () {
         $table.bootstrapTable('resetView', {
             height: $(window).height()-110
         });
     });
+
+    document.getElementById('add').onclick = function () {
+        showAddModal();
+    };
+
+    document.getElementById('remove').onclick = function () {
+        clickRemove();
+    };
 
     var $search_group = $("#toolbar #search-group").find("input,select,textarea");
     $.each($search_group, function (index, value) {
@@ -250,6 +243,19 @@ function initComponent(){
             }
         });
     });
+}
+
+function showAddModal() {
+    $('#add-modal').modal('show');
+    $('#save-add').click(function () {
+        ifox_table_delegate.add(refresh);
+    });
+}
+
+function clickRemove() {
+    var ids = getIdSelections();
+    ifox_table_delegate.delete(ids, refresh);
+    $remove.prop('disabled', true);
 }
 
 /**
@@ -329,7 +335,7 @@ function getScript(url, callback) {
 	// Attach handlers for all browsers
 	script.onload = script.onreadystatechange = function() {
 		if (!done && (!this.readyState ||
-				this.readyState == 'loaded' || this.readyState == 'complete')) {
+				this.readyState === 'loaded' || this.readyState === 'complete')) {
 			done = true;
 			if (callback)
 				callback();
@@ -368,8 +374,7 @@ function getIdSelections() {
  * @returns {*}
  */
 function queryParams(params) {
-    var temp = ifox_table.searchParams(params);
-    return temp;
+    return ifox_table_delegate.searchParams(params);
 }
 
 /**
@@ -382,8 +387,8 @@ function responseHandler(res){
 		rows: [],
 		total: '',
 		pageNo: '',
-		pageSize: '',
-	}
+		pageSize: ''
+	};
 	table_res.rows = res.data;
 	table_res.total = res.pageInfo.totalCount;
 	table_res.pageNo = res.pageInfo.pageNo;
@@ -404,17 +409,17 @@ function responseHandler(res){
 function detailFormatter(index, row) {
 	var html = [];
 	$.each(row, function (key, value) {
-		if(key != 'state' && key != 'headPortrait'){
-			var col_ = columns[key];
-			if (col_ != null && col_ != undefined && col_.hasOwnProperty('value')){
-                if(col_.hasOwnProperty('formatter')){
-                    var col_formatter = col_.formatter;
-                    html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + col_formatter(value, row, index) + '</p>');
-                }else{
-                    html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + value + '</p>');
-                }
+	    //state是bootstrap table插件里面的是否选中属性,headPortrait是头像字段
+        var col_ = ifox_table_setting.response_columns[key];
+        if (!isEmpty(col_) && col_.hasOwnProperty('value')){
+            if (isEmpty(value)) value = '-';
+            if(col_.hasOwnProperty('formatter')){
+                var col_formatter = col_.formatter;
+                html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + col_formatter(value, row, index) + '</p>');
+            }else{
+                html.push('<p class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><b>' + col_.value + ':</b> ' + value + '</p>');
             }
-		}
+        }
 	});
 	return html.join('');
 } 
@@ -422,11 +427,13 @@ function detailFormatter(index, row) {
 /**
  *  初始化列
  *	res：{'row1':'row1','row2':'row2','row3':'row3'}
- * @param res
+ * @param show_columns
+ * @param response_columns
  * @returns {[*]}
  */
-function initColumns(res){
-	var column_key = Object.keys(res);
+function initColumns(response_columns){
+    var res_keys = Object.keys(response_columns);
+
 	//自动排序列
 	// column_key.sort(sortByLength);
 	var col = [
@@ -437,16 +444,21 @@ function initColumns(res){
 				'valign': 'middle'
 			}
 	];
-	
-	for(var i = 0; i < column_key.length; i ++){
-		var col_formatter = columns[column_key[i]].formatter;
+
+	for(var i = 0; i < res_keys.length; i ++){
+	    var key = res_keys[i];
+	    var value = response_columns[key];
+
+        if(value.disabled === true) continue;
+
+		var col_formatter = value.formatter;
 		var col_opt = {
-				'field': column_key[i],
-				'title': res[column_key[i]],
+				'field': key,
+				'title': value.value,
 				'sortable': true,
 				'align': 'center',
 				'formatter': col_formatter
-			}
+			};
 		
 		col.push(col_opt);	
 	}
@@ -457,15 +469,14 @@ function initColumns(res){
 			'align': 'center',
 			'events': {
 				'click .edit': function (e, value, row, index) {
-					$('#editModal').modal('show');
-                    ifox_table.getDetail(row.id);
+					$('#edit-modal').modal('show');
+                    ifox_table_delegate.getDetail(row.id);
                     $('#save-edit').click(function () {
-                        ifox_table.edit(refresh);
-                        $("#editModal").modal('hide');
+                        ifox_table_delegate.edit(refresh);
                     });
 				},
 				'click .remove': function (e, value, row, index) {
-                    ifox_table.delete(row.id, refresh);
+                    ifox_table_delegate.delete(row.id, refresh);
 				}
 			},
 			'formatter': function(value, row, index) {
@@ -478,35 +489,9 @@ function initColumns(res){
 					'</a>'
 				].join('');
 			}
-		}
+		};
 	col.push(operate);
 	return col;
-}
-
-/**
- * 获取table需要显示的列
- * @param res
- * @returns {Object}
- */
-function getShowColumns(res){
-	var res_key = Object.keys(res);
-	
-	var opt_str = "{"
-	for(var i = 0; i < res_key.length; i ++){
-		var key = res_key[i];
-		var col = res[key];
-		
-		if(col.disabled == false){
-			opt_str += ("'" + key + "'" + ':' + "'" + col.value + "'");
-			if(i != (res_key.length - 1)){
-				opt_str += ",";
-			}
-		}
-	}
-	opt_str += "}";
-	var opt = eval("(" + opt_str + ")");
-	
-	return opt;
 }
 
 /**
@@ -525,56 +510,45 @@ function sortByLength(arr1, arr2){
  *
  * @type {{setOptions, setColumns, setAjaxOptions, init}}
  */
-var TableComponent = (function(){
-		return {
+var ifox_table_setting = (function(){
+        return {
             /**
              * 设置table options，支持自定义options，详情参考bootstrap table官方文档
              * @param opt
              */
-			setOptions: function (opt){
-				if(opt != undefined && opt != null){
-					options = opt;
-				}
-			},
+            setOptions: function (opt){
+                if(!isEmpty(opt)) options = opt;
+            },
+            response_columns:{},
             /**
              * 设置table options.columns，支持自定义columns，详情参考bootstrap table官方文档
-             * @param columns
+             * @param response_columns
              */
-			setColumns: function (columns){
-				if(columns != undefined && columns != null){
-					options.columns = columns;
-				}
-			},
+            setColumns: function (response_columns){
+                this.response_columns = response_columns;
+                if(!isEmpty(response_columns)) options.columns = initColumns(response_columns);
+            },
             /**
              * 设置提交ajax请求时的附加参数
              * @param ajaxOptions
              */
-			setAjaxOptions: function(ajaxOptions){
-				if(ajaxOptions != undefined && ajaxOptions != null){
-					options.ajaxOptions = ajaxOptions;
-				}
-			},
+            setAjaxOptions: function(ajaxOptions){
+                if(!isEmpty(ajaxOptions)) options.ajaxOptions = ajaxOptions;
+            },
             /**
-             * 初始化table
+             * 启动table
              * @param tableId
              * @param url
              * @param method
              */
-			init: function(tableId, url, method){
-				if(tableId != undefined && tableId != null){
-					$table = $('#' + tableId);
-				}
-				
-				if(url != undefined && url != null){
-					options.url = url;
-				}
-				
-				if(method != undefined && method != null){
-					options.method = method;
-				}
-				
-				eachSeries(scripts, getScript, initComponent);
-			}
-		}
-	}
+            launch: function(tableId, url, method){
+                if (!isEmpty(tableId)) $table = $('#' + tableId);
+                if (!isEmpty(url)) options.url = url;
+                if (!isEmpty(method)) options.method = method;
+                if (!isEmpty(ifox_table_ajax_options)) options.ajaxOptions = ifox_table_ajax_options;
+
+                eachSeries(scripts, getScript, initComponent);
+            }
+        }
+    }
 ).call(this);
