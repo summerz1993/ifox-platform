@@ -64,16 +64,6 @@ var ifox_table_delegate = {
 var $table = $('#table');
 
 /**
- *	#table为列表的页面控件中添加按钮
- */
-var	$add = $('#add');
-
-/**
- *	#table为列表的页面控件中删除按钮
- */
-var	$remove = $('#remove');
-
-/**
  *	#table为列表的页面控件中被选中记录
  */
 var	selections = [];
@@ -204,11 +194,7 @@ function initComponent(){
 
     $table.on('check.bs.table uncheck.bs.table ' +
         'check-all.bs.table uncheck-all.bs.table', function () {
-        if (!$table.bootstrapTable('getSelections').length){
-            document.getElementById('remove').disabled=true;
-        } else {
-            document.getElementById('remove').disabled=false;
-        }
+        document.getElementById('remove-btn').disabled = !$table.bootstrapTable('getSelections').length;
         // save your data, here just save the current page
         selections = getIdSelections();
         // push or splice the selections if you want to save all data selections
@@ -220,14 +206,19 @@ function initComponent(){
         });
     });
 
-    document.getElementById('add').onclick = function () {
+    document.getElementById('add-btn').onclick = function () {
         showAddModal();
     };
 
-    document.getElementById('remove').onclick = function () {
+    document.getElementById('remove-btn').onclick = function () {
         clickRemove();
     };
 
+    document.getElementById('search-btn').onclick = function () {
+        refresh();
+    };
+
+    /* 搜索框有效性判断
     var $search_group = $("#toolbar #search-group").find("input,select,textarea");
     $.each($search_group, function (index, value) {
         var $search_ = $(value);
@@ -243,11 +234,12 @@ function initComponent(){
             }
         });
     });
+    */
 }
 
 function showAddModal() {
     $('#add-modal').modal('show');
-    $('#save-add').click(function () {
+    $('#save-add-modal-btn').click(function () {
         ifox_table_delegate.add(refresh);
     });
 }
@@ -255,7 +247,7 @@ function showAddModal() {
 function clickRemove() {
     var ids = getIdSelections();
     ifox_table_delegate.delete(ids, refresh);
-    $remove.prop('disabled', true);
+    document.getElementById('remove-btn').disabled = true;
 }
 
 /**
@@ -471,7 +463,7 @@ function initColumns(response_columns){
 				'click .edit': function (e, value, row, index) {
 					$('#edit-modal').modal('show');
                     ifox_table_delegate.getDetail(row.id);
-                    $('#save-edit').click(function () {
+                    $('#save-edit-modal-btn').click(function () {
                         ifox_table_delegate.edit(refresh);
                     });
 				},
