@@ -2,20 +2,20 @@ function validate() {
    return $('#add-user-form').validate({
         rules: {
             email:{
-                required: true,
+                required: false,
                 email: true
             },
             mobile:{
-                required: true,
+                required: false,
                 mobileZH: true
             },
             loginName:{
                 required: true,
-                rangelength: [2,6]
+                rangelength: [4,15]
             },
             nickName:{
-                required: true,
-                rangelength: [2,6]
+                required: false,
+                rangelength: [2,20]
             },
             password:{
                 required: true,
@@ -25,8 +25,8 @@ function validate() {
         messages: {
             email: "请输入一个正确的邮箱",
             mobile: "请输入正确的联系电话",
-            loginName: "请输入4-6位有效的登录名",
-            nickName: "请输入4-6位有效的昵称",
+            loginName: "请输入4-15位有效的登录名",
+            nickName: "请输入2-20位有效的昵称",
             password: "请输入至少8位，包含数字及字母的有效密码"
         }
    });
@@ -59,11 +59,16 @@ function addUser(callback) {
             Authorization: sessionStorage.token,
             'api-version': '1.0'
         },
-        success: function () {
-            callback();
+        success: function (res) {
+            if (res.status === 200) {
+                callback();
+            } else {
+                artAlert(res.desc);
+            }
+
         },
         error: function () {
-
+            artAlert("服务器异常");
         }
     })
 }

@@ -53,6 +53,12 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
         logger.info("保存用户信息:{}", adminUserSaveRequest);
 
+        String loginName = adminUserSaveRequest.getLoginName();
+        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+        if (byLoginName != null) {
+            return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+        }
+
         String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
 
@@ -103,11 +109,15 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             logger.info("此用户不存在");
             return super.notFoundBaseResponse("此用户不存在");
         }
+
         String loginName = updateRequest.getLoginName();
-        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
-        if (byLoginName != null) {
-            return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+        if (!adminUserEO.getLoginName().equals(loginName)) {
+            AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+            if (byLoginName != null) {
+                return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+            }
         }
+
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
 //        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
         adminUserService.update(adminUserEO);
