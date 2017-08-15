@@ -53,6 +53,12 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
         logger.info("保存用户信息:{}", adminUserSaveRequest);
 
+        String loginName = adminUserSaveRequest.getLoginName();
+        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+        if (byLoginName != null) {
+            return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
+        }
+
         String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
 
