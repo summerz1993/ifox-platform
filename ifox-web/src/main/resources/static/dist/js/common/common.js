@@ -26,12 +26,32 @@ var ifox_table_ajax_options = {
 function getURLQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
+    if (r !== null) return unescape(r[2]); return null;
 }
 
 function isEmpty(val) {
-    if (val === null || val === "null" || val === "" || val === undefined){
-        return true;
+    return val === null || val === "null" || val === "" || val === undefined;
+}
+
+// 根据bootstrap_table参数，初始化排序属性
+function initSimpleOrderList(bootstrap_table_params) {
+    var simpleOrderList = [];
+    if (!isEmpty(bootstrap_table_params.sort && !isEmpty(bootstrap_table_params.order))){
+        var simpleOrder = {};
+        simpleOrder.property = bootstrap_table_params.sort;
+        simpleOrder.orderMode = bootstrap_table_params.order.toUpperCase();
+        simpleOrderList.push(simpleOrder);
     }
-    return false;
+    return simpleOrderList;
+}
+
+// 根据bootstrap_table参数，初始化查询参数
+function initParams(bootstrap_table_params) {
+    var params = {
+        "pageNo": bootstrap_table_params.offset/bootstrap_table_params.limit + 1,
+        "pageSize": bootstrap_table_params.limit
+    };
+    var simpleOrderList = initSimpleOrderList(bootstrap_table_params);
+    if (simpleOrderList.length > 0) params.simpleOrderList = simpleOrderList;
+    return params;
 }

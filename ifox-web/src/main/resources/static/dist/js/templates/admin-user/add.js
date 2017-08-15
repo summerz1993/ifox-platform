@@ -105,6 +105,6 @@ function initAddUserFileUpload() {
 }
 
 $(function () {
-    ifox_table.add = addUser;
+    ifox_table_delegate.add = addUser;
     initAddUserFileUpload();
 });

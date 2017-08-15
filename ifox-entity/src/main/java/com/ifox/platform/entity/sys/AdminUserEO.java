@@ -80,6 +80,7 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 头像
      */
+    @Column(name = "head_portrait")
     private String headPortrait;
 
     /**
