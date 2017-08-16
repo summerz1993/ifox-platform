@@ -51,11 +51,11 @@ new Vue({
             return $('#edit-user-form').validate({
                 rules: {
                     email:{
-                        required: true,
+                        required: false,
                         email: true
                     },
                     mobile:{
-                        required: true,
+                        required: false,
                         mobileZH: true
                     },
                     loginName:{
@@ -77,15 +77,9 @@ new Vue({
         },
         detail: function (id) {
             var url = admin_user_get_URL + "/" + id;
-            var config = {
-                headers: {
-                    "api-version": "1.0",
-                    "Authorization": sessionStorage.token
-                }
-            };
 
             var vm = this;
-            axios.get(url, config)
+            axios.get(url, ifox_table_ajax_options)
                 .then(function (res) {
                     if(res.data.status === 200){
                         var res_data = res.data.data;
@@ -99,34 +93,40 @@ new Vue({
                         vm.status = res_data.status;
                         vm.remark = res_data.remark;
                     }else{
-                        alert(res.data.desc);
+                        layer.msg(res.data.desc);
                     }
                 })
-                .catch(function (err) {
-                    alert(err);
+                .catch(function () {
+                    serverError();
                 });
         },
         update: function (callback) {
             if(!this.validate().form())
                 return;
 
-            var config = {
-                headers: {
-                    "api-version": "1.0",
-                    "Authorization": sessionStorage.token
-                }
-            };
             var vm = this;
-            axios.put(admin_user_update_URL, vm.$data, config)
+            axios.put(admin_user_update_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
-                    alert(res.data.desc);
+                    layer.msg(res.data.desc);
                     if (res.data.status === 200){
+                        vm.resetData();
                         callback();
                     }
                 })
-                .catch(function (err) {
-                    alert(err);
+                .catch(function () {
+                    serverError();
                 });
+        },
+        resetData: function () {
+            this.id = '';
+            this.loginName = '';
+            this.headPortrait = '';
+            this.nickName = '';
+            this.mobile = '';
+            this.email = '';
+            this.buildinSystem = "true";
+            this.status = "ACTIVE";
+            this.remark = "";
         }
     },
     mounted: function () {

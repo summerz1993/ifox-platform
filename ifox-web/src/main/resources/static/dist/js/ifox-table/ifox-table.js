@@ -243,6 +243,7 @@ function initComponent(){
 
 function showAddModal() {
     $('#add-modal').modal('show');
+    $('#save-add-modal-btn').unbind('click');
     $('#save-add-modal-btn').click(function () {
         ifox_table_delegate.add(refresh);
     });
@@ -467,12 +468,17 @@ function initColumns(response_columns){
 				'click .edit': function (e, value, row, index) {
 					$('#edit-modal').modal('show');
                     ifox_table_delegate.getDetail(row.id);
+                    $('#save-edit-modal-btn').unbind('click');
                     $('#save-edit-modal-btn').click(function () {
                         ifox_table_delegate.edit(refresh);
                     });
 				},
 				'click .remove': function (e, value, row, index) {
-                    ifox_table_delegate.delete(row.id, refresh);
+                    layer.confirm('确认删除?', {icon: 3, title:'提示'}, function(index){
+                        //do something
+                        ifox_table_delegate.delete(row.id, refresh);
+                        layer.close(index);
+                    });
 				}
 			},
 			'formatter': function(value, row, index) {

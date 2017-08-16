@@ -12,10 +12,10 @@ $.validator.setDefaults({
     errorClass: "error",
     success: 'valid',
     unhighlight: function (element, errorClass, validClass) {
-        $(element).tooltip('destroy').removeClass(errorClass);
+        $(element).removeClass(errorClass);
     },
     highlight: function (element, errorClass, validClass) {
-        $(element).tooltip('destroy').addClass(errorClass);
+        $(element).addClass(errorClass);
     },
     errorPlacement: function (error, element) {
         if ($(element).next("div").hasClass("tooltip")) {
