@@ -9,13 +9,10 @@ var mainSidebar = new Vue({
         menuPermissionActive: false,
         resourceActive: false,
 
-        token: '',
         action: ''
     },
     created: function () {
-        this.token = sessionStorage.token;
-        var menu = getURLQueryString('menu');
-        console.log('menu : ' + menu);
+        var menu = getCookie('menu');
 
         if ('home' === menu) {
             this.homeActive = true;
@@ -36,10 +33,8 @@ var mainSidebar = new Vue({
             } else if ('role' === name) {
                 this.action = 'web/role';
             }
-            window.location = this.generateURL(name);
-        },
-        generateURL: function (menuName) {
-            return web_service_URL + this.action + '?menu=' + menuName + '&token=' + this.token;
+            setCookie('menu', name);
+            window.location = web_service_URL + this.action;
         }
     }
 });

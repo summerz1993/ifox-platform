@@ -17,7 +17,7 @@ var role_page_URL = system_service_URL + 'role/page';
 
 var ifox_table_ajax_options = {
     'headers': {
-        "Authorization": sessionStorage.token,
+        "Authorization": getCookie('token'),
         'api-version': '1.0'
     }
 };
@@ -58,36 +58,29 @@ function initParams(bootstrap_table_params) {
 }
 
 //写cookies
-function setCookie(name,value)
-{
-    var Days = 1;
-    var exp = new Date();
-    exp.setTime(exp.getTime() + Days*24*60*60*1000);
-    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+function setCookie(name, value) {
+    var days = 1;
+    var second = days*24*60*60;
+    document.cookie = name + "="+ escape (value) + ";max-age=" + second;
 }
 
 //读取cookies
-function getCookie(name)
-{
+function getCookie(name) {
     var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-
     if(arr=document.cookie.match(reg))
-
         return unescape(arr[2]);
     else
         return null;
 }
 
 //删除cookies
-function delCookie(name)
-{
-    var exp = new Date();
-    exp.setTime(exp.getTime() - 1);
-    var cval=getCookie(name);
-    if(cval!=null)
-        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+function delCookie(name) {
+    var value=getCookie(name);
+    if(value !== null)
+        document.cookie= name + "=" + value + ";max-age=-2";
 }
 
+//服务器异常提示信息
 function serverError() {
     layer.msg('服务器异常');
 }

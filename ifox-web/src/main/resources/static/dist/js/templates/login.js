@@ -19,16 +19,16 @@ var loginApp = new Vue({
                 .then(function(res){
                     if (res.data.status === 200) {
                         var token = res.data.token;
-                        sessionStorage.token = token;
-
                         var homeURL = web_service_URL + 'web/home';
-                        window.location = homeURL + '?menu=home&token=' + token;
+                        setCookie('menu', 'home');
+                        setCookie('token', token);
+                        window.location = homeURL;
                     } else {
-                        alert(res.data.desc);
+                        layer.msg(res.data.desc);
                     }
                 })
                 .catch(function(err){
-                    alert('服务器错误');
+                    serverError();
                     console.log(err);
                 });
         }
