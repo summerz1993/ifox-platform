@@ -28,14 +28,16 @@
                                 <td>
                                     <label for="loginName-edit" class="col-sm-4 text-center">登录名</label>
                                     <div class="col-sm-8">
-                                        <input class="form-control" id="loginName-edit" name="loginName" placeholder="请输入登录名">
+                                        <input type="hidden" class="form-control" id="id-edit" name="id" v-model="id">
+                                        <input class="form-control" id="loginName-edit" name="loginName" placeholder="请输入登录名" v-model="loginName">
                                     </div>
                                 </td>
 
-                                <td rowspan="5">
+                                <td rowspan="4">
                                     <label for="headPortrait-edit" class="col-sm-4 text-center">头像</label>
                                     <div class="col-sm-6">
-                                        <input id="headPortrait-edit" name="headPortrait" type="file" class="file-loading" accept="image/*">
+                                        <input  name="headPortrait" type="hidden" v-model="headPortrait">
+                                        <input id="headPortrait-edit" type="file" class="file-loading" accept="image/*">
                                         <div id="kv-success-modal" class="modal fade">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -56,16 +58,7 @@
                                 <td>
                                     <label for="nickName-edit" class="col-sm-4 text-center">昵称</label>
                                     <div class="col-sm-8">
-                                        <input class="form-control" id="nickName-edit" name="nickName" placeholder="请输入昵称">
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <label for="password-edit" class="col-sm-4 text-center">密码</label>
-                                    <div class="col-sm-8">
-                                        <input type="password" class="form-control" id="password-edit" name="password" placeholder="请输入密码">
+                                        <input class="form-control" id="nickName-edit" name="nickName" placeholder="请输入昵称" v-model="nickName">
                                     </div>
                                 </td>
                             </tr>
@@ -74,7 +67,7 @@
                                 <td>
                                     <label for="mobile-edit" class="col-sm-4 text-center">联系电话</label>
                                     <div class="col-sm-8">
-                                        <input class="form-control" id="mobile-edit" name="mobile" placeholder="请输入联系电话">
+                                        <input class="form-control" id="mobile-edit" name="mobile" placeholder="请输入联系电话" v-model="mobile">
                                     </div>
                                 </td>
                             </tr>
@@ -83,8 +76,7 @@
                                 <td>
                                     <label for="email-edit" class="col-sm-4 text-center">邮箱</label>
                                     <div class="col-sm-8">
-                                        <input type="hidden" class="form-control" id="id-edit" name="id">
-                                        <input class="form-control" id="email-edit" name="email" placeholder="请输入邮箱">
+                                        <input class="form-control" id="email-edit" name="email" placeholder="请输入邮箱" v-model="email">
                                     </div>
                                 </td>
                             </tr>
@@ -93,7 +85,7 @@
                                 <td>
                                     <label for="buildinSystem-edit" class="col-sm-4 text-center">系统内置</label>
                                     <div class="col-sm-8">
-                                        <select id="buildinSystem-edit" name="buildinSystem" class="selectpicker">
+                                        <select id="buildinSystem-edit" name="buildinSystem" class="form-control" v-model="buildinSystem">
                                             <option value="true">是</option>
                                             <option value="false">否</option>
                                         </select>
@@ -102,7 +94,7 @@
                                 <td>
                                     <label for="status-edit" class="col-sm-4 text-center">账号状态</label>
                                     <div class="col-sm-8">
-                                        <select id="status-edit" name="status" class="selectpicker">
+                                        <select id="status-edit" name="status" class="form-control" v-model="status">
                                             <option value="ACTIVE">有效</option>
                                             <option value="INVALID">无效</option>
                                         </select>
@@ -113,7 +105,7 @@
                                 <td colspan="2">
                                     <label for="remark-edit" class="col-sm-2 text-center">备注</label>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control" rows="3" id="remark-edit" name="remark" placeholder="请输入。。。"></textarea>
+                                        <textarea class="form-control" rows="3" id="remark-edit" name="remark" placeholder="请输入。。。" v-model="remark"></textarea>
                                     </div>
                                 </td>
                             </tr>

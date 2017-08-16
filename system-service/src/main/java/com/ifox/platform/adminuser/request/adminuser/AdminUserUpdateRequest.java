@@ -1,6 +1,8 @@
 package com.ifox.platform.adminuser.request.adminuser;
 
-public class AdminUserUpdateRequest extends AdminUserSaveRequest {
+import com.ifox.platform.adminuser.dto.AdminUserBaseColumns;
+
+public class AdminUserUpdateRequest extends AdminUserBaseColumns {
 
     private String id;
 
