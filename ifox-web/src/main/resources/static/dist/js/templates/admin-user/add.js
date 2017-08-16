@@ -51,11 +51,11 @@ new Vue({
             return $('#add-user-form').validate({
                 rules: {
                     email:{
-                        required: true,
+                        required: false,
                         email: true
                     },
                     mobile:{
-                        required: true,
+                        required: false,
                         mobileZH: true
                     },
                     loginName:{
@@ -63,7 +63,7 @@ new Vue({
                         rangelength: [4,15]
                     },
                     nickName:{
-                        required: true,
+                        required: false,
                         rangelength: [2,20]
                     },
                     password:{
@@ -84,24 +84,30 @@ new Vue({
             if(!this.validate().form())
                 return;
 
-            var config = {
-                headers: {
-                    "api-version": "1.0",
-                    "Authorization": sessionStorage.token
-                }
-            };
             var vm = this;
-
-            axios.post(admin_user_save_URL, vm.$data, config)
+            axios.post(admin_user_save_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
-                    alert(res.data.desc);
+                    layer.msg(res.data.desc);
                     if(res.data.status === 200){
+                        vm.resetData();
                         callback();
                     }
                 })
                 .catch(function (err) {
-                    alert(err);
+                    console.log(err);
+                    serverError();
                 });
+        },
+        resetData: function () {
+            this.loginName = '';
+            this.headPortrait = '';
+            this.nickName = '';
+            this.password = '';
+            this.mobile = '';
+            this.email = '';
+            this.buildinSystem = "true";
+            this.status = "ACTIVE";
+            this.remark = "";
         }
     },
     mounted: function () {
