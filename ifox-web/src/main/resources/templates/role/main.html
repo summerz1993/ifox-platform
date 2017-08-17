@@ -27,10 +27,6 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap3-editable/css/bootstrap-editable.css}">
     <!--common css-->
     <link rel="stylesheet" th:href="@{/dist/css/common.css}">
-    <!--file input-->
-    <link rel="stylesheet" th:href="@{/bower_components/bootstrap-fileinput/css/fileinput.css}" rel="stylesheet" />
-    <!--bootstrap select-->
-    <link rel="stylesheet" th:href="@{/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css}">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -45,7 +41,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" id="content-wrapper">
         <!-- Content Header (Page header) -->
-        <div th:replace="/fragments/content-header :: content-header"></div>
+        <div th:replace="/role/role-content-header :: role-content-header"></div>
 
         <!-- Main content -->
         <section class="content container-fluid">
@@ -85,29 +81,32 @@
 <!-- axios -->
 <script th:src="@{/bower_components/axios/axios.min.js}"></script>
 
+<!--bootstrap table-->
+<script th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
+<!--bootstrap table zn-->
+<script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+<!-- art dialog -->
+<script th:src="@{/bower_components/layer/layer.js}"></script>
+
 <!-- 必须引入的JS -->
 <script th:src="@{/dist/js/common/common.js}"></script>
 <script th:src="@{/dist/js/common/main-header.js}"></script>
 <script th:src="@{/dist/js/common/main-sidebar.js}"></script>
 
-<!-- 业务相关的js -->
 <!--ifox table-->
 <script th:src="@{/dist/js/ifox-table/ifox-table.js}"></script>
-
-<!--bootstrap select-->
-<script th:src="@{/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js}"></script>
-<script th:src="@{/bower_components/bootstrap-select/dist//js/i18n/defaults-zh_CN.js}"></script>
 
 <!--jquery validation-->
 <script th:src="@{/bower_components/jquery-validation/dist/jquery.validate.min.js}"></script>
 <script th:src="@{/bower_components/jquery-validation/dist/additional-methods.min.js}"></script>
 <script th:src="@{/bower_components/jquery-validation/src/localization/messages_zh.js}"></script>
+<script th:src="@{/dist/js/common/validate-error-place.js}"></script>
 
+<!-- 业务相关的js -->
 <!-- role -->
 <script th:src="@{/dist/js/templates/role/list.js}"></script>
 <script th:src="@{/dist/js/templates/role/add.js}"></script>
 <script th:src="@{/dist/js/templates/role/edit.js}"></script>
-<script th:src="@{/dist/js/templates/role/delete.js}"></script>
 
 </body>
 </html>
