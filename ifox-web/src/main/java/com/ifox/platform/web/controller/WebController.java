@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
 @Controller
@@ -33,24 +35,24 @@ public class WebController extends BaseWebController {
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String home(String token, Model model) {
+    public String home(HttpServletRequest request, Model model) {
         logger.info("进入主页");
 
-        return verifyToken(token, model, "/home");
+        return verifyToken(request, model, "/home");
     }
 
     @RequestMapping(value = "/adminUser", method = RequestMethod.GET)
-    public String adminUser(String token, Model model){
+    public String adminUser(HttpServletRequest request, Model model){
         logger.info("进入后台用户管理");
 
-        return verifyToken(token, model, "/admin-user/main");
+        return verifyToken(request, model, "/admin-user/main");
     }
 
     @RequestMapping(value = "/role", method = RequestMethod.GET)
-    public String role(String token, Model model){
+    public String role(HttpServletRequest request, Model model){
         logger.info("进入角色管理");
 
-        return verifyToken(token, model, "/role/main");
+        return verifyToken(request, model, "/role/main");
     }
 
 }

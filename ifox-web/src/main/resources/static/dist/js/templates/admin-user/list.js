@@ -70,10 +70,25 @@ new Vue({
             if (!isEmpty(this.loginName)) params.loginName = this.loginName;
 
             return params;
+        },
+        deleteAdminUsers: function (ids, callback) {
+            var url = admin_user_delete_URL + "/" + ids;
+            axios.delete(url, ifox_table_ajax_options)
+                .then(function (res) {
+                    layer.msg(res.data.desc);
+                    if(res.data.status === 200){
+                        callback();
+                    }
+                })
+                .catch(function (err) {
+                    serverError();
+                });
         }
     },
     mounted: function () {
         ifox_table_delegate.searchParams = this.searchParams;
+        ifox_table_delegate.delete = this.deleteAdminUsers;
+
         ifox_table_setting.setColumns(this.responseColumns);
         ifox_table_setting.launch('admin_user_table', admin_user_page_URL, 'post');
     }

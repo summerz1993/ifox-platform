@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
@@ -22,7 +24,17 @@ public class BaseWebController {
     @Autowired
     private Environment env;
 
-    protected String verifyToken(String token, Model model, String view) {
+    protected String verifyToken(HttpServletRequest request, Model model, String view) {
+        String token = "";
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            String cookieName = cookie.getName();
+            if ("token".equals(cookieName)) {
+                token = cookie.getValue();
+                break;
+            }
+        }
+
         HttpRequest httpRequest = getTokenHttpRequest(token);
         int code = httpRequest.code();
         String body = httpRequest.body();

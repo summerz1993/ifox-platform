@@ -94,7 +94,6 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    console.log(err);
                     serverError();
                 });
         },
