@@ -15,6 +15,13 @@ var role_update_URL = system_service_URL + '/role/update';
 var role_get_URL = system_service_URL + 'role/get';
 var role_page_URL = system_service_URL + 'role/page';
 
+<!-- resource -->
+var resource_page_URL = system_service_URL + 'resource/page';
+var resource_save_URL = system_service_URL + 'resource/save';
+var resource_get_URL = system_service_URL + 'resource/get';
+var resource_update_URL = system_service_URL + 'resource/update';
+var resource_delete_URL = system_service_URL + 'resource/delete';
+
 var ifox_table_ajax_options = {
     'headers': {
         "Authorization": getCookie('token'),

@@ -82,6 +82,12 @@ public class BaseController<T> {
         return new OneResponse(NOT_FOUND, desc, null);
     }
 
+    protected BaseResponse emptyBaseResponse(String desc){
+        return new BaseResponse(INVALID_REQUEST, desc);
+    }
 
+    protected OneResponse emptyOneResponse(String desc){
+        return new OneResponse(INVALID_REQUEST, desc, null);
+    }
 
 }

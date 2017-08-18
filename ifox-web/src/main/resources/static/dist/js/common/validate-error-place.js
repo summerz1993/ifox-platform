@@ -18,20 +18,11 @@ $.validator.setDefaults({
         $(element).addClass(errorClass);
     },
     errorPlacement: function (error, element) {
-        if ($(element).next("div").hasClass("tooltip")) {
-            $(element).attr("data-original-title", $(error).text());
+        $(element).attr("data-original-title", $(error).text());
 
-            $(element).tooltip('show');
-            $(element).tooltip({
-                trigger: "hover focus click"
-            });
-        } else {
-            $(element).attr("title", $(error).text());
-
-            $(element).tooltip('show');
-            $(element).tooltip({
-                trigger: "hover focus click"
-            });
-        }
+        $(element).tooltip('show');
+        $(element).tooltip({
+            trigger: "hover focus click"
+        });
     }
 });

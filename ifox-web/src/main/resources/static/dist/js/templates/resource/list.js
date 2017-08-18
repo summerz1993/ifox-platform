@@ -2,50 +2,38 @@ new Vue({
     el: '#list-modal',
     data: {
         name: '',
-        status: '',
-        buildinSystem: '',
+        type: '',
         responseColumns: {
             'id': {
                 value:'ID',
                 disabled: true
             },
             'name': {
-                value:'角色名',
+                value:'资源名',
                 disabled: false
             },
-            'identifier': {
-                value:'标识符',
-                disabled: false
-            },
-            'buildinSystem': {
-                value:'内置',
+            'type': {
+                value:'资源类型',
                 disabled: false,
                 formatter: function(value, row, index){
                     if(!isEmpty(value)){
-                        if(value === true || value === 'true'){
-                            return "是";
-                        }else{
-                            return "否";
+                        if(value === "PUBLIC"){
+                            return "公共资源";
+                        }else if(value === "ROLE"){
+                            return "角色资源";
+                        }else if(value === "PERSONAL"){
+                            return "私人资源";
                         }
                     }
                 }
+            },
+            'controller': {
+                value:'控制器',
+                disabled: false
             },
             'remark': {
                 value:'备注',
                 disabled: true
-            },
-            'status': {
-                value:'状态',
-                disabled: false,
-                formatter: function(value, row, index){
-                    if(!isEmpty(value)){
-                        if(value === "ACTIVE"){
-                            return "有效";
-                        }else{
-                            return "无效";
-                        }
-                    }
-                }
             }
         }
     },
@@ -57,14 +45,13 @@ new Vue({
         searchParams: function (bootstrap_table_params) {
             var params = initParams(bootstrap_table_params);
 
-            if (!isEmpty(this.buildinSystem)) params.buildinSystem = this.buildinSystem;
-            if (!isEmpty(this.status)) params.status = this.status;
             if (!isEmpty(this.name)) params.name = this.name;
+            if (!isEmpty(this.type)) params.type = this.type;
 
             return params;
         },
-        deleteRoles: function (ids, callback) {
-            var url = role_delete_URL;
+        deleteResource: function (ids, callback) {
+            var url = resource_delete_URL;
             axios.post(url, ids, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
@@ -79,9 +66,9 @@ new Vue({
     },
     mounted: function () {
         ifox_table_delegate.searchParams = this.searchParams;
-        ifox_table_delegate.delete = this.deleteRoles;
+        ifox_table_delegate.delete = this.deleteResource;
 
         ifox_table_setting.setColumns(this.responseColumns);
-        ifox_table_setting.launch('role_table', role_page_URL, 'post');
+        ifox_table_setting.launch('resource_table', resource_page_URL, 'post');
     }
 });
