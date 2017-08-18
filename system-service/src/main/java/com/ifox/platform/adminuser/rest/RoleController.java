@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Api(tags = "角色管理")
@@ -48,17 +49,20 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("删除角色信息")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
+    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
+        @ApiResponse(code = 400, message = "无效请求：ids为空")})
     public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids) {
-        logger.info("删除角色信息:{}", ids.toString());
+        logger.info("删除角色信息:{}", Arrays.toString(ids));
 
-        for (String roleId : ids) {
-            RoleEO roleEO = roleService.get(roleId);
-            if (roleEO == null) {
-                logger.info("角色不存在:{}", roleId);
-                return super.notFoundBaseResponse("角色不存在");
-            }
-            roleService.deleteByEntity(roleEO);
+        if (ids.length == 0){
+            logger.info("无效请求：ids为空");
+            return invalidRequestBaseResponse();
+        }
+
+        try {
+            roleService.deleteMulti(ids);
+        } catch (IllegalArgumentException e) {
+            return notFoundBaseResponse("角色不存在");
         }
 
         logger.info(successDelete);

@@ -30,6 +30,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.EXISTED_LOGIN_NAME;
@@ -80,17 +81,23 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
     @ApiOperation("删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ApiResponses({ @ApiResponse(code = 400, message = "未指定待删除用户") })
+    @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
+                    @ApiResponse(code = 400, message = "无效请求：ids为空")})
     public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids){
-        logger.info("删除用户:{}", ids.toString());
+        logger.info("删除用户:{}", Arrays.toString(ids));
 
-        if (ids == null || ids.length == 0){
-            logger.info("未指定待删除用户");
-            return emptyBaseResponse("未指定待删除用户");
+        if (ids.length == 0){
+            logger.info("无效请求：ids为空");
+            return invalidRequestBaseResponse();
         }
 
-        adminUserService.deleteMulti(ids);
-        logger.info("成功删除用户：{}", ids.toString());
+        try {
+            adminUserService.deleteMulti(ids);
+        } catch (IllegalArgumentException e) {
+            return notFoundBaseResponse("用户不存在");
+        }
+
+        logger.info(successDelete);
 
         return successDeleteBaseResponse();
     }
