@@ -1,78 +1,91 @@
-function validate() {
-    return $('#edit-role-form').validate({
-        rules: {
-            name:{
-                required: true,
-                rangelength: [2,10]
-            }
+new Vue({
+    el: '#edit-role-form',
+    data: {
+        id: '',
+        name: '',
+        identifier: '',
+        buildinSystem: 'true',
+        status: 'ACTIVE',
+        remark: ""
+    },
+    methods: {
+        validate: function () {
+            return $('#edit-role-form').validate({
+                rules: {
+                    name:{
+                        required: true,
+                        rangelength: [2,10]
+                    },
+                    identifier: {
+                        required: true
+                    },
+                    buildinSystem: {
+                        required: true
+                    },
+                    status: {
+                        required: true
+                    },
+                    remark: {
+                        required: false,
+                        rangelength: [0, 500]
+                    }
+                },
+                messages: {
+                    name: "请输入2-10位有效的角色名",
+                    remark: "备注最多500字"
+                }
+            });
         },
-        messages: {
-            name: "请输入4-10位有效的角色名"
+        detail: function (id) {
+            var url = role_get_URL + "/" + id;
+
+            var vm = this;
+            axios.get(url, ifox_table_ajax_options)
+                .then(function (res) {
+                    if(res.data.status === 200){
+                        var res_data = res.data.data;
+                        vm.id = res_data.id;
+                        vm.name = res_data.name;
+                        vm.identifier = res_data.identifier;
+                        vm.buildinSystem = res_data.buildinSystem;
+                        vm.status = res_data.status;
+                        vm.remark = res_data.remark;
+                    }else{
+                        layer.msg(res.data.desc);
+                    }
+                })
+                .catch(function () {
+                    serverError();
+                });
+        },
+        update: function (callback) {
+            if(!this.validate().form())
+                return;
+
+            var vm = this;
+            axios.put(role_update_URL, vm.$data, ifox_table_ajax_options)
+                .then(function (res) {
+                    layer.msg(res.data.desc);
+                    if (res.data.status === 200){
+                        vm.resetData();
+                        callback();
+                    }
+                })
+                .catch(function () {
+                    serverError();
+                });
+        },
+        resetData: function () {
+            this.id = '';
+            this.name = '';
+            this.identifier = '';
+            this.buildinSystem = "true";
+            this.status = "ACTIVE";
+            this.remark = "";
         }
-    });
-}
-
-function getRole(id) {
-    $.ajax({
-        url: role_get_URL + "/" + id,
-        type: 'get',
-        dataType: 'json',
-        headers: {
-            Accept: "*/*",
-            'content-type': 'application/json',
-            Authorization: sessionStorage.token,
-            'api-version': '1.0'
-        },
-        success: function (res) {
-            if (res.status == "200"){
-                $("#id-edit").val(res.data.id);
-                $("#buildinSystem-edit").selectpicker('val', new Object(res.data.buildinSystem).toString());
-                $("#name-edit").val(res.data.name);
-                $("#identifier-edit").val(res.data.identifier);
-                $("#remark-edit").val(res.data.remark);
-                $("#status-edit").selectpicker('val', new Object(res.data.status).toString());
-            }
-        },
-        error: function (res) {
-
-        }
-    });
-}
-
-function editRole(callback) {
-    if(!validate().form())
-        return;
-
-    var data = {
-        "buildinSystem": $("#buildinSystem-edit").val(),
-        "id": $("#id-edit").val(),
-        "name": $("#name-edit").val(),
-        "identifier": $("#identifier-edit").val(),
-        "remark": $("#remark-edit").val(),
-        "status": $("#status-edit").val()
-    };
-
-    $.ajax({
-        url: role_update_URL,
-        type: 'put',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        headers: {
-            Accept: "*/*",
-            'content-type': 'application/json',
-            Authorization: sessionStorage.token,
-            'api-version': '1.0'
-        },
-        success: function () {
-            callback();
-        },
-        error: function () {
-
-        }
-    })
-}
-
-$(function () {
-    ifox_table.getDetail = getRole;
-    ifox_table.edit = editRole;
+    },
+    mounted: function () {
+        ifox_table_delegate.getDetail = this.detail;
+        ifox_table_delegate.edit = this.update;
+    }
 });

@@ -62,6 +62,12 @@ new Vue({
                         required: true,
                         rangelength: [4,15]
                     },
+                    buildinSystem: {
+                        required: true
+                    },
+                    status: {
+                        required: true
+                    },
                     nickName:{
                         required: false,
                         rangelength: [2,20]

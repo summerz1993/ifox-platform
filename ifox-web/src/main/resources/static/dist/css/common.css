@@ -1,5 +1,4 @@
-
-.preview-size{
+.preview-size {
     font-size: 1px;
 }
 
@@ -18,4 +17,9 @@
 
 .tooltip-inner {
     background-color: #f00;
+}
+
+.search-group {
+    margin-left: -3%;
+    margin-top: 1%;
 }
