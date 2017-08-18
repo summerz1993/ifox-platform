@@ -75,6 +75,7 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 备注
      */
+    @Column(length = 500)
     private String remark;
 
     /**

@@ -1,49 +1,66 @@
-function validate() {
-   return $('#add-role-form').validate({
-        rules: {
-            name:{
-                required: true,
-                rangelength: [2,10]
-            }
+new Vue({
+    el: '#add-role-form',
+    data: {
+        name: '',
+        identifier: '',
+        buildinSystem: 'true',
+        status: 'ACTIVE',
+        remark: ""
+    },
+    methods: {
+        validate: function () {
+            return $('#add-role-form').validate({
+                rules: {
+                    name:{
+                        required: true,
+                        rangelength: [2,10]
+                    },
+                    identifier: {
+                        required: true
+                    },
+                    buildinSystem: {
+                        required: true
+                    },
+                    status: {
+                        required: true
+                    },
+                    remark: {
+                        required: false,
+                        rangelength: [0, 500]
+                    }
+                },
+                messages: {
+                    name: "请输入2-10位有效的角色名",
+                    remark: "备注最多500字"
+                }
+            });
         },
-        messages: {
-            name: "请输入4-10位有效的角色名"
+        save: function (callback) {
+            if(!this.validate().form())
+                return;
+
+            var vm = this;
+            axios.post(role_save_URL, vm.$data, ifox_table_ajax_options)
+                .then(function (res) {
+                    layer.msg(res.data.desc);
+                    if(res.data.status === 200){
+                        vm.resetData();
+                        callback();
+                    }
+                })
+                .catch(function (err) {
+                    serverError();
+                });
+        },
+        resetData: function () {
+            this.name = '';
+            this.identifier = '';
+            this.buildinSystem = "true";
+            this.status = "ACTIVE";
+            this.remark = "";
         }
-   });
-}
-
-function addRole(callback) {
-    if(!validate().form())
-        return;
-
-    var data = {
-        "buildinSystem": $("#buildinSystem-add").val(),
-        "identifier": $("#identifier-add").val(),
-        "name": $("#name-add").val(),
-        "remark":  $("#remark-add").val(),
-        "status": $("#status-add").val()
-    };
-
-    $.ajax({
-        url: role_save_URL,
-        type: 'post',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        headers: {
-            Accept: "*/*",
-            'content-type': 'application/json',
-            Authorization: sessionStorage.token,
-            'api-version': '1.0'
-        },
-        success: function () {
-            callback();
-        },
-        error: function () {
-
-        }
-    })
-}
-
-$(function () {
-    ifox_table.add = addRole;
+    },
+    mounted: function () {
+        ifox_table_delegate.add = this.save;
+    }
 });

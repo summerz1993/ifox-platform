@@ -57,8 +57,7 @@ public class RoleController extends BaseController<RoleVO> {
             logger.info("角色不存在:{}", roleId);
             return super.notFoundBaseResponse("角色不存在");
         }
-        roleEO.setStatus(RoleEO.RoleEOStatus.INVALID);
-        roleService.update(roleEO);
+        roleService.deleteByEntity(roleEO);
 
         logger.info(successDelete);
         return successDeleteBaseResponse();
