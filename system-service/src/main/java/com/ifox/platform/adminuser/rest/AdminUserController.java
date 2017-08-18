@@ -79,20 +79,19 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     }
 
     @ApiOperation("删除用户")
-    @RequestMapping(value = "/delete/{userId}", method = RequestMethod.DELETE)
-    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
-    public @ResponseBody BaseResponse delete(@ApiParam @PathVariable(name = "userId") String userId){
-        logger.info("删除用户:{}", userId);
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ApiResponses({ @ApiResponse(code = 400, message = "未指定待删除用户") })
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids){
+        logger.info("删除用户:{}", ids.toString());
 
-        AdminUserEO eo = adminUserService.get(userId);
-        if (eo == null) {
-            logger.info("此用户不存在");
-            return super.notFoundBaseResponse("此用户不存在");
+        if (ids == null || ids.length == 0){
+            logger.info("未指定待删除用户");
+            return emptyBaseResponse("未指定待删除用户");
         }
 
-        adminUserService.deleteByEntity(eo);
+        adminUserService.deleteMulti(ids);
+        logger.info("成功删除用户：{}", ids.toString());
 
-        logger.info(successDelete);
         return successDeleteBaseResponse();
     }
 

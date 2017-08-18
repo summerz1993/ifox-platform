@@ -72,8 +72,8 @@ new Vue({
             return params;
         },
         deleteAdminUsers: function (ids, callback) {
-            var url = admin_user_delete_URL + "/" + ids;
-            axios.delete(url, ifox_table_ajax_options)
+            var url = admin_user_delete_URL;
+            axios.post(url, ids, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if(res.data.status === 200){

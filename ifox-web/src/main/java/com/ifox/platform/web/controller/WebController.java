@@ -55,4 +55,10 @@ public class WebController extends BaseWebController {
         return verifyToken(request, model, "/role/main");
     }
 
+    @RequestMapping(value = "/resource", method = RequestMethod.GET)
+    public String resource(HttpServletRequest request, Model model){
+        logger.info("进入后台资源管理");
+
+        return verifyToken(request, model, "/resource/main");
+    }
 }

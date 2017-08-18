@@ -47,17 +47,19 @@ public class RoleController extends BaseController<RoleVO> {
     }
 
     @ApiOperation("删除角色信息")
-    @RequestMapping(value = "/delete/{roleId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
-    public @ResponseBody BaseResponse delete(@ApiParam @PathVariable(name = "roleId") String roleId) {
-        logger.info("删除角色信息:{}", roleId);
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids) {
+        logger.info("删除角色信息:{}", ids.toString());
 
-        RoleEO roleEO = roleService.get(roleId);
-        if (roleEO == null) {
-            logger.info("角色不存在:{}", roleId);
-            return super.notFoundBaseResponse("角色不存在");
+        for (String roleId : ids) {
+            RoleEO roleEO = roleService.get(roleId);
+            if (roleEO == null) {
+                logger.info("角色不存在:{}", roleId);
+                return super.notFoundBaseResponse("角色不存在");
+            }
+            roleService.deleteByEntity(roleEO);
         }
-        roleService.deleteByEntity(roleEO);
 
         logger.info(successDelete);
         return successDeleteBaseResponse();

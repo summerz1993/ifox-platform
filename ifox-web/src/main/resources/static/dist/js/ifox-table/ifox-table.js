@@ -476,7 +476,10 @@ function initColumns(response_columns){
 				'click .remove': function (e, value, row, index) {
                     layer.confirm('确认删除?', {icon: 3, title:'提示'}, function(index){
                         //do something
-                        ifox_table_delegate.delete(row.id, refresh);
+                        var ids = new Array();
+                        ids.push(row.id);
+
+                        ifox_table_delegate.delete(ids, refresh);
                         layer.close(index);
                     });
 				}

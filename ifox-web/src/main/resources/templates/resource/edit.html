@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>modal</title>
+</head>
+<body>
+
+<aside class="edit-modal-sidebar" th:fragment="edit-modal">
+
+    <!-- edit modal -->
+    <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="editModalLabel">
+                        资源编辑
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="edit-resource-form">
+                        <table class="table no-border">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label for="name-edit" class="col-sm-2 text-center">资源名称</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="id-edit" name="id" type="hidden" v-model="id">
+                                            <input class="form-control" id="name-edit" name="name" placeholder="请输入资源名称" v-model="name">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="controller-edit" class="col-sm-2 text-center">控制器</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="controller-edit" name="controller" placeholder="请输入控制器名称" v-model="controller">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="type-edit" class="col-sm-2 text-center">资源类型</label>
+                                        <div class="col-sm-10">
+                                            <select id="type-edit" name="type" class="form-control" v-model="type">
+                                                <option value="PUBLIC">公共资源</option>
+                                                <option value="ROLE">角色资源</option>
+                                                <option value="PERSONAL">私人资源</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2">
+                                        <label for="remark-edit" class="col-sm-2 text-center">备注</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" rows="3" id="remark-edit" name="remark" placeholder="请输入..."></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="save-edit-modal-btn">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--edit modal-->
+</aside>
+
+</body>
+</html>

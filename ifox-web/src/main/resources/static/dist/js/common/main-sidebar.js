@@ -22,6 +22,9 @@ var mainSidebar = new Vue({
         } else if ('role' === menu) {
             this.systemServiceActive = true;
             this.roleActive = true;
+        }else if('resource' === menu){
+            this.systemServiceActive = true;
+            this.resourceActive = true;
         }
     },
     methods: {
@@ -32,6 +35,8 @@ var mainSidebar = new Vue({
                 this.action = 'web/adminUser';
             } else if ('role' === name) {
                 this.action = 'web/role';
+            }else if('resource' === name){
+                this.action = 'web/resource';
             }
             setCookie('menu', name);
             window.location = web_service_URL + this.action;
