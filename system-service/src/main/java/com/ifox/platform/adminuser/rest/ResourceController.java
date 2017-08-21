@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Api(tags = "资源管理")
@@ -43,31 +44,37 @@ public class ResourceController extends BaseController<ResourceVO> {
         ResourceEO resourceEO = ModelMapperUtil.get().map(resource, ResourceEO.class);
         resourceService.save(resourceEO);
 
-        logger.info("保存资源成功：{}", resource.toString());
+        logger.info(successSave);
         return successSaveBaseResponse();
     }
 
     @ApiOperation("删除资源")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ApiResponses({@ApiResponse(code = 400, message = "未指定待删除资源")})
+    @ApiResponses({@ApiResponse(code = 400, message = "无效请求：ids为空"),
+        @ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
     BaseResponse delete(@ApiParam @RequestBody String[] ids){
-        logger.info("删除资源：{}", ids.toString());
+        logger.info("删除资源:{}", Arrays.toString(ids));
 
-        if (ids == null || ids.length == 0){
-            logger.info("未指定待删除资源");
-            return emptyBaseResponse("未指定待删除资源");
+        if (ids.length == 0){
+            logger.info("无效请求：ids为空");
+            return invalidRequestBaseResponse();
         }
 
-        resourceService.deleteMulti(ids);
-        logger.info("成功删除资源：{}", ids);
+        try {
+            resourceService.deleteMulti(ids);
+        } catch (IllegalArgumentException e) {
+            return notFoundBaseResponse("资源不存在");
+        }
 
+        logger.info(successDelete);
         return successDeleteBaseResponse();
     }
 
     @ApiOperation("获取指定资源")
     @RequestMapping(value = "/get/{resourceId}", method = RequestMethod.GET)
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
+    @SuppressWarnings("unchecked")
     public @ResponseBody
     OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") String id){
         logger.info("查询单个指定资源：{}", id);
@@ -108,6 +115,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiOperation("分页查询资源")
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public @ResponseBody
+    @SuppressWarnings("unchecked")
     PageResponse<ResourceVO> page(@ApiParam @RequestBody ResourcePageRequest pageRequest){
         logger.info("分页查询资源：", pageRequest);
 
@@ -115,9 +123,9 @@ public class ResourceController extends BaseController<ResourceVO> {
         List<ResourceDTO> resourceDTOS = resourceDTOPage.getContent();
 
         PageInfo pageInfo = resourceDTOPage.convertPageInfo();
-        List<ResourceVO> resourceVOS = ModelMapperUtil.get().map(resourceDTOS, new TypeToken<List<ResourceVO>>() {}.getType());
+        List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOS, new TypeToken<List<ResourceVO>>() {}.getType());
 
         logger.info(successQuery);
-        return successQueryPageResponse(pageInfo, resourceVOS);
+        return successQueryPageResponse(pageInfo, resourceVOList);
     }
 }
