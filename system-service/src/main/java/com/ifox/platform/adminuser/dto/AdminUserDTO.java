@@ -1,6 +1,8 @@
 package com.ifox.platform.adminuser.dto;
 
-public class AdminUserDTO extends AdminUserBaseColumns{
+import com.ifox.platform.adminuser.dto.base.AdminUserBaseColumns;
+
+public class AdminUserDTO extends AdminUserBaseColumns {
 
     /**
      * ID

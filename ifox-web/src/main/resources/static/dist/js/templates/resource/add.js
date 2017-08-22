@@ -12,16 +12,20 @@ new Vue({
                 rules: {
                     name: {
                         required: true,
-                        rangelength: [4,15]
+                        rangelength: [2,15]
                     },
                     controller: {
                         required: true,
-                        rangelength: [4,30]
+                        rangelength: [2,30]
+                    },
+                    remark: {
+                        required: false,
+                        rangelength: [0,255]
                     }
                 },
                 messages: {
-                    name: "请输入4-15位有效的资源名称",
-                    controller: "请输入4-30位有效的控制器名称",
+                    name: "请输入2-15位有效的资源名称",
+                    controller: "请输入2-30位有效的控制器名称"
                 }
             });
         },

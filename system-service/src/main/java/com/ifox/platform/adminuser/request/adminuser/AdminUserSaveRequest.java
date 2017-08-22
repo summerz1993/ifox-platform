@@ -1,6 +1,6 @@
 package com.ifox.platform.adminuser.request.adminuser;
 
-import com.ifox.platform.adminuser.dto.AdminUserBaseColumns;
+import com.ifox.platform.adminuser.dto.base.AdminUserBaseColumns;
 
 /**
  * Created by Administrator on 2017/7/15 0015.

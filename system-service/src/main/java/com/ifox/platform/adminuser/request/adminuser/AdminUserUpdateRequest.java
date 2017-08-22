@@ -1,6 +1,6 @@
 package com.ifox.platform.adminuser.request.adminuser;
 
-import com.ifox.platform.adminuser.dto.AdminUserBaseColumns;
+import com.ifox.platform.adminuser.dto.base.AdminUserBaseColumns;
 
 public class AdminUserUpdateRequest extends AdminUserBaseColumns {
 

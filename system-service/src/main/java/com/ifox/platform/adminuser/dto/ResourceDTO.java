@@ -1,6 +1,8 @@
 package com.ifox.platform.adminuser.dto;
 
-public class ResourceDTO extends ResourceColumns {
+import com.ifox.platform.adminuser.dto.base.ResourceBaseColumns;
+
+public class ResourceDTO extends ResourceBaseColumns {
     private String id;
 
     public String getId() {

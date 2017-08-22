@@ -1,8 +1,8 @@
-package com.ifox.platform.adminuser.dto;
+package com.ifox.platform.adminuser.dto.base;
 
 import com.ifox.platform.entity.common.ResourceEO;
 
-public class ResourceColumns {
+public class ResourceBaseColumns {
     /**
      * 资源名称
      */

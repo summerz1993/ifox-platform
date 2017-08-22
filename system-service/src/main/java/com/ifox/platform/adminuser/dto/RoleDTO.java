@@ -1,5 +1,7 @@
 package com.ifox.platform.adminuser.dto;
 
+import com.ifox.platform.adminuser.dto.base.RoleBaseColumns;
+
 public class RoleDTO extends RoleBaseColumns {
 
     private String id;
