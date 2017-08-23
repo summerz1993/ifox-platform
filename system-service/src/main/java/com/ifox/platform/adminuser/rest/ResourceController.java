@@ -120,10 +120,10 @@ public class ResourceController extends BaseController<ResourceVO> {
         logger.info("分页查询资源：", pageRequest);
 
         Page<ResourceDTO> resourceDTOPage = resourceService.page(pageRequest);
-        List<ResourceDTO> resourceDTOS = resourceDTOPage.getContent();
+        List<ResourceDTO> resourceDTOList = resourceDTOPage.getContent();
 
         PageInfo pageInfo = resourceDTOPage.convertPageInfo();
-        List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOS, new TypeToken<List<ResourceVO>>() {}.getType());
+        List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOList, new TypeToken<List<ResourceVO>>() {}.getType());
 
         logger.info(successQuery);
         return successQueryPageResponse(pageInfo, resourceVOList);

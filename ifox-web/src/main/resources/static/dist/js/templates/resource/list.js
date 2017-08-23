@@ -51,8 +51,7 @@ new Vue({
             return params;
         },
         deleteResource: function (ids, callback) {
-            var url = resource_delete_URL;
-            axios.post(url, ids, ifox_table_ajax_options)
+            axios.post(resource_delete_URL, ids, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if(res.data.status === 200){

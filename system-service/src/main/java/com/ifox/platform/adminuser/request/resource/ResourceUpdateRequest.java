@@ -1,8 +1,8 @@
 package com.ifox.platform.adminuser.request.resource;
 
-import com.ifox.platform.adminuser.dto.ResourceColumns;
+import com.ifox.platform.adminuser.dto.base.ResourceBaseColumns;
 
-public class ResourceUpdateRequest extends ResourceColumns {
+public class ResourceUpdateRequest extends ResourceBaseColumns {
     private String id;
 
     public String getId() {
