@@ -38,10 +38,10 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @RequestMapping(value = "/get/menu", method = RequestMethod.GET)
     public @ResponseBody
     MultiResponse<MenuVO> getMenu(){
-        logger.info("获取树形目录菜单。");
-        int maxLevel = menuPermissionService.getMaxLevel();
+        logger.info("获取树形目录菜单");
+        Integer maxLevel = menuPermissionService.getMaxLevel();
         logger.info("当前目录最大层级：{}", maxLevel);
-        List<MenuPermissionDTO> menuPermissionDTOList = menuPermissionService.list();
+        List<MenuPermissionDTO> menuPermissionDTOList = menuPermissionService.listAllDTO();
         List<MenuVO> menuVOList = new ArrayList<>();
 
         while (maxLevel != 0){

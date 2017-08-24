@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface MenuPermissionService extends GenericService<MenuPermissionEO, String> {
     /**
-     * 获取最大菜单层级
-     * @return
+     * 获取菜单的最大层级
+     * @return 最大层级
      */
-    int getMaxLevel();
+    Integer getMaxLevel();
 
     /**
      * 查询所有菜单权限
-     * @return
+     * @return List<MenuPermissionDTO>
      */
-    List<MenuPermissionDTO> list();
+    List<MenuPermissionDTO> listAllDTO();
 }
