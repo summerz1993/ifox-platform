@@ -32,8 +32,8 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
      * @return 最大层级
      */
     @Override
-    public Integer getMaxLevel() {
-        return menuPermissionDao.getMaxLevel();
+    public Integer getBottomLevel() {
+        return menuPermissionDao.getBottomLevel();
     }
 
     /**

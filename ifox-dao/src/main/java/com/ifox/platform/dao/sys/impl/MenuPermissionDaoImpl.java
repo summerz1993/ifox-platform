@@ -14,7 +14,7 @@ public class MenuPermissionDaoImpl extends GenericHibernateDaoImpl<MenuPermissio
      * @return 最大层级
      */
     @Override
-    public Integer getMaxLevel() {
+    public Integer getBottomLevel() {
         String hql = "SELECT max(menu.level) FROM MenuPermissionEO menu";
         return getHibernateTemplate().execute(session -> {
             Object result = HQLUtil.createQueryByHQL(session, hql, null).uniqueResult();

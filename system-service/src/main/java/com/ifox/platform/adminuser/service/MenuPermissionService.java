@@ -11,7 +11,7 @@ public interface MenuPermissionService extends GenericService<MenuPermissionEO, 
      * 获取菜单的最大层级
      * @return 最大层级
      */
-    Integer getMaxLevel();
+    Integer getBottomLevel();
 
     /**
      * 查询所有菜单权限

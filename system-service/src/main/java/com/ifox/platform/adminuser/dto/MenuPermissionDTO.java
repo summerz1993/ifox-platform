@@ -17,9 +17,9 @@ public class MenuPermissionDTO extends MenuPermissionBaseColumns {
         this.id = id;
     }
 
-    public static List<MenuVO> convert(List<MenuPermissionDTO> menuPermissionDTOS) {
+    public static List<MenuVO> convertToVO(List<MenuPermissionDTO> menuPermissionDTOList) {
         List<MenuVO> menuVOS = new ArrayList<>();
-        for (MenuPermissionDTO menuPermissionDTO : menuPermissionDTOS){
+        for (MenuPermissionDTO menuPermissionDTO : menuPermissionDTOList){
             MenuVO menuVO = new MenuVO();
             menuVO.setId(menuPermissionDTO.getId());
             menuVO.setText(menuPermissionDTO.getName());

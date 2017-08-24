@@ -42,6 +42,9 @@ public class MenuVO {
      */
     private Integer level;
 
+    /**
+     * 父菜单ID
+     */
     private String parentId;
 
     public String getId() {

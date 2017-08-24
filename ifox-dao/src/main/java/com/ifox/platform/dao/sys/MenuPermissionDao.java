@@ -9,5 +9,5 @@ public interface MenuPermissionDao extends GenericDao<MenuPermissionEO, String> 
      * 获取菜单的最大层级
      * @return 最大层级
      */
-    Integer getMaxLevel();
+    Integer getBottomLevel();
 }
