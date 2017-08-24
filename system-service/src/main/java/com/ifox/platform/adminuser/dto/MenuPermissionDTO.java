@@ -1,11 +1,12 @@
 package com.ifox.platform.adminuser.dto;
 
+import com.ifox.platform.adminuser.dto.base.MenuPermissionBaseColumns;
 import com.ifox.platform.adminuser.response.MenuVO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuPermissionDTO extends MenuPermissionColumns {
+public class MenuPermissionDTO extends MenuPermissionBaseColumns {
     private String id;
 
     public String getId() {
