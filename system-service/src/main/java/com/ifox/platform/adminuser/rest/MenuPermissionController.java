@@ -35,9 +35,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     private MenuPermissionService menuPermissionService;
 
     @ApiOperation("获取菜单")
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    @RequestMapping(value = "/get/menu", method = RequestMethod.GET)
     public @ResponseBody
-    MultiResponse<MenuVO> menu(){
+    MultiResponse<MenuVO> getMenu(){
         logger.info("获取树形目录菜单。");
         int maxLevel = menuPermissionService.getMaxLevel();
         logger.info("当前目录最大层级：{}", maxLevel);
@@ -55,18 +55,18 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             if(childMenuVOList.size() == 0){
                 menuVOList.addAll(MenuPermissionDTO.convert(parentMenuPermissionDTOList));
             }else{
-                List<MenuVO> parentsMenuVOS = MenuPermissionDTO.convert(parentMenuPermissionDTOList);
+                List<MenuVO> parentsMenuVOList = MenuPermissionDTO.convert(parentMenuPermissionDTOList);
 
                 menuVOList.removeAll(childMenuVOList);
 
-                for(MenuVO menuVO : parentsMenuVOS){
+                for(MenuVO menuVO : parentsMenuVOList){
                     List<MenuVO> childs = childMenuVOList.stream()
                         .filter(child -> child.getParentId().equals(menuVO.getId()))
                         .collect(Collectors.toList());
                     menuVO.setChildren(childs);
                 }
 
-                menuVOList.addAll(parentsMenuVOS);
+                menuVOList.addAll(parentsMenuVOList);
             }
 
             maxLevel--;
@@ -77,10 +77,10 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     }
 
     @ApiOperation("获取菜单详情")
-    @RequestMapping(value = "/menu/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})
     public @ResponseBody
-    OneResponse<MenuPermissionVO> menuById(@ApiParam @PathVariable String id){
+    OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id){
         logger.info("查询菜单权限：{}", id);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
         if (menuPermissionEO == null){
@@ -130,7 +130,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     }
 
     @ApiOperation("修改菜单权限")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody
     BaseResponse update(){
         return null;
