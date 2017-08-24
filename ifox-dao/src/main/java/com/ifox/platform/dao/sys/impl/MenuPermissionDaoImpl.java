@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MenuPermissionDaoImpl extends GenericHibernateDaoImpl<MenuPermissionEO, String> implements MenuPermissionDao{
+    /**
+     * 查询所有菜单权限
+     * @return
+     */
     @Override
     public int getMaxLevel() {
         String hql = "SELECT max(menu.level) FROM MenuPermissionEO menu";

@@ -10,11 +10,11 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
+@Service
 public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermissionEO, String> implements MenuPermissionService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -27,11 +27,19 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
         super.genericDao = menuPermissionDao;
     }
 
+    /**
+     * 获取最大菜单层级
+     * @return
+     */
     @Override
     public int getMaxLevel() {
         return menuPermissionDao.getMaxLevel();
     }
 
+    /**
+     * 查询所有菜单权限
+     * @return
+     */
     @Override
     public List<MenuPermissionDTO> list() {
         List<MenuPermissionEO> menuPermissionEOS = listAll();
