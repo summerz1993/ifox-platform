@@ -1,8 +1,8 @@
-package com.ifox.platform.adminuser.dto;
+package com.ifox.platform.adminuser.dto.base;
 
 import com.ifox.platform.entity.sys.MenuPermissionEO;
 
-public class MenuPermissionColumns {
+public class MenuPermissionBaseColumns {
     /**
      * 名称
      */

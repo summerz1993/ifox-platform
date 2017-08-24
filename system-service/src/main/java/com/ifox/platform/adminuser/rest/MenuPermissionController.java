@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,46 +37,38 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
 
     @ApiOperation("获取菜单")
     @RequestMapping(value = "/get/menu", method = RequestMethod.GET)
+    @SuppressWarnings("unchecked")
     public @ResponseBody
     MultiResponse<MenuVO> getMenu(){
-        logger.info("获取树形目录菜单。");
-        int maxLevel = menuPermissionService.getMaxLevel();
-        logger.info("当前目录最大层级：{}", maxLevel);
-        List<MenuPermissionDTO> menuPermissionDTOList = menuPermissionService.list();
+        logger.info("获取树形目录菜单");
+
+        List<MenuPermissionDTO> allMPDTOList = menuPermissionService.listAllDTO();
         List<MenuVO> menuVOList = new ArrayList<>();
+        int topLevel = 1;
+        int bottomLevel = menuPermissionService.getBottomLevel();
 
-        while (maxLevel != 0){
-            int currentLevel = maxLevel;
-            List<MenuVO> childMenuVOList = menuVOList.stream()
-                .filter(menuVO -> menuVO.getLevel() == currentLevel + 1).collect(Collectors.toList());
-            List<MenuPermissionDTO> parentMenuPermissionDTOList = menuPermissionDTOList.stream()
-                .filter(menuPermissionDTO -> menuPermissionDTO.getLevel() == currentLevel)
-                .collect(Collectors.toList());
-
-            if(childMenuVOList.size() == 0){
-                menuVOList.addAll(MenuPermissionDTO.convert(parentMenuPermissionDTOList));
-            }else{
-                List<MenuVO> parentsMenuVOList = MenuPermissionDTO.convert(parentMenuPermissionDTOList);
-
-                menuVOList.removeAll(childMenuVOList);
-
-                for(MenuVO menuVO : parentsMenuVOList){
-                    List<MenuVO> childs = childMenuVOList.stream()
-                        .filter(child -> child.getParentId().equals(menuVO.getId()))
-                        .collect(Collectors.toList());
-                    menuVO.setChildren(childs);
-                }
-
-                menuVOList.addAll(parentsMenuVOList);
+        for (int i = bottomLevel ; i >= topLevel; i --) {
+            int level = i;
+            //临时变量
+            List<MenuVO> newMenuVOList = new ArrayList<>();
+            List<MenuPermissionDTO> currentLevelMPDTOList = allMPDTOList.stream().filter(dto -> dto.getLevel() == level).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(currentLevelMPDTOList))
+                newMenuVOList.addAll(MenuPermissionDTO.convertToVO(currentLevelMPDTOList));
+            for (MenuVO menuVO : newMenuVOList) {
+                //设置children来源于menuVOList
+                List<MenuVO> childrenList = menuVOList.stream().filter(vo -> menuVO.getId().equals(vo.getParentId())).collect(Collectors.toList());
+                if (!CollectionUtils.isEmpty(childrenList))
+                    menuVO.setChildren(childrenList);
             }
-
-            maxLevel--;
+            menuVOList.clear();
+            menuVOList = newMenuVOList;
         }
 
         logger.info(successQuery);
         return new MultiResponse(SUCCESS, successQuery, menuVOList);
     }
 
+    @SuppressWarnings("unchecked")
     @ApiOperation("获取菜单详情")
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})

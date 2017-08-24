@@ -28,20 +28,20 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
     }
 
     /**
-     * 获取最大菜单层级
-     * @return
+     * 获取菜单的最大层级
+     * @return 最大层级
      */
     @Override
-    public int getMaxLevel() {
-        return menuPermissionDao.getMaxLevel();
+    public Integer getBottomLevel() {
+        return menuPermissionDao.getBottomLevel();
     }
 
     /**
      * 查询所有菜单权限
-     * @return
+     * @return List<MenuPermissionDTO>
      */
     @Override
-    public List<MenuPermissionDTO> list() {
+    public List<MenuPermissionDTO> listAllDTO() {
         List<MenuPermissionEO> menuPermissionEOS = listAll();
         return ModelMapperUtil.get().map(menuPermissionEOS, new TypeToken<List<MenuPermissionDTO>>() {}.getType());
     }
