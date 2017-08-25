@@ -16,6 +16,8 @@ public class DateTimeUtil {
 
 	public static final String DEFAULT_DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
+    public static final String DATE_FORMATTER = "yyyyMMdd";
+
 	/**
 	 * 获取当前日期时间字符串
 	 * @param formatter 格式化
@@ -28,6 +30,19 @@ public class DateTimeUtil {
 		}
 		return currentDateTime.format(formatter);
 	}
+
+    /**
+     * 获取当前日期字符串
+     * @param formatter 格式化
+     * @return String
+     */
+    public static String getCurrentDateAsString(DateTimeFormatter formatter) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if (null == formatter) {
+            formatter = DateTimeFormatter.ofPattern(DATE_FORMATTER);
+        }
+        return currentDateTime.format(formatter);
+    }
 
 	/**
 	 * 获取当前日期时间

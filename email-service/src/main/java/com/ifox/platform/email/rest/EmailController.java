@@ -40,7 +40,7 @@ public class EmailController extends BaseController {
      * @return BaseResponse
      */
     @RequestMapping(value = "/sendSimpleEmail", method = RequestMethod.POST)
-    @ApiOperation(value = "/sendSimpleEmail", notes = "发送简单邮件", response = BaseResponse.class)
+    @ApiOperation("发送简单邮件")
     @ApiResponses({ @ApiResponse(code = 200, message = "发送成功"),
         @ApiResponse(code = 481, message = "Token校验失败"),
         @ApiResponse(code = 500, message = "服务器错误")})

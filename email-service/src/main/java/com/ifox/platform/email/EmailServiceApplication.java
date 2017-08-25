@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan({"com.ifox.platform.email"})
 public class EmailServiceApplication {
 
-    static Logger logger = LoggerFactory.getLogger(EmailServiceApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(EmailServiceApplication.class);
 
     public static void main(String[] args) {
         logger.info("email-service 项目启动中");
