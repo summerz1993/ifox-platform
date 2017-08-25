@@ -1,0 +1,18 @@
+.menu{
+    width: 100%;
+    margin: 10px;
+    position: relative;
+}
+
+.menu-tree{
+    width: 40%;
+    margin: 5%;
+    display: inline-block;
+}
+
+.selected-menu-detail{
+    width: 40%;
+    margin: 5%;
+    display: inline-block;
+    position: absolute;
+}

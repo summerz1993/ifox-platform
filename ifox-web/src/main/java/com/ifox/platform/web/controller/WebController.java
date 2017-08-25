@@ -61,4 +61,11 @@ public class WebController extends BaseWebController {
 
         return verifyToken(request, model, "/resource/main");
     }
+
+    @RequestMapping(value = "/menuPermission", method = RequestMethod.GET)
+    public String menuPermission(HttpServletRequest request, Model model){
+        logger.info("进入后台菜单权限管理");
+
+        return verifyToken(request, model, "/menu-permission/main");
+    }
 }

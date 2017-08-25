@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title>Admin menu tree</title>
+</head>
+<body>
+<aside id="menu-tree-modal" class="list-sidebar" th:fragment="menu-tree-modal">
+    <!--menu-->
+    <div id="menu" class="menu">
+        <!--menu tree-->
+        <div id="menu-tree" class="menu-tree">
+
+        </div>
+        <!--menu tree-->
+        <!--selected menu detail-->
+        <div class="selected-menu-detail">
+            <ul class="list-group" id="selected-menu-detail">
+                <li v-for="obj in object" class="list-group-item" v-bind:class="{ active: obj.isActive }">
+                    {{obj.lable}}：{{ obj.value }}
+                </li>
+            </ul>
+        </div>
+        <!--selected menu detail-->
+    </div>
+    <!--menu-->
+</aside>
+</body>
+</html>

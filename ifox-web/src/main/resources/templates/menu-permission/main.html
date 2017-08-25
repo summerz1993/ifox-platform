@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Admin System</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}"/>
+    <!-- Ionicons -->
+    <link rel="stylesheet" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}"/>
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}"/>
+    <!-- AdminLTE Skins -->
+    <link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}"/>
+    <!-- Google Font -->
+    <link rel="stylesheet" th:href="@{/bower_components/googleapis-fonts/fonts.css}"/>
+
+    <!--bootstrap table -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
+    <!--bootstrap editable-->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap3-editable/css/bootstrap-editable.css}">
+    <!--common css-->
+    <link rel="stylesheet" th:href="@{/dist/css/common.css}">
+    <!--js tree style css-->
+    <link rel="stylesheet" th:href="@{/plugins/vakata-jstree/themes/default/style.min.css}" />
+    <!--menu permission css-->
+    <link rel="stylesheet" th:href="@{/dist/css/menu-permission.css}">
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <div id="header" th:replace="/fragments/header :: header"></div>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <div th:replace="/fragments/main-sidebar :: main-sidebar"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div th:replace="/menu-permission/menu-permission-content-header :: menu-permission-content-header"></div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <!--menu tree-->
+        <div th:replace="/menu-permission/menu-tree::menu-tree-modal"></div>
+        <!--menu tree-->
+
+        <!--add modal-->
+        <!--<div th:replace="/menu-permission/add::add-modal"></div>-->
+        <!--add modal-->
+
+        <!--edit modal-->
+        <!--<div th:replace="/menu-permission/edit::edit-modal"></div>-->
+        <!--edit modal-->
+    </section>
+    <!-- /.content -->
+
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 3 -->
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/dist/js/adminlte.min.js}"></script>
+<!-- vue -->
+<script th:src="@{/bower_components/vue/vue2.4.1.js}"></script>
+<!-- axios -->
+<script th:src="@{/bower_components/axios/axios.min.js}"></script>
+
+<!--bootstrap table-->
+<script th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
+<!--bootstrap table zn-->
+<script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+<!-- layer -->
+<script th:src="@{/bower_components/layer/layer.js}"></script>
+
+<!-- 必须引入的JS -->
+<script th:src="@{/dist/js/common/common.js}"></script>
+<script th:src="@{/dist/js/common/main-header.js}"></script>
+<script th:src="@{/dist/js/common/main-sidebar.js}"></script>
+
+<!--jquery validation-->
+<script th:src="@{/bower_components/jquery-validation/dist/jquery.validate.min.js}"></script>
+<script th:src="@{/bower_components/jquery-validation/dist/additional-methods.min.js}"></script>
+<script th:src="@{/bower_components/jquery-validation/src/localization/messages_zh.js}"></script>
+<script th:src="@{/dist/js/common/validate-error-place.js}"></script>
+
+<!--js tree-->
+<script th:src="@{/plugins/vakata-jstree/jstree.min.js}"></script>
+<script th:src="@{/dist/js/menu-tree/menu-tree.js}"></script>
+
+<!-- 业务相关的js -->
+<!-- menu permission -->
+<script th:src="@{/dist/js/templates/menu-permission/menu.js}"></script>
+</body>
+</html>
