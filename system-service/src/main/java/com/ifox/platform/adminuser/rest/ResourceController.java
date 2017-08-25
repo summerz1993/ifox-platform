@@ -14,6 +14,7 @@ import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.common.ResourceEO;
+import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -39,12 +40,13 @@ public class ResourceController extends BaseController<ResourceVO> {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody
     BaseResponse save(@ApiParam @RequestBody ResourceSaveRequest resource){
-        logger.info("保存资源：{}", resource.toString());
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("保存资源 resource:{}, uuid:{}", resource.toString(), uuid);
 
         ResourceEO resourceEO = ModelMapperUtil.get().map(resource, ResourceEO.class);
         resourceService.save(resourceEO);
 
-        logger.info(successSave);
+        logger.info(successSave + " uuid:{}", uuid);
         return successSaveBaseResponse();
     }
 
@@ -54,20 +56,22 @@ public class ResourceController extends BaseController<ResourceVO> {
         @ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
     BaseResponse delete(@ApiParam @RequestBody String[] ids){
-        logger.info("删除资源:{}", Arrays.toString(ids));
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("删除资源 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
-            logger.info("无效请求：ids为空");
+            logger.info("无效请求,ids为空 uuid:{}", uuid);
             return invalidRequestBaseResponse();
         }
 
         try {
             resourceService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
+            logger.info("资源不存在 uuid:{}", uuid);
             return notFoundBaseResponse("资源不存在");
         }
 
-        logger.info(successDelete);
+        logger.info(successDelete + " uuid:{}", uuid);
         return successDeleteBaseResponse();
     }
 
@@ -77,16 +81,17 @@ public class ResourceController extends BaseController<ResourceVO> {
     @SuppressWarnings("unchecked")
     public @ResponseBody
     OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") String id){
-        logger.info("查询单个指定资源：{}", id);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("查询单个指定资源 id:{}, uuid:{}", id, uuid);
 
         ResourceEO resourceEO = resourceService.get(id);
         if (resourceEO == null){
-            logger.info("资源不存在：{}", id);
+            logger.info("资源不存在 id:{}, uuid:{}", id, uuid);
             return super.notFoundOneResponse("资源不存在");
         }
 
         ResourceVO resourceVO = ModelMapperUtil.get().map(resourceEO, ResourceVO.class);
-        logger.info(successQuery);
+        logger.info(successQuery + " uuid:{}", uuid);
 
         return successQueryOneResponse(resourceVO);
     }
@@ -96,18 +101,19 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
     BaseResponse update(@ApiParam @RequestBody ResourceUpdateRequest resource){
-        logger.info("更新资源：{}", resource);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("更新资源 resource:{}, uuid:{}", resource, uuid);
 
         String id = resource.getId();
         ResourceEO resourceEO = resourceService.get(id);
         if (resourceEO == null){
-            logger.info("资源不存在：{}", id);
+            logger.info("资源不存在 id:{}, uuid:{}", id, uuid);
             return super.notFoundOneResponse("资源不存在");
         }
 
         ModelMapperUtil.get().map(resource, resourceEO);
         resourceService.update(resourceEO);
-        logger.info(successUpdate);
+        logger.info(successUpdate + " uuid:{}", uuid);
 
         return successUpdateBaseResponse();
     }
@@ -117,7 +123,8 @@ public class ResourceController extends BaseController<ResourceVO> {
     public @ResponseBody
     @SuppressWarnings("unchecked")
     PageResponse<ResourceVO> page(@ApiParam @RequestBody ResourcePageRequest pageRequest){
-        logger.info("分页查询资源：", pageRequest);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("分页查询资源 pageRequest:{}, uuid:{}", pageRequest, uuid);
 
         Page<ResourceDTO> resourceDTOPage = resourceService.page(pageRequest);
         List<ResourceDTO> resourceDTOList = resourceDTOPage.getContent();
@@ -125,7 +132,7 @@ public class ResourceController extends BaseController<ResourceVO> {
         PageInfo pageInfo = resourceDTOPage.convertPageInfo();
         List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOList, new TypeToken<List<ResourceVO>>() {}.getType());
 
-        logger.info(successQuery);
+        logger.info(successQuery + " uuid:{}", uuid);
         return successQueryPageResponse(pageInfo, resourceVOList);
     }
 }

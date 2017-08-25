@@ -13,6 +13,7 @@ import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.sys.RoleEO;
+import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.*;
 import org.modelmapper.TypeToken;
@@ -38,12 +39,13 @@ public class RoleController extends BaseController<RoleVO> {
     @ApiOperation("保存角色信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
-        logger.info("保存角色信息:{}", saveRequest.toString());
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
         roleService.save(roleEO);
 
-        logger.info(successSave);
+        logger.info(successSave + " uuid:{}", uuid);
         return successSaveBaseResponse();
     }
 
@@ -52,20 +54,22 @@ public class RoleController extends BaseController<RoleVO> {
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
         @ApiResponse(code = 400, message = "无效请求：ids为空")})
     public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids) {
-        logger.info("删除角色信息:{}", Arrays.toString(ids));
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("删除角色信息 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
-            logger.info("无效请求：ids为空");
+            logger.info("无效请求,ids为空 uuid:{}", uuid);
             return invalidRequestBaseResponse();
         }
 
         try {
             roleService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
+            logger.info("角色不存在 uuid:{}", uuid);
             return notFoundBaseResponse("角色不存在");
         }
 
-        logger.info(successDelete);
+        logger.info(successDelete + " uuid:{}", uuid);
         return successDeleteBaseResponse();
     }
 
@@ -73,18 +77,19 @@ public class RoleController extends BaseController<RoleVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
     public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest) {
-        logger.info("更新用户信息:{}", updateRequest);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest, uuid);
 
         String id = updateRequest.getId();
         RoleEO roleEO = roleService.get(id);
         if (roleEO == null) {
-            logger.info("角色不存在:{}", id);
+            logger.info("角色不存在 id:{}, uuid:{}", id, uuid);
             return super.notFoundBaseResponse("角色不存在");
         }
         ModelMapperUtil.get().map(updateRequest, roleEO);
         roleService.update(roleEO);
 
-        logger.info(successUpdate);
+        logger.info(successUpdate + " uuid:{}", uuid);
         return successUpdateBaseResponse();
     }
 
@@ -92,23 +97,25 @@ public class RoleController extends BaseController<RoleVO> {
     @RequestMapping(value = "/get/{roleId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
     public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId) {
-        logger.info("查询单个角色信息:{}", roleId);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("查询单个角色信息 roleId:{}, uuid:{}", roleId, uuid);
 
         RoleEO roleEO = roleService.get(roleId);
         if (roleEO == null) {
-            logger.info("角色不存在:{}", roleId);
+            logger.info("角色不存在 roleId:{}, uuid:{}", roleId, uuid);
             return super.notFoundOneResponse("角色不存在");
         }
         RoleVO vo = ModelMapperUtil.get().map(roleEO, RoleVO.class);
 
-        logger.info(successQuery);
+        logger.info(successQuery + " uuid:{}", uuid);
         return successQueryOneResponse(vo);
     }
 
     @ApiOperation("分页查询角色")
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     public @ResponseBody PageResponse page(@ApiParam @RequestBody RolePageRequest pageRequest) {
-        logger.info("分页查询角色:{}", pageRequest);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("分页查询角色 pageRequest:{}, uuid:{}", pageRequest, uuid);
 
         Page<RoleDTO> page = roleService.page(pageRequest);
         List<RoleDTO> roleDTOList = page.getContent();
@@ -116,7 +123,7 @@ public class RoleController extends BaseController<RoleVO> {
         PageInfo pageInfo = page.convertPageInfo();
         List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
 
-        logger.info(successQuery);
+        logger.info(successQuery + " uuid:{}", uuid);
         return successQueryPageResponse(pageInfo, roleVOList);
     }
 
