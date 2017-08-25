@@ -67,7 +67,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         try {
             validatePassword = PasswordUtil.validatePassword(password, adminUserEO.getSalt(), adminUserEO.getPassword());
         } catch (Exception e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.warn(ExceptionUtil.getStackTraceAsString(e));
             validatePassword = false;
         }
 
@@ -85,8 +85,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
             AdminUserEO adminUserEO = getAdminUserEOByLoginName(loginName);
             return ModelMapperUtil.get().map(adminUserEO, AdminUserDTO.class);
         } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            logger.error("根据登陆名查询AdminUser异常");
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.warn(ExceptionUtil.getStackTraceAsString(e));
         }
         return null;
     }

@@ -30,5 +30,7 @@ public final class RestStatusConstant {
     public static final Integer TOKEN_ERROR = 481;
     //登录名已经存在
     public static final Integer EXISTED_LOGIN_NAME = 482;
+    //无效状态
+    public static final Integer INVALID_STATUS = 483;
 
 }

@@ -18,6 +18,7 @@ import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
+import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
@@ -52,11 +53,13 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
-        logger.info("保存用户信息:{}", adminUserSaveRequest);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("保存用户信息:{}, uuid:{}", adminUserSaveRequest, uuid);
 
         String loginName = adminUserSaveRequest.getLoginName();
         AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
         if (byLoginName != null) {
+            logger.info("登录名已经存在:uuid:{}", uuid);
             return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
         }
 
@@ -75,7 +78,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         adminUserService.save(adminUserEO);
 
-        logger.info(successSave);
+        logger.info(successSave + ":uuid:{}", uuid);
         return successSaveBaseResponse();
     }
 
@@ -84,42 +87,45 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 400, message = "无效请求：ids为空")})
     public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids){
-        logger.info("删除用户:{}", Arrays.toString(ids));
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("删除用户:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
-            logger.info("无效请求：ids为空");
+            logger.info("无效请求：ids为空, uuid:{}", uuid);
             return invalidRequestBaseResponse();
         }
 
         try {
             adminUserService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
+            logger.info("用户不存在:uuid:{}", uuid);
             return notFoundBaseResponse("用户不存在");
         }
 
-        logger.info(successDelete);
-
+        logger.info(successDelete + ":{}", uuid);
         return successDeleteBaseResponse();
     }
 
     @ApiOperation("更新用户")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在"),
+    @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 482, message = "登录名已经存在")})
     public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
-        logger.info("更新用户信息:{}", updateRequest.toString());
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("更新用户信息:{}, uuid:{}", updateRequest.toString(), uuid);
 
         String id = updateRequest.getId();
         AdminUserEO adminUserEO = adminUserService.get(id);
         if (adminUserEO == null) {
-            logger.info("此用户不存在");
-            return super.notFoundBaseResponse("此用户不存在");
+            logger.info("用户不存在:uuid:{}", uuid);
+            return super.notFoundBaseResponse("用户不存在");
         }
 
         String loginName = updateRequest.getLoginName();
         if (!adminUserEO.getLoginName().equals(loginName)) {
             AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
             if (byLoginName != null) {
+                logger.info("登录名已经存在:uuid:{}" ,uuid);
                 return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
             }
         }
@@ -128,7 +134,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 //        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
         adminUserService.update(adminUserEO);
 
-        logger.info(successUpdate);
+        logger.info(successUpdate + ":uuid:{}", uuid);
         return successUpdateBaseResponse();
     }
 
@@ -137,18 +143,19 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
     @SuppressWarnings("unchecked")
     public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId){
-        logger.info("单个用户信息查询:{}", userId);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("单个用户信息查询:{}, uuid:{}", userId, uuid);
 
         AdminUserEO eo = adminUserService.get(userId);
         if (eo == null) {
-            logger.info("此用户不存在");
+            logger.info("此用户不存在:uuid:{}", uuid);
             return super.notFoundOneResponse("此用户不存在");
         }
 
         AdminUserVO vo = new AdminUserVO();
         ModelMapperUtil.get().map(eo, vo);
 
-        logger.info(successQuery);
+        logger.info(successQuery + ":uuid:{}", uuid);
         return successQueryOneResponse(vo);
     }
 
@@ -157,7 +164,8 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ResponseBody
     @SuppressWarnings("unchecked")
     public PageResponse<AdminUserVO> page(@ApiParam @RequestBody AdminUserPageRequest pageRequest) {
-        logger.info("分页查询用户:{}", pageRequest.toString());
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("分页查询用户:{}, uuid:{}", pageRequest.toString(), uuid);
 
         Page<AdminUserDTO> page = adminUserService.page(pageRequest);
         List<AdminUserDTO> adminUserDTOList = page.getContent();
@@ -166,21 +174,22 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         PageInfo pageInfo = page.convertPageInfo();
 
-        logger.info(successQuery);
+        logger.info(successQuery + ":uuid:{}", uuid);
         return successQueryPageResponse(pageInfo, adminUserVOList);
     }
 
-    @ApiOperation("获取所有用户信息接口")
+    @ApiOperation("获取用户列表接口")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     @SuppressWarnings("unchecked")
     public MultiResponse<AdminUserVO> list(@ApiParam @RequestBody AdminUserQueryRequest queryRequest){
-        logger.info("获取多条用户信息:{}", queryRequest.toString());
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("获取用户列表:{}, uuid:{}", queryRequest.toString(), uuid);
 
         List<AdminUserDTO> adminUserDTOList = adminUserService.list(queryRequest);
         List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
-        logger.info(successQuery);
+        logger.info(successQuery + ":uuid:{}", uuid);
         return successQueryMultiResponse(adminUserVOList);
     }
 
