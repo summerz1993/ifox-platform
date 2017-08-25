@@ -44,7 +44,8 @@ public class LoginController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 200, message = "登陆成功"),
                     @ApiResponse(code = 500, message = "服务器异常"),
                     @ApiResponse(code = 404, message = "用户不存在"),
-                    @ApiResponse(code = 480, message = "用户名或者密码错误") })
+                    @ApiResponse(code = 480, message = "用户名或者密码错误"),
+                    @ApiResponse(code = 483, message = "用户状态无效")})
     public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest){
         String uuid = UUIDUtil.randomUUID();
         logger.info("用户登陆:{}, uuid:{}", adminUserLoginRequest, uuid);
