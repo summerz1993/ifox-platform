@@ -16,6 +16,12 @@ import java.util.Date;
 public class DateTimeUtilTest {
 
     @Test
+    public void testGetCurrentDateAsString() {
+        String currentDateAsString = DateTimeUtil.getCurrentDateAsString(null);
+        System.out.println("currentDateAsString:" + currentDateAsString);
+    }
+
+    @Test
     public void testTimestampConverter(){
         String unixTimestamp = "1500715426";
         LocalDateTime parse = LocalDateTime.parse(unixTimestamp, DateTimeFormatter.BASIC_ISO_DATE);

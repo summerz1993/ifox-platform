@@ -1,0 +1,8 @@
+#==================== Tomcat Setting =====================#
+server:
+  port: 8085
+  tomcat:
+    uri-encoding: UTF-8
+
+file-service:
+  save-path: /home/user

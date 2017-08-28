@@ -4,6 +4,7 @@ import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -82,8 +83,15 @@ public class BaseController<T> {
         return new OneResponse(NOT_FOUND, desc, null);
     }
 
+    //--------------- 400 ----------------
+
     protected BaseResponse invalidRequestBaseResponse(){
         return new BaseResponse(INVALID_REQUEST, "无效请求");
     }
 
+    //--------------- 401 ----------------
+
+    protected BaseResponse unauthorizedBaseResponse(String desc) {
+        return new BaseResponse(UNAUTHORIZED, StringUtils.isEmpty(desc) ? "未授权访问" : desc);
+    }
 }
