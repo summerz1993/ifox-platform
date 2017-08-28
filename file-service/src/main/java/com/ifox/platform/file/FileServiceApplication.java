@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
  * 文件服务
  */
 @SpringBootApplication
-@ComponentScan({"com.ifox.platform.file"})
+@ComponentScan({"com.ifox.platform"})
 public class FileServiceApplication {
 
     private static Logger logger = LoggerFactory.getLogger(FileServiceApplication.class);

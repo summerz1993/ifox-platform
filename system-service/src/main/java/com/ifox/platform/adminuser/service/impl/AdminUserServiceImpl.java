@@ -102,7 +102,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         try {
             adminUserEO = getAdminUserEOByLoginName(loginName);
         } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.info(ExceptionUtil.getStackTraceAsString(e));
         }
         if (adminUserEO != null) {
             payload.setIss(env.getProperty("jwt.payload.iss"));

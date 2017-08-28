@@ -5,4 +5,12 @@ server:
     uri-encoding: UTF-8
 
 file-service:
-  save-path: /home/user
+  token: 1234567890Yeager
+  save:
+    path: D:\test\
+  file-type:
+    picture: jpg,png,bmp,gif,jpeg,psd,svg
+    doc: doc,docx,xls,xlsx,txt
+    video: rmvb,mkv,mp4,avi,3gp,amv,dmv,rm,mpeg,wmv
+    audio: mp3,wma,wav,ogg
+  service-name: system-service,ifox-web

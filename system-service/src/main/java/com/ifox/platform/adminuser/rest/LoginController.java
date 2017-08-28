@@ -48,7 +48,7 @@ public class LoginController extends BaseController {
                     @ApiResponse(code = 483, message = "用户状态无效")})
     public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("用户登陆:{}, uuid:{}", adminUserLoginRequest, uuid);
+        logger.info("用户登陆 adminUserLoginRequest:{}, uuid:{}", adminUserLoginRequest, uuid);
         Boolean validAdminUser;
         TokenResponse tokenResponse = new TokenResponse();
         try {
@@ -72,7 +72,7 @@ public class LoginController extends BaseController {
         if (adminUserDTO.getStatus() == AdminUserEO.AdminUserEOStatus.INVALID) {
             tokenResponse.setStatus(INVALID_STATUS);
             tokenResponse.setDesc("用户状态无效");
-            logger.info("用户状态无效:uuid:{}", uuid);
+            logger.info("用户状态无效 uuid:{}", uuid);
             return tokenResponse;
         }
 
@@ -86,7 +86,7 @@ public class LoginController extends BaseController {
         } catch (UnsupportedEncodingException e) {
             tokenResponse.setStatus(SERVER_EXCEPTION);
             tokenResponse.setDesc("服务器异常");
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            logger.warn(ExceptionUtil.getStackTraceAsString(e));
             logger.info("登陆异常 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
         }
         return tokenResponse;
@@ -98,15 +98,14 @@ public class LoginController extends BaseController {
                     @ApiResponse(code = 481, message = "Token校验失败")})
     public @ResponseBody BaseResponse verifyToken(@ApiParam String token) {
         String uuid = UUIDUtil.randomUUID();
-        logger.info("校验Token:{}, uuid:", token, uuid);
+        logger.info("校验 token:{}, uuid:", token, uuid);
         try {
             JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
         } catch (Exception e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
-            logger.info("Token校验失败:uuid:{}", uuid);
+            logger.info("Token校验失败 uuid:{}", uuid);
             return new BaseResponse(TOKEN_ERROR, "Token校验失败");
         }
-        logger.info("Token校验成功:uuid:{}", uuid);
+        logger.info("Token校验成功 uuid:{}", uuid);
         return successBaseResponse("Token校验成功");
     }
 

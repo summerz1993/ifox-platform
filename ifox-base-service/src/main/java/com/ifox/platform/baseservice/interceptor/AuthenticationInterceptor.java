@@ -51,7 +51,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         try {
             decodedJWT = JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
         } catch (Exception e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
             response.setStatus(UNAUTHORIZED);
             logger.info("认证失败");
             return false;
