@@ -6,6 +6,7 @@ import com.ifox.platform.file.enums.EnumFile;
 import com.ifox.platform.file.service.FileService;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.datetime.DateTimeUtil;
+import com.ifox.platform.utility.jwt.JWTUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -43,16 +44,9 @@ public class FileController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
                     @ApiResponse(code = 484, message = "不支持的文件类型"),
                     @ApiResponse(code = 485, message = "不支持的服务名称")})
-    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType, @RequestHeader("Authorization") String token) {
+    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("单文件上传 serviceName:{}, fileType:{}, uuid:{}", serviceName, fileType, uuid);
-
-        //校验Token
-        String applicationToken = env.getProperty("file-service.token");
-        if (!applicationToken.equals(token)){
-            logger.info("token校验失败");
-            return tokenErrorBaseResponse();
-        }
 
         String originalFilename = file.getOriginalFilename();
         String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -71,19 +65,16 @@ public class FileController extends BaseController {
         String absolutePath = env.getProperty("file-service.save.path");
         String fileName = uuid + ext;
         String currentDateAsString = DateTimeUtil.getCurrentDateAsString(null);
-
-        String finalPathString = absolutePath + serviceName + File.separator+ currentDateAsString + File.separator + fileName;
+        String relativePath = serviceName + File.separator+ currentDateAsString + File.separator + fileName;
+        String finalPathString = absolutePath + relativePath;
         File finalPath = new File(finalPathString);
         File parentFile = finalPath.getParentFile();
         if (!parentFile.exists())
             parentFile.mkdir();
 
         if (!parentFile.canWrite()) {
-            boolean writable = parentFile.setWritable(true);
-            if (!writable) {
-                logger.info("没有文件操作权限 finalPathString:{}, uuid:{}", finalPathString, uuid);
-                return unauthorizedBaseResponse("没有文件操作权限");
-            }
+            logger.info("没有文件操作权限 finalPathString:{}, uuid:{}", finalPathString, uuid);
+            return unauthorizedBaseResponse("没有文件操作权限");
         }
 
         try {
@@ -94,7 +85,7 @@ public class FileController extends BaseController {
         }
 
         logger.info("上传成功 finalPathString:{}, uuid:{}", finalPathString, uuid);
-        return successBaseResponse(finalPathString);
+        return successBaseResponse(relativePath);
     }
 
 }

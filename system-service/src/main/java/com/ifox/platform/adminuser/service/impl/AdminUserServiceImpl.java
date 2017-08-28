@@ -107,7 +107,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
         if (adminUserEO != null) {
             payload.setIss(env.getProperty("jwt.payload.iss"));
             payload.setIat(new Date());
-            payload.setExp(DateTimeUtil.plusMinBaseOnCurrentDate(Integer.valueOf(env.getProperty("jwt.payload.exp"))));  //过期时间
+            payload.setExp(DateTimeUtil.getThreeOclockAMOfTheNextDay());  //过期时间为第二天的凌晨三点钟
             payload.setJti(UUIDUtil.randomUUID());
             payload.setUserId(adminUserEO.getId());
             payload.setLoginName(adminUserEO.getLoginName());

@@ -1,5 +1,6 @@
 package com.ifox.platform.utility.datetime;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -109,6 +110,16 @@ public class DateTimeUtil {
         LocalDateTime currentLocalDateTime = getCurrentLocalDateTime(null);
         LocalDateTime plusHours = currentLocalDateTime.plusHours(hour);
         return convertLocalDateTimeToDate(plusHours);
+    }
+
+    /**
+     * 获取第二天的凌晨三点 - 主要用于JWT过期时间
+     * @return 日期
+     */
+    public static Date getThreeOclockAMOfTheNextDay() {
+        LocalDateTime currentLocalDateTime = getCurrentLocalDateTime(null);
+        LocalDateTime threeOclockAMOfTheNextDay = LocalDateTime.of(currentLocalDateTime.getYear(), currentLocalDateTime.getMonth(), currentLocalDateTime.getDayOfMonth() + 1, 3, 0, 0);
+        return convertLocalDateTimeToDate(threeOclockAMOfTheNextDay);
     }
 
 }
