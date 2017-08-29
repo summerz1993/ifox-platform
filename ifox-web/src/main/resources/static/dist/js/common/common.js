@@ -25,6 +25,7 @@ var resource_delete_URL = system_service_URL + 'resource/delete';
 <!-- menu -->
 var menu_permission_list_URL = system_service_URL + 'menuPermission/get/menu';
 var menu_permission_get_URL = system_service_URL + 'menuPermission/get';
+var menu_permission_delete_URL = system_service_URL + 'menuPermission/delete';
 
 var ifox_table_ajax_options = {
     'headers': {

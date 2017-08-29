@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ifox.platform.common.constant.RestStatusConstant.CONTAIN_CHILD_MENU;
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
 @Api(tags = "菜单权限管理")
@@ -116,6 +117,13 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             return super.notFoundOneResponse("此菜单权限不存在");
         }
 
+        List<MenuPermissionEO> menuPermissionEOList = menuPermissionService.listChildMenu(id);
+        if(menuPermissionEOList != null && menuPermissionEOList.size() > 0){
+            logger.info("当前菜单包含子菜单");
+            return new BaseResponse(CONTAIN_CHILD_MENU, "菜单包含子菜单，请先删除子菜单！");
+        }
+
+        menuPermissionService.deleteMenuRoleRelation(id);
         menuPermissionService.deleteByEntity(menuPermissionEO);
         logger.info(successDelete);
 
