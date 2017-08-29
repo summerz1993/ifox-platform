@@ -35,4 +35,9 @@ public class DateTimeUtilTest {
         System.out.println(from);
     }
 
+    @Test
+    public void testGetThreeOclockAMOfTheNextDay() {
+        Date threeOclockAMOfTheNextDay = DateTimeUtil.getThreeOclockAMOfTheNextDay();
+        System.out.println(threeOclockAMOfTheNextDay);
+    }
 }

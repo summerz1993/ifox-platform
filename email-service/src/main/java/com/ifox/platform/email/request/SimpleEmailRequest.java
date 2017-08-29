@@ -7,7 +7,7 @@ import java.util.Date;
  * 简单邮件发送请求
  * @author Yeager
  */
-public class SimpleEmailRequest extends BaseEmailRequest {
+public class SimpleEmailRequest {
 
     private String replyTo;
 

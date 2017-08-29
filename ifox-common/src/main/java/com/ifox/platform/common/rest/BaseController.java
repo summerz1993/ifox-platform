@@ -66,7 +66,7 @@ public class BaseController<T> {
         return new BaseResponse(TOKEN_ERROR, "token错误");
     }
 
-    //--------------- token error ----------------
+    //--------------- server error ----------------
 
     protected BaseResponse serverExceptionBaseResponse() {
         return new BaseResponse(SERVER_EXCEPTION, "服务器异常");
@@ -94,4 +94,15 @@ public class BaseController<T> {
     protected BaseResponse unauthorizedBaseResponse(String desc) {
         return new BaseResponse(UNAUTHORIZED, StringUtils.isEmpty(desc) ? "未授权访问" : desc);
     }
+
+    //--------------- fail ----------------
+
+    protected BaseResponse notSupportFileTypeBaseResponse(){
+        return new BaseResponse(NOT_SUPPORT_FILE_TYPE, "不支持的文件类型");
+    }
+
+    protected BaseResponse notSupportServiceNameBaseResponse(){
+        return new BaseResponse(NOT_SUPPORT_SERVICE_NAME, "不支持的服务名称");
+    }
+
 }
