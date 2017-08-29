@@ -1,5 +1,6 @@
 var system_service_URL = 'http://localhost:8081/';
 var web_service_URL = 'http://localhost:8080/';
+var file_service_URL = 'http://localhost:8085/';
 
 <!-- admin user -->
 var admin_user_save_URL = system_service_URL + 'adminUser/save';

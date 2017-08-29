@@ -19,9 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 /**
  * 文件服务控制器
@@ -44,7 +47,7 @@ public class FileController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
                     @ApiResponse(code = 484, message = "不支持的文件类型"),
                     @ApiResponse(code = 485, message = "不支持的服务名称")})
-    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType) {
+    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("单文件上传 serviceName:{}, fileType:{}, uuid:{}", serviceName, fileType, uuid);
 
@@ -53,12 +56,14 @@ public class FileController extends BaseController {
         boolean validation = fileService.validateFileType(fileType, ext.substring(1));
         if (!validation) {
             logger.info("不支持的文件类型 uuid:{}", uuid);
+            response.setStatus(NOT_SUPPORT_FILE_TYPE);
             return notSupportFileTypeBaseResponse();
         }
 
         String[] serviceNameArray = env.getProperty("file-service.service-name").split(",");
         if (!Arrays.asList(serviceNameArray).contains(serviceName)) {
             logger.info("不支持的服务名称 uuid:{}", uuid);
+            response.setStatus(NOT_SUPPORT_SERVICE_NAME);
             return notSupportServiceNameBaseResponse();
         }
 
@@ -74,6 +79,7 @@ public class FileController extends BaseController {
 
         if (!parentFile.canWrite()) {
             logger.info("没有文件操作权限 finalPathString:{}, uuid:{}", finalPathString, uuid);
+            response.setStatus(UNAUTHORIZED);
             return unauthorizedBaseResponse("没有文件操作权限");
         }
 
@@ -81,6 +87,7 @@ public class FileController extends BaseController {
             file.transferTo(finalPath);
         } catch (IOException e) {
             logger.warn("保存文件异常 finalPathString:{}, uuid:{}", finalPathString, uuid);
+            response.setStatus(SERVER_EXCEPTION);
             return serverExceptionBaseResponse();
         }
 
