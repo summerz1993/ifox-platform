@@ -22,8 +22,8 @@ import static com.ifox.platform.common.constant.ExceptionStatusConstant.EMAIL_EX
  * @author Yeager
  */
 @Controller("emailController")
-@RequestMapping("/email")
-@Api(value = "/email", description = "邮件服务")
+@RequestMapping(value = "/email", headers = {"api-version=1.0", "Authorization"})
+@Api(tags = "邮件服务")
 public class EmailController extends BaseController {
 
     @Autowired
@@ -44,10 +44,9 @@ public class EmailController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 200, message = "发送成功"),
         @ApiResponse(code = 481, message = "Token校验失败"),
         @ApiResponse(code = 500, message = "服务器错误")})
-    public @ResponseBody BaseResponse sendSimpleEmail(@ApiParam(value = "request", required = true) @RequestBody SimpleEmailRequest request) {
+    public @ResponseBody BaseResponse sendSimpleEmail(@ApiParam @RequestBody SimpleEmailRequest request, @RequestHeader("Authorization") String token) {
         logger.info("sendSimpleEmail 发送邮件");
         //校验Token
-        String token = request.getToken();
         String applicationToken = env.getProperty("email-service.token");
         if (!applicationToken.equals(token)){
             logger.info("发送失败：token校验失败");
@@ -77,8 +76,6 @@ public class EmailController extends BaseController {
 
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
             throw new EmailException(EMAIL_EXP, "邮件发送异常");
         }
 
