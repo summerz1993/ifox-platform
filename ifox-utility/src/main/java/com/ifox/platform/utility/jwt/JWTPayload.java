@@ -65,6 +65,11 @@ public class JWTPayload {
     private String loginName;
 
     /**
+     * 头像
+     */
+    private String headPortrait;
+
+    /**
      * 角色ID列表
      */
     private String[] roleIdList;
@@ -147,5 +152,13 @@ public class JWTPayload {
 
     public void setNbf(Date nbf) {
         this.nbf = nbf;
+    }
+
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
     }
 }
