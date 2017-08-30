@@ -21,11 +21,14 @@ var resource_save_URL = system_service_URL + 'resource/save';
 var resource_get_URL = system_service_URL + 'resource/get';
 var resource_update_URL = system_service_URL + 'resource/update';
 var resource_delete_URL = system_service_URL + 'resource/delete';
+var resource_list_URL = system_service_URL + 'resource/list';
 
 <!-- menu -->
 var menu_permission_list_URL = system_service_URL + 'menuPermission/get/menu';
 var menu_permission_get_URL = system_service_URL + 'menuPermission/get';
 var menu_permission_delete_URL = system_service_URL + 'menuPermission/delete';
+var menu_permission_save_URL = system_service_URL + 'menuPermission/save';
+var menu_permission_update_URL = system_service_URL + 'menuPermission/update';
 
 var ifox_table_ajax_options = {
     'headers': {
