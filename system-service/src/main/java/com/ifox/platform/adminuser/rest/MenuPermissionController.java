@@ -48,7 +48,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     public @ResponseBody
     MultiResponse<MenuVO> getMenu(){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("获取树形目录菜单,uuid:{}", uuid);
+        logger.info("获取树形目录菜单 uuid:{}", uuid);
 
         List<MenuPermissionDTO> allMPDTOList = menuPermissionService.listAllDTO();
         List<MenuVO> menuVOList = new ArrayList<>();
@@ -72,7 +72,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             menuVOList = newMenuVOList;
         }
 
-        logger.info(successQuery + ",uuid:{}", uuid);
+        logger.info(successQuery + " uuid:{}", uuid);
         return new MultiResponse(SUCCESS, successQuery, menuVOList);
     }
 
@@ -83,17 +83,17 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     public @ResponseBody
     OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("查询菜单权限：{},uuid:{}", id, uuid);
+        logger.info("查询菜单权限 id:{},uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
         if (menuPermissionEO == null){
-            logger.info("此菜单权限不存在");
+            logger.info("此菜单权限不存在 uuid:{}", uuid);
             return super.notFoundOneResponse("此菜单权限不存在");
         }
 
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        logger.info(successQuery + ",uuid:{}", uuid);
+        logger.info(successQuery + " uuid:{}", uuid);
         return successQueryOneResponse(menuPermissionVO);
     }
 
@@ -105,7 +105,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     public @ResponseBody
     OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody MenuPermissionRequest request, @RequestHeader("Authorization") String token){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("保存菜单权限：{}, uuid:{}", request.toString(), uuid);
+        logger.info("保存菜单权限 request:{}, uuid:{}", request.toString(), uuid);
 
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
         ModelMapperUtil.get().map(request, menuPermissionEO);
@@ -116,7 +116,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
 
         MenuPermissionEO parentMenu = menuPermissionService.get(menuPermissionEO.getParentId());
         if(parentMenu == null){
-            logger.info("父菜单权限不存在: {}", menuPermissionEO.getParentId());
+            logger.info("父菜单权限不存在 uuid:{}", uuid);
             return super.notFoundOneResponse("父菜单权限不存在");
         }
 
@@ -127,7 +127,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        logger.info(successSave + ",uuid:{}", uuid);
+        logger.info(successSave + " uuid:{}", uuid);
         return new OneResponse(SUCCESS, successSave, menuPermissionVO);
     }
 
@@ -135,34 +135,34 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     @ApiResponses({
         @ApiResponse(code = 404, message = "菜单权限不存在"),
-        @ApiResponse(code = 487, message = "系统内置菜单不可删除"),
-        @ApiResponse(code = 486, message = "菜单包含子菜单，请先删除子菜单")
+        @ApiResponse(code = 488, message = "系统内置菜单不可删除"),
+        @ApiResponse(code = 487, message = "菜单包含子菜单，请先删除子菜单")
     })
     public @ResponseBody
     BaseResponse delete(@ApiParam @PathVariable String id){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("删除菜单权限：{}, uuid:{}", id, uuid);
+        logger.info("删除菜单权限 id:{}, uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
 
         if (menuPermissionEO == null){
-            logger.info("此菜单权限不存在");
+            logger.info("此菜单权限不存在 uuid:{}", uuid);
             return super.notFoundOneResponse("此菜单权限不存在");
         }
 
         if(menuPermissionEO.getBuildinSystem()){
-            logger.info("菜单{}为系统内置菜单，不可删除", id);
+            logger.info("为系统内置菜单，不可删除 id:{}, uuid:{}", id, uuid);
             return new BaseResponse(BUILD_IN_SYSTEM_CAN_NOT_DELETE, "系统内置菜单不可删除！");
         }
 
         List<MenuPermissionEO> menuPermissionEOList = menuPermissionService.listChildMenu(id);
         if(menuPermissionEOList != null && menuPermissionEOList.size() > 0){
-            logger.info("当前菜单包含子菜单");
+            logger.info("当前菜单包含子菜单 uuid:{}", uuid);
             return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 
         menuPermissionService.deleteMenuRoleRelation(id);
         menuPermissionService.deleteByEntity(menuPermissionEO);
-        logger.info(successDelete + ",uuid:{}", uuid);
+        logger.info(successDelete + " uuid:{}", uuid);
 
         return successDeleteBaseResponse();
     }
@@ -172,7 +172,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     public @ResponseBody
     OneResponse<MenuPermissionVO> update(@ApiParam @RequestBody MenuPermissionRequest request){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("修改菜单权限{},uuid:{}", request.toString(), uuid);
+        logger.info("修改菜单权限 request:{}, uuid:{}", request.toString(), uuid);
 
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
         ModelMapperUtil.get().map(request, menuPermissionEO);
@@ -181,7 +181,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        logger.info(successUpdate + ",uuid:{}", uuid);
+        logger.info(successUpdate + " uuid:{}", uuid);
         return new OneResponse(SUCCESS, successSave, menuPermissionVO);
     }
 }
