@@ -60,9 +60,11 @@ public class BaseWebController {
         Any payLoadAny = JsonIterator.deserialize(payload);
         String userId = payLoadAny.get("userId").toString();
         String loginName = payLoadAny.get("loginName").toString();
+        String headPortrait = payLoadAny.get("headPortrait").toString();
 
         model.addAttribute("userId", userId);
         model.addAttribute("loginName", loginName);
+        model.addAttribute("headPortrait", headPortrait);
 
         return view;
     }

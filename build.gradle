@@ -44,6 +44,8 @@ subprojects{
         compile('org.apache.commons:commons-lang3:3.5') {
             exclude group: 'org.slf4j', module: 'slf4j-api' //by both name and group
         }
+        // https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.io
+        compile group: 'org.apache.directory.studio', name: 'org.apache.commons.io', version: '2.4'
 
         compile "com.jsoniter:jsoniter:$jsoniterVersion"
 
