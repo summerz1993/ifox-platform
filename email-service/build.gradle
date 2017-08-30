@@ -11,8 +11,7 @@ repositories {
 }
 
 dependencies {
-
-    compile project(":ifox-common")
+    compile project(":ifox-base-service")
 
     // email
     compile "org.springframework.boot:spring-boot-starter-mail:$springBootVersion"
