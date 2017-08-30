@@ -54,6 +54,7 @@ public class JWTUtil {
                 .withSubject(payload.getSub())
                 .withClaim("userId", payload.getUserId())
                 .withClaim("loginName", payload.getLoginName())
+                .withClaim("headPortrait", payload.getHeadPortrait())
                 .withArrayClaim("roleIdList", payload.getRoleIdList())
                 .sign(algorithm);
     }

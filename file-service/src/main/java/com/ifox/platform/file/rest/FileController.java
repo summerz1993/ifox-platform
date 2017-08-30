@@ -39,7 +39,7 @@ import static com.ifox.platform.common.constant.RestStatusConstant.*;
  * 文件服务控制器
  */
 @Controller("fileController")
-@RequestMapping(value = "/file", headers = {"api-version=1.0", "Authorization"})
+@RequestMapping(value = "/file")
 @Api(tags = "文件服务")
 public class FileController extends BaseController {
 
@@ -51,7 +51,7 @@ public class FileController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = {"api-version=1.0", "Authorization"})
     @ApiOperation("单文件上传")
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
                     @ApiResponse(code = 484, message = "不支持的文件类型"),
@@ -111,7 +111,7 @@ public class FileController extends BaseController {
         File file=new File(absolutePath + path);
 
         HttpHeaders headers = new HttpHeaders();
-//        String fileName=new String("你好.xlsx".getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
+//        String fileName=new String("你好.xlsx".getBytes("UTF-8"),"iso-8859-1");
 //        headers.setContentDispositionFormData("attachment", fileName);
 //        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 

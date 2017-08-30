@@ -36,5 +36,7 @@ public final class RestStatusConstant {
     public static final Integer NOT_SUPPORT_FILE_TYPE = 484;
     //不支持的服务名称
     public static final Integer NOT_SUPPORT_SERVICE_NAME = 485;
+    //不允许删除自身账号
+    public static final Integer DELETE_SELF_ERROR = 486;
 
 }

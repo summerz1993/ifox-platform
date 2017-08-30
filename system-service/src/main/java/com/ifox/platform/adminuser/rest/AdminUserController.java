@@ -85,14 +85,22 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
-                    @ApiResponse(code = 400, message = "无效请求：ids为空")})
-    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids){
+                    @ApiResponse(code = 400, message = "无效请求：ids为空"),
+                    @ApiResponse(code = 486, message = "不允许删除自身账号")})
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, @RequestHeader("Authorization") String token){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除用户 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
             logger.info("无效请求,ids为空 uuid:{}", uuid);
             return invalidRequestBaseResponse();
+        }
+
+        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String userId = JsonIterator.deserialize(payload).get("userId").toString();
+        if (Arrays.asList(ids).contains(userId)) {
+            logger.info("不允许删除自身账号 userId:{}, uuid:{}", userId, uuid);
+            return deleteSelfErrorBaseResponse();
         }
 
         try {

@@ -143,6 +143,7 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            $('#headPortrait-add').fileinput('clear');
         }
     },
     mounted: function () {

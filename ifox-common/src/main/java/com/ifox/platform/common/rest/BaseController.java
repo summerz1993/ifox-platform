@@ -105,4 +105,11 @@ public class BaseController<T> {
         return new BaseResponse(NOT_SUPPORT_SERVICE_NAME, "不支持的服务名称");
     }
 
+    //--------------- delete self error ----------------
+
+    protected BaseResponse deleteSelfErrorBaseResponse(){
+        return new BaseResponse(DELETE_SELF_ERROR, "不允许删除自身账号");
+    }
+
+
 }
