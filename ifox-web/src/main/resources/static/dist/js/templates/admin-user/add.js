@@ -13,10 +13,12 @@ new Vue({
     },
     methods: {
         initAddUserFileUpload: function () {
+            var vm = this;
             $("#headPortrait-add").fileinput({
                 language: 'zh',
-                uploadUrl: "/site/image-upload",
-                allowedFileExtensions: ["jpg", "png", "gif"],
+                allowedFileTypes: ["image"],
+                allowedFileExtensions: ["jpg", "png", "gif", "bmp", "jpeg", "psd", "svg"],
+                maxFileSize: 50,
                 maxFileCount: 1,
                 previewClass: 'preview-size',
                 showCaption: false,
@@ -25,11 +27,18 @@ new Vue({
                 autoReplace: true,
                 showUploadedThumbs: true,
                 showBrowse: false,
-                browseOnZoneClick: true
+                browseOnZoneClick: true,
+                uploadUrl: file_service_URL + "file/upload?serviceName=system-service&fileType=PICTURE",
+                ajaxSettings: {
+                    'headers': {
+                        "Authorization": getCookie('token'),
+                        'api-version': '1.0'
+                    }
+                }
             });
 
-            $("#add-modal .file-preview").attr("style", "width:160px;height:230px;");
-            $("#add-modal .clickable").attr('style', 'width:120px;height:195px;');
+            $("#add-modal .file-preview").attr("style", "width:220px; height:220px;");
+            $("#add-modal .clickable").attr('style', 'width:185px; height:185px;');
             $("#add-modal .file-drop-zone-title").css('padding', '45px 10px');
 
             $('#headPortrait-add').on('fileloaded', function(event, file, previewId, index, reader) {
@@ -43,9 +52,25 @@ new Vue({
             });
 
             $('#headPortrait-add').on('fileuploaderror', function(event, data, msg) {
+                console.log('file upload error, data=' + data + ' msg=' + msg);
                 $('.text-success').remove();
                 $('.file-error-message').remove();
+                try {
+                    layer.msg(JSON.parse(msg).desc);
+                } catch(err) {
+                    layer.msg(msg);
+                }
             });
+
+            $('#headPortrait-add').on('fileuploaded', function(event, data, previewId, index) {
+                if (data.response.status === 200) {
+                    vm.headPortrait = data.response.desc;
+                } else {
+                    layer.msg(data.response.desc);
+                }
+                console.log('File uploaded triggered, response.status=' + data.response.status + " response.desc=" + data.response.desc);
+            });
+
         },
         validate: function () {
             return $('#add-user-form').validate({

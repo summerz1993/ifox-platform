@@ -111,16 +111,15 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
             payload.setJti(UUIDUtil.randomUUID());
             payload.setUserId(adminUserEO.getId());
             payload.setLoginName(adminUserEO.getLoginName());
+            payload.setHeadPortrait(adminUserEO.getHeadPortrait());
 
             List<RoleEO> roleEOList = adminUserEO.getRoleEOList();
             List<String> roleIdList = new ArrayList<>();
-            for (RoleEO role :
-                roleEOList) {
+            for (RoleEO role : roleEOList) {
                 roleIdList.add(role.getId());
             }
             int size = roleIdList.size();
             payload.setRoleIdList(roleIdList.toArray(new String[size]));
-
         }
         return payload;
     }
