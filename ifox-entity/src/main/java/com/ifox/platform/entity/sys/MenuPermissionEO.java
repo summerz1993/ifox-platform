@@ -80,7 +80,7 @@ public class MenuPermissionEO extends BaseEntity {
     /**
      * 所属资源
      */
-    @Column(nullable = false)
+    @Column
     private String resource;
 
     public String getName() {
