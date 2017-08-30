@@ -36,5 +36,6 @@ public final class RestStatusConstant {
     public static final Integer NOT_SUPPORT_FILE_TYPE = 484;
     //不支持的服务名称
     public static final Integer NOT_SUPPORT_SERVICE_NAME = 485;
-
+    //菜单包含子菜单，不可直接删除，必须先删除子菜单
+    public static final Integer CONTAIN_CHILD_MENU = 486;
 }

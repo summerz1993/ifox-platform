@@ -18,4 +18,17 @@ public interface MenuPermissionService extends GenericService<MenuPermissionEO, 
      * @return List<MenuPermissionDTO>
      */
     List<MenuPermissionDTO> listAllDTO();
+
+    /**
+     * 删除菜单权限和角色的关联关系
+     * @param menuId
+     */
+    void deleteMenuRoleRelation(String menuId);
+
+    /**
+     * 查询所有子菜单
+     * @param id
+     * @return
+     */
+    List<MenuPermissionEO> listChildMenu(String id);
 }

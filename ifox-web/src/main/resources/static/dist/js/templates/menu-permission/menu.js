@@ -1,3 +1,3 @@
 $(function () {
-    menuTree.init("menu-tree", menu_permission_list_URL, ["checkbox","contextmenu","dnd"], true);
+    menuTree.init("menu-tree", menu_permission_list_URL, ["contextmenu"], true);
 });

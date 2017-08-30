@@ -10,4 +10,10 @@ public interface MenuPermissionDao extends GenericDao<MenuPermissionEO, String> 
      * @return 最大层级
      */
     Integer getBottomLevel();
+
+    /**
+     * 删除菜单权限和角色的关联关系
+     * @param menuId
+     */
+    void deleteMenuRoleRelation(String menuId);
 }
