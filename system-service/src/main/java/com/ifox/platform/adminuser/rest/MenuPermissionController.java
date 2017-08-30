@@ -10,11 +10,15 @@ import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.entity.sys.MenuPermissionEO;
+import com.ifox.platform.utility.common.UUIDUtil;
+import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
+import com.jsoniter.JsonIterator;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.CONTAIN_CHILD_MENU;
-import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 @Api(tags = "菜单权限管理")
 @Controller
@@ -34,6 +37,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     private MenuPermissionService menuPermissionService;
 
     @ApiOperation("获取菜单")
@@ -41,7 +47,8 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @SuppressWarnings("unchecked")
     public @ResponseBody
     MultiResponse<MenuVO> getMenu(){
-        logger.info("获取树形目录菜单");
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("获取树形目录菜单,uuid:{}", uuid);
 
         List<MenuPermissionDTO> allMPDTOList = menuPermissionService.listAllDTO();
         List<MenuVO> menuVOList = new ArrayList<>();
@@ -65,7 +72,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             menuVOList = newMenuVOList;
         }
 
-        logger.info(successQuery);
+        logger.info(successQuery + ",uuid:{}", uuid);
         return new MultiResponse(SUCCESS, successQuery, menuVOList);
     }
 
@@ -75,7 +82,8 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})
     public @ResponseBody
     OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id){
-        logger.info("查询菜单权限：{}", id);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("查询菜单权限：{},uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
         if (menuPermissionEO == null){
             logger.info("此菜单权限不存在");
@@ -85,31 +93,55 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        logger.info(successQuery);
+        logger.info(successQuery + ",uuid:{}", uuid);
         return successQueryOneResponse(menuPermissionVO);
     }
 
     @ApiOperation("添加菜单权限")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ApiResponses({
+        @ApiResponse(code = 404, message = "父菜单权限不存在")
+    })
     public @ResponseBody
-    BaseResponse save(@ApiParam @RequestBody MenuPermissionRequest request){
-        logger.info("保存菜单权限：{}", request.toString());
+    OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody MenuPermissionRequest request, @RequestHeader("Authorization") String token){
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("保存菜单权限：{}, uuid:{}", request.toString(), uuid);
 
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
         ModelMapperUtil.get().map(request, menuPermissionEO);
 
+        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String userId = JsonIterator.deserialize(payload).get("userId").toString();
+        menuPermissionEO.setCreator(userId);
+
+        MenuPermissionEO parentMenu = menuPermissionService.get(menuPermissionEO.getParentId());
+        if(parentMenu == null){
+            logger.info("父菜单权限不存在: {}", menuPermissionEO.getParentId());
+            return super.notFoundOneResponse("父菜单权限不存在");
+        }
+
+        menuPermissionEO.setLevel(parentMenu.getLevel() + 1);
+        menuPermissionEO.setStatus(MenuPermissionEO.MenuEOStatus.ACTIVE);
         menuPermissionService.save(menuPermissionEO);
 
-        logger.info(successSave);
-        return successSaveBaseResponse();
+        MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
+        ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
+
+        logger.info(successSave + ",uuid:{}", uuid);
+        return new OneResponse(SUCCESS, successSave, menuPermissionVO);
     }
 
     @ApiOperation("删除菜单权限")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})
+    @ApiResponses({
+        @ApiResponse(code = 404, message = "菜单权限不存在"),
+        @ApiResponse(code = 487, message = "系统内置菜单不可删除"),
+        @ApiResponse(code = 486, message = "菜单包含子菜单，请先删除子菜单")
+    })
     public @ResponseBody
     BaseResponse delete(@ApiParam @PathVariable String id){
-        logger.info("删除菜单权限：{}", id);
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("删除菜单权限：{}, uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
 
         if (menuPermissionEO == null){
@@ -117,15 +149,20 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             return super.notFoundOneResponse("此菜单权限不存在");
         }
 
+        if(menuPermissionEO.getBuildinSystem()){
+            logger.info("菜单{}为系统内置菜单，不可删除", id);
+            return new BaseResponse(BUILD_IN_SYSTEM_CAN_NOT_DELETE, "系统内置菜单不可删除！");
+        }
+
         List<MenuPermissionEO> menuPermissionEOList = menuPermissionService.listChildMenu(id);
         if(menuPermissionEOList != null && menuPermissionEOList.size() > 0){
             logger.info("当前菜单包含子菜单");
-            return new BaseResponse(CONTAIN_CHILD_MENU, "菜单包含子菜单，请先删除子菜单！");
+            return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 
         menuPermissionService.deleteMenuRoleRelation(id);
         menuPermissionService.deleteByEntity(menuPermissionEO);
-        logger.info(successDelete);
+        logger.info(successDelete + ",uuid:{}", uuid);
 
         return successDeleteBaseResponse();
     }
@@ -133,7 +170,18 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @ApiOperation("修改菜单权限")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody
-    BaseResponse update(){
-        return null;
+    OneResponse<MenuPermissionVO> update(@ApiParam @RequestBody MenuPermissionRequest request){
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("修改菜单权限{},uuid:{}", request.toString(), uuid);
+
+        MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
+        ModelMapperUtil.get().map(request, menuPermissionEO);
+
+        menuPermissionService.update(menuPermissionEO);
+        MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
+        ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
+
+        logger.info(successUpdate + ",uuid:{}", uuid);
+        return new OneResponse(SUCCESS, successSave, menuPermissionVO);
     }
 }

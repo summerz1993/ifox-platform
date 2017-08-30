@@ -11,7 +11,7 @@
 <aside id="add-modal" class="list-sidebar" th:fragment="add-modal">
     <!-- add modal -->
     <div class="modal fade" id="add-menu" tabindex="-1" role="dialog" aria-labelledby="menuLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width:800px">
+        <div class="modal-dialog" style="width:600px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -22,10 +22,66 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="menu-form">
+                    <form class="form-horizontal" id="menu-add-form">
                         <table class="table no-border">
                             <tbody>
+                                <tr >
+                                    <td>
+                                        <label for="name-add" class="col-sm-3 text-center">菜单名称</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="name-add" name="name" placeholder="请输入菜单名称" v-model="name">
+                                        </div>
+                                    </td>
+                                </tr>
 
+                                <tr>
+                                    <td>
+                                        <label for="url-add" class="col-sm-3 text-center">菜单链接</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" id="url-add" name="url" placeholder="请输入菜单链接" v-model="url">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="buildinSystem-add" class="col-sm-3 text-center">系统内置</label>
+                                        <div class="col-sm-3">
+                                            <select id="buildinSystem-add" name="buildinSystem" class="form-control" v-model="buildinSystem">
+                                                <option value="true">是</option>
+                                                <option value="false">否</option>
+                                            </select>
+                                        </div>
+
+                                        <label for="button-add" class="col-sm-3 text-center">按钮</label>
+                                        <div class="col-sm-3">
+                                            <select id="button-add" name="button" class="form-control" v-model="button">
+                                                <option value="true">是</option>
+                                                <option value="false">否</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="resource-add" class="col-sm-3 text-center">所属资源</label>
+                                        <div class="col-sm-9">
+                                            <select id="resource-add" name="resource" class="form-control" v-model="resource" @change="selectVal">
+                                                <option v-for="res in resources" v-bind:value="res.id">{{res.name}}</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label for="remark-add" class="col-sm-3 text-center">备注</label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" rows="3" id="remark-add" name="remark" v-model="remark" placeholder="请输入..."></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </form>
@@ -34,7 +90,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
-                    <button type="button" class="btn btn-primary" id="save-modal-btn">
+                    <button type="button" class="btn btn-primary" id="save-add-modal-btn">
                         保存
                     </button>
                 </div>

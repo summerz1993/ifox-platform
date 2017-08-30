@@ -11,6 +11,7 @@ import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.PageInfo;
 import com.ifox.platform.common.rest.response.BaseResponse;
+import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.common.ResourceEO;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -134,5 +136,19 @@ public class ResourceController extends BaseController<ResourceVO> {
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryPageResponse(pageInfo, resourceVOList);
+    }
+
+    @ApiOperation("获取所有资源")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public @ResponseBody
+    MultiResponse<ResourceVO> list(){
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("获取所有资源uuid:{}", uuid);
+
+        List<ResourceDTO> resourceDTOList = ModelMapperUtil.get().map(resourceService.listAll(), new TypeToken<List<ResourceDTO>>() {}.getType());
+        List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOList, new TypeToken<List<ResourceVO>>() {}.getType());
+
+        logger.info(successQuery + " uuid:{}", uuid);
+        return successQueryMultiResponse(resourceVOList);
     }
 }
