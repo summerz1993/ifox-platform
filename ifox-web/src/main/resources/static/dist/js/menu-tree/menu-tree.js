@@ -6,80 +6,18 @@ Array.prototype.contains = function ( ele ) {
 }
 
 var menuTree = (function(){
-    var detail_vue = new Vue({
-        el: "#selected-menu-detail",
-        data: {
-            object: {
-                name: {
-                    lable: "名称",
-                    value: "",
-                    isActive: true
-                },
-                link: {
-                    lable: "链接",
-                    value: ""
-                },
-                creator: {
-                    lable: "创建者",
-                    value: ""
-                },
-                level: {
-                    lable: "级别",
-                    value: ""
-                },
-                buildinSystem: {
-                    lable: "系统内置",
-                    value: ""
-                },
-                resource: {
-                    lable: "所属资源",
-                    value: ""
-                }
-            }
-        },
-        methods: {
-            detail: function (id) {
-                var url = menu_permission_get_URL + "/" + id;
-                this.resetData();
-                var vm = this;
-                axios.get(url, ifox_table_ajax_options)
-                    .then(function (res) {
-                        if(res.data.status === 200){
-                            var res_data = res.data.data;
-                            vm.object.name.value = res_data.name;
-                            vm.object.link.value = res_data.url;
-                            vm.object.level.value = res_data.level;
-                            vm.object.creator.value = vm.getCreator(res_data.creator);
-                            vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
-                            vm.object.resource.value = vm.getResource(res_data.resource);
-                        }else{
-                            layer.msg(res.data.desc);
-                        }
-                    })
-                    .catch(function () {
-                        serverError();
-                    });
-            },
-            getCreator: function (id) {
-                return id;
-            },
-            getResource: function (id) {
-                return id;
-            },
-            resetData: function () {
-                this.object.name.value = "";
-                this.object.link.value = "#";
-                this.object.creator.value = "";
-                this.object.buildinSystem.value = "";
-                this.object.resource.value = "";
-            }
-        }
-    });
+    //点击详情vue
+    var detail_vue = "";
+    //添加vue
+    var add_model_vue = "";
+   //编辑vue
+    var edit_model_vue = "";
 
 	var _menu = {
 		data: {},
 		plugins: ["types"],
 		contextmenu: {
+		    "select_node": false,
 			"items":{  
 					"create":null,  
 					"rename":null,  
@@ -90,8 +28,13 @@ var menuTree = (function(){
 								"action": function(data){
 										var node = _menu.data.jsTree.jstree('get_node',data.reference[0])
 										var pid = node.id;
-										$("#menu").modal('show');
-										_menu.operation.add(data);
+										$("#add-menu").modal('show');
+										add_model_vue.initData(pid);
+                                        $("#save-add-modal-btn").unbind('click');
+                                        $("#save-add-modal-btn").click(function () {
+                                            add_model_vue.save(data);
+                                        });
+										// _menu.operation.add(data);
 									}  
 							},
 					"删除":{  
@@ -99,50 +42,47 @@ var menuTree = (function(){
 								"action": function (data) {
 										var node = _menu.data.jsTree.jstree('get_node',data.reference[0]);
 										//提示是否删除
-										console.log("delete node : " + node.id);
-										//删除
-										_menu.operation.delete(data);
-										//删除成功后刷新
-										_menu.operation.refresh(data);
+                                        layer.open({
+                                            content: '确认删除菜单“' + node.text + "“?"
+                                            ,btn: ['确定', '取消']
+                                            ,yes: function(index, layero){
+                                                //删除
+                                                _menu.operation.delete(data);
+                                                layer.closeAll()
+                                            }
+                                            ,btn2: function(index, layero){
+
+                                            }
+                                            ,cancel: function(){
+
+                                            }
+                                        });
 									}  
 							},
 					"编辑":{  
 								"label": "编辑",  
 								"action": function(data){
-										var node = _menu.data.jsTree.jstree('get_node',data.reference[0]).original;
-										$("#menu").modal('show');
-										_menu.operation.update(data);
+                                        var node = _menu.data.jsTree.jstree('get_node',data.reference[0]);
+										$("#edit-menu").modal('show');
+										edit_model_vue.initData(node.id);
+                                        $("#save-edit-modal-btn").unbind('click');
+                                        $("#save-edit-modal-btn").click(function () {
+                                            edit_model_vue.save(data);
+                                        });
+										// _menu.operation.update(data);
 									}  
 							}		
 					}
 		},
 		types: {
-				"#": {
-						"max_children" : 1,
-						"max_depth" : 4,
-						"valid_children" : ["root"]
-					},
-				"root": {
-						"icon" : "glyphicon glyphicon-link",
-						"valid_children" : ["default","file","menu","button"]
-					},
-				"default": {
-						"valid_children" : ["default","file","menu","button"]
-					},
-				"file": {
-						"icon" : "glyphicon glyphicon-folder-open",
-						"valid_children" : ["default","file","menu","button"]
-					},
-				"menu": {
-						"icon" : "glyphicon glyphicon-indent-left",
-						"valid_children" : ["default","file","menu","button"]
-					},
-				"button": {
-						"icon" : "glyphicon glyphicon-th-large",
-						"valid_children" : []
-					}
+            "menu": {
+                    "icon" : "glyphicon glyphicon-indent-left"
+            },
+            "button": {
+                    "icon" : "glyphicon glyphicon-th-large"
+            }
 		},
-		initMenu: function(element, url, option){
+		initMenu: function(element, url, option, clickable){
 			var _tree_option = {
 				core: {
 					"animation" : 0,
@@ -154,8 +94,11 @@ var menuTree = (function(){
                                 if(res.data.status === 200){
                                     var data = res.data.data;
                                     callback.call(this, data);
-                                    var default_ = data[0];
-                                    detail_vue.detail(default_.id);
+
+                                    if(clickable){
+                                        var default_ = data[0];
+                                        _menu.operation.getDetail(default_.id);
+                                    }
                                 }else{
                                     layer.msg(res.data.desc);
                                 }
@@ -177,84 +120,426 @@ var menuTree = (function(){
 			if(option.contains("checkbox"))
 				_menu.plugins.push("checkbox");
 			
-			if(option.contains("dnd"))
-				_menu.plugins.push("dnd");
-			
 			_tree_option.plugins = _menu.plugins;
 			
 			var js_tree = $("#" + element).jstree(_tree_option);
 			
-			console.log(_tree_option.plugins);
-			
 			this.data.jsTree = js_tree;
 		},
-		initEvent: function(element, clickable){
-			$("#" + element).on('move_node.jstree', function(e, data){
-				console.log(data.node);
-				console.log(data.parent);
-				_menu.operation.move();
-			});
-			
+		initEvent: function(element, option, clickable){
+            if(option.contains("contextmenu")){
+                add_model_vue = _menu.operation.getAddModelVue();
+                edit_model_vue = _menu.operation.getEditModelVue();
+            }
+
 			if(clickable){
+                detail_vue = _menu.operation.getDetailVue();
 				$("#" + element).bind("select_node.jstree deselect_node.jstree", 
-										function(e, data){
-											var node = data.node;
-											console.log(node);
-											_menu.operation.getDetail(node.id);
-										});
+                    function(e, data){
+                        var node = data.node;
+                        _menu.operation.getDetail(node.id);
+                });
 			}
 		},
 		operation: {
-			add: function(data){
+			add: function(data, newNode){
 				var inst = $.jstree.reference(data.reference),
 							obj = inst.get_node(data.reference);
 				inst.create_node(obj, {}, "last", function (new_node) {
-					inst.set_id (new_node, "5");
-					inst.set_text (new_node, "menu5");
-					inst.set_type (new_node, "menu");
+					inst.set_id (new_node, newNode.id);
+					inst.set_text (new_node, newNode.name);
+					inst.set_type (new_node, newNode.button ? "button" : "menu");
 					try {
 							inst.edit(new_node);
 						} catch (ex) {
 							setTimeout(function () { inst.edit(new_node); },0);
 						}
-				});	
+
+                    $("#add-menu").modal('hide');
+				});
 			},
-			update: function (data) {
+			update: function (data, node) {
 				var inst = $.jstree.reference(data.reference),
 							obj = inst.get_node(data.reference);
-				
-				inst.set_text (obj, "test");
-				inst.set_type (obj, "button");				
-				
-				inst.edit(obj);
+
+				inst.set_text (obj, node.name);
+				inst.set_type (obj, node.button ? "button" : "menu");
+                try {
+                    inst.edit(obj, function () {
+                        return true;
+                    });
+                } catch (ex) {
+                    setTimeout(function () { inst.edit(obj, function () {
+                        return true;
+                    }); },0);
+                }
+
+                $("#edit-menu").modal('hide');
 			},
 			delete: function(data){
 				var inst = $.jstree.reference(data.reference),
 						obj = inst.get_node(data.reference);
-				
-				//if(inst.is_selected(obj)) {
-				//	inst.delete_node(inst.get_selected());
-				//} else {
-					inst.delete_node(obj);
-				//}
-			},
-			move: function(){
-				
+
+				var url = menu_permission_delete_URL + "/" + obj.id;
+                axios.delete(url, ifox_table_ajax_options)
+                    .then(function (res) {
+                        if(res.data.status === 200){
+                            inst.delete_node(obj);
+                            //删除成功后刷新
+                            _menu.operation.refresh(data);
+                        }else{
+                            layer.msg(res.data.desc);
+                        }
+                    })
+                    .catch(function () {
+                        serverError();
+                    });
 			},
             getDetail: function (id) {
                 detail_vue.detail(id);
             },
 			refresh: function(data){
-				console.log("refresh");
 				_menu.data.jsTree.jstree('refresh');
-			}
+			},
+            getDetailVue: function () {
+                return new Vue({
+                    el: "#selected-menu-detail",
+                    data: {
+                        object: {
+                            name: {
+                                lable: "名称",
+                                value: "",
+                                isActive: true
+                            },
+                            link: {
+                                lable: "链接",
+                                value: ""
+                            },
+                            level: {
+                                lable: "级别",
+                                value: ""
+                            },
+                            creator: {
+                                lable: "创建者",
+                                value: ""
+                            },
+                            buildinSystem: {
+                                lable: "系统内置",
+                                value: ""
+                            },
+                            resource: {
+                                lable: "所属资源",
+                                value: ""
+                            },
+                            remark: {
+                                lable: "备注",
+                                value: ""
+                            }
+                        }
+                    },
+                    methods: {
+                        /**
+                         * 查看菜单详情
+                         * @param id
+                         */
+                        detail: function (id) {
+                            var url = menu_permission_get_URL + "/" + id;
+                            this.resetData();
+                            var vm = this;
+                            axios.get(url, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.object.name.value = res_data.name;
+                                        vm.object.link.value = res_data.url;
+                                        vm.object.level.value = res_data.level;
+                                        vm.object.creator.value = vm.getCreator(res_data.creator);
+                                        vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
+                                        vm.object.resource.value = vm.getResource(res_data.resource);
+                                        vm.object.remark.value = res_data.remark;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        /**
+                         * 获取菜单创建者
+                         * @param id
+                         */
+                        getCreator: function (id) {
+                            var url = admin_user_get_URL + "/" + id;
+                            var vm = this;
+                            axios.get(url, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.object.creator.value =  res_data.loginName;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        /**
+                         * 获取菜单所属资源
+                         * @param id
+                         */
+                        getResource: function (id) {
+                            var url = resource_get_URL + "/" + id;
+                            var vm = this;
+                            axios.get(url, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.object.resource.value =  res_data.name;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        resetData: function () {
+                            this.object.name.value = "";
+                            this.object.link.value = "#";
+                            this.object.creator.value = "";
+                            this.object.buildinSystem.value = "";
+                            this.object.resource.value = "";
+                        }
+                    }
+                });
+            },
+            getAddModelVue: function () {
+                return new Vue({
+                    el: "#add-modal",
+                    data: {
+                        parentId: "",
+                        name: "",
+                        url: "",
+                        buildinSystem: true,
+                        button: false,
+                        resource: "",
+                        resources: [],
+                        remark: ""
+                    },
+                    methods: {
+                        validate: function () {
+                            return $('#menu-add-form').validate({
+                                rules: {
+                                    name:{
+                                        required: true,
+                                        minlength: 2
+                                    },
+                                    url:{
+                                        required: true,
+                                        resourceUrl: true
+                                    }
+                                },
+                                messages: {
+                                    name: "请输入2位有效的菜单名称！",
+                                    url: "请输入正确的资源路径！"
+                                }
+                            });
+                        },
+                        initData: function (parentId) {
+                            var vm = this;
+                            vm.resetData();
+                            vm.parentId = parentId;
+                            vm.initResources();
+                        },
+                        initResources: function () {
+                            var vm = this;
+                            axios.get(resource_list_URL, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.resources =  res_data;
+                                        vm.resource = res_data[0].id;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        selectVal: function(ele) {
+                            this.resource = ele.target.value;
+                        },
+                        save: function (data) {
+                            if(!this.validate().form())
+                                return;
+
+                            var vm = this;
+                            var req_data = {
+                                parentId: vm.parentId,
+                                name: vm.name,
+                                url: vm.url,
+                                buildinSystem: vm.buildinSystem,
+                                button: vm.button,
+                                resource: vm.resource,
+                                remark: vm.remark
+                            };
+                            axios.post(menu_permission_save_URL, req_data, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    layer.msg(res.data.desc);
+                                    if(res.data.status === 200){
+                                        _menu.operation.add(data, res.data.data);
+                                    }
+                                })
+                                .catch(function (err) {
+                                    serverError();
+                                });
+                        },
+                        resetData: function () {
+                            this.name = "";
+                            this.url = "";
+                            this.buildinSystem = true;
+                            this.button = false;
+                            this.resource = "";
+                            this.resources = [];
+                            this.remark = "";
+                        }
+                    }
+                });
+            },
+            getEditModelVue: function () {
+                return new Vue({
+                    el: "#edit-modal",
+                    data: {
+                        id: "",
+                        parentId: "",
+                        name: "",
+                        url: "",
+                        level: "",
+                        buildinSystem: true,
+                        button: false,
+                        status: "",
+                        creator: "",
+                        resource: "",
+                        resources: [],
+                        remark: ""
+                    },
+                    methods: {
+                        validate: function () {
+                            return $('#menu-edit-form').validate({
+                                rules: {
+                                    name:{
+                                        required: true,
+                                        minlength: 2
+                                    },
+                                    url:{
+                                        required: true,
+                                        resourceUrl: true
+                                    }
+                                },
+                                messages: {
+                                    name: "请输入2位有效的菜单名称！",
+                                    url: "请输入正确的资源路径！"
+                                }
+                            });
+                        },
+                        initData: function (id) {
+                            var url = menu_permission_get_URL + "/" + id;
+                            var vm = this;
+                            vm.resetData();
+                            vm.initResources();
+                            axios.get(url, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.id = res_data.id;
+                                        vm.parentId = res_data.parentId;
+                                        vm.name = res_data.name;
+                                        vm.url = res_data.url;
+                                        vm.level = res_data.level;
+                                        vm.status = res_data.status;
+                                        vm.creator = res_data.creator;
+                                        vm.buildinSystem = res_data.buildinSystem;
+                                        vm.button = res_data.button;
+                                        vm.remark = res_data.remark;
+                                        vm.resource = res_data.resource;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        initResources: function () {
+                            var vm = this;
+                            axios.get(resource_list_URL, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    if(res.data.status === 200){
+                                        var res_data = res.data.data;
+                                        vm.resources = res_data;
+                                    }else{
+                                        layer.msg(res.data.desc);
+                                    }
+                                })
+                                .catch(function () {
+                                    serverError();
+                                });
+                        },
+                        selectVal: function(ele) {
+                            this.resource = ele.target.value;
+                        },
+                        save: function (data) {
+                            if(!this.validate().form())
+                                return;
+
+                            var vm = this;
+                            var req_data = {
+                                id: vm.id,
+                                parentId: vm.parentId,
+                                name: vm.name,
+                                url: vm.url,
+                                level: vm.level,
+                                buildinSystem: vm.buildinSystem,
+                                button: vm.button,
+                                status: vm.status,
+                                creator: vm.creator,
+                                resource: vm.resource,
+                                remark: vm.remark
+                            }
+
+                            axios.put(menu_permission_update_URL, req_data, ifox_table_ajax_options)
+                                .then(function (res) {
+                                    layer.msg(res.data.desc);
+                                    if(res.data.status === 200){
+                                        _menu.operation.update(data, res.data.data);
+                                    }
+                                })
+                                .catch(function (err) {
+                                    serverError();
+                                });
+                        },
+                        resetData: function () {
+                            this.name = "";
+                            this.url = "";
+                            this.buildinSystem = true;
+                            this.button = false;
+                            this.resource = "";
+                            this.resources = [];
+                            this.remark = "";
+                        }
+                    }
+                });
+            }
 		}
 	}
 	
 	return {
 		init: function(element, url, option, clickable){
-			_menu.initMenu(element, url, option);
-			_menu.initEvent(element, clickable);
+			_menu.initMenu(element, url, option, clickable);
+			_menu.initEvent(element, option, clickable);
 		}
 	};
 })();

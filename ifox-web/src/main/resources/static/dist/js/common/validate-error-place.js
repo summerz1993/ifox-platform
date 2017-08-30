@@ -8,6 +8,11 @@ $.validator.addMethod("password", function(value, element, length) {
     return this.optional(element) || (pass.test(value));
 }, "");
 
+$.validator.addMethod("resourceUrl", function(value, element, length) {
+    var resource_url = new RegExp("^\/");
+    return this.optional(element) || (resource_url.test(value));
+}, "");
+
 $.validator.setDefaults({
     errorClass: "error",
     success: 'valid',

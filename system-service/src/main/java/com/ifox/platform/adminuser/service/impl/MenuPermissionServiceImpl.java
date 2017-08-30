@@ -3,6 +3,8 @@ package com.ifox.platform.adminuser.service.impl;
 import com.ifox.platform.adminuser.dto.MenuPermissionDTO;
 import com.ifox.platform.adminuser.service.MenuPermissionService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
+import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.dao.sys.MenuPermissionDao;
 import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
@@ -11,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,5 +48,27 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
     public List<MenuPermissionDTO> listAllDTO() {
         List<MenuPermissionEO> menuPermissionEOS = listAll();
         return ModelMapperUtil.get().map(menuPermissionEOS, new TypeToken<List<MenuPermissionDTO>>() {}.getType());
+    }
+
+    /**
+     * 删除菜单权限和角色的关联关系
+     * @param menuId
+     */
+    @Override
+    @Transactional
+    public void deleteMenuRoleRelation(String menuId) {
+        menuPermissionDao.deleteMenuRoleRelation(menuId);
+    }
+
+    /**
+     * 查询所有子菜单
+     * @param id
+     * @return
+     */
+    @Override
+    public List<MenuPermissionEO> listChildMenu(String id) {
+        List<QueryProperty> queryProperties = new ArrayList<>();
+        queryProperties.add(new QueryProperty("parentId", EnumDao.Operation.EQUAL, id));
+        return listByQueryProperty(queryProperties);
     }
 }
