@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,27 +88,27 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 400, message = "无效请求：ids为空"),
                     @ApiResponse(code = 486, message = "不允许删除自身账号")})
-    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, @RequestHeader("Authorization") String token){
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, @RequestHeader("Authorization") String token, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除用户 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
             logger.info("无效请求,ids为空 uuid:{}", uuid);
-            return invalidRequestBaseResponse();
+            return invalidRequestBaseResponse(response);
         }
 
         String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
         if (Arrays.asList(ids).contains(userId)) {
             logger.info("不允许删除自身账号 userId:{}, uuid:{}", userId, uuid);
-            return deleteSelfErrorBaseResponse();
+            return deleteSelfErrorBaseResponse(response);
         }
 
         try {
             adminUserService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
             logger.info("用户不存在 uuid:{}", uuid);
-            return notFoundBaseResponse("用户不存在");
+            return notFoundBaseResponse("用户不存在", response);
         }
 
         logger.info(successDelete + " uuid:{}", uuid);
@@ -118,7 +119,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 482, message = "登录名已经存在")})
-    public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest){
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest.toString(), uuid);
 
@@ -126,7 +127,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         AdminUserEO adminUserEO = adminUserService.get(id);
         if (adminUserEO == null) {
             logger.info("用户不存在 uuid:{}", uuid);
-            return super.notFoundBaseResponse("用户不存在");
+            return super.notFoundBaseResponse("用户不存在", response);
         }
 
         String loginName = updateRequest.getLoginName();
@@ -150,14 +151,14 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
     @SuppressWarnings("unchecked")
-    public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId){
+    public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("单个用户信息查询 userId:{}, uuid:{}", userId, uuid);
 
         AdminUserEO eo = adminUserService.get(userId);
         if (eo == null) {
             logger.info("此用户不存在 uuid:{}", uuid);
-            return super.notFoundOneResponse("此用户不存在");
+            return super.notFoundOneResponse("此用户不存在", response);
         }
 
         AdminUserVO vo = new AdminUserVO();

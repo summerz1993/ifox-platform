@@ -47,8 +47,8 @@ new Vue({
                         layer.msg(res.data.desc);
                     }
                 })
-                .catch(function () {
-                    serverError();
+                .catch(function (err) {
+                    layer.msg(err.response.data.desc);
                 });
         },
         update: function (callback) {
@@ -64,8 +64,8 @@ new Vue({
                         callback();
                     }
                 })
-                .catch(function () {
-                    serverError();
+                .catch(function (err) {
+                    layer.msg(err.response.data.desc);
                 });
         },
         resetData: function () {

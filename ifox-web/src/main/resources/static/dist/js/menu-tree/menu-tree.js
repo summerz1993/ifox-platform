@@ -103,8 +103,8 @@ var menuTree = (function(){
                                     layer.msg(res.data.desc);
                                 }
                             })
-                            .catch(function () {
-                                serverError();
+                            .catch(function (err) {
+                                layer.msg(err.response.data.desc);
                             });
                     }
 				}
@@ -191,8 +191,8 @@ var menuTree = (function(){
                             layer.msg(res.data.desc);
                         }
                     })
-                    .catch(function () {
-                        serverError();
+                    .catch(function (err) {
+                        layer.msg(err.response.data.desc);
                     });
 			},
             getDetail: function (id) {
@@ -261,8 +261,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         /**
@@ -281,8 +281,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         /**
@@ -301,8 +301,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         resetData: function () {
@@ -365,8 +365,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         selectVal: function(ele) {
@@ -394,7 +394,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    serverError();
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         resetData: function () {
@@ -469,8 +469,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         initResources: function () {
@@ -484,8 +484,8 @@ var menuTree = (function(){
                                         layer.msg(res.data.desc);
                                     }
                                 })
-                                .catch(function () {
-                                    serverError();
+                                .catch(function (err) {
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         selectVal: function(ele) {
@@ -518,7 +518,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    serverError();
+                                    layer.msg(err.response.data.desc);
                                 });
                         },
                         resetData: function () {

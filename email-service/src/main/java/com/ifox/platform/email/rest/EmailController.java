@@ -15,6 +15,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.EMAIL_EXP;
 
 /**
@@ -44,13 +46,13 @@ public class EmailController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 200, message = "发送成功"),
         @ApiResponse(code = 481, message = "Token校验失败"),
         @ApiResponse(code = 500, message = "服务器错误")})
-    public @ResponseBody BaseResponse sendSimpleEmail(@ApiParam @RequestBody SimpleEmailRequest request, @RequestHeader("Authorization") String token) {
+    public @ResponseBody BaseResponse sendSimpleEmail(@ApiParam @RequestBody SimpleEmailRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response) {
         logger.info("sendSimpleEmail 发送邮件");
         //校验Token
         String applicationToken = env.getProperty("email-service.token");
         if (!applicationToken.equals(token)){
             logger.info("发送失败：token校验失败");
-            return tokenErrorBaseResponse();
+            return tokenErrorBaseResponse(response);
         }
 
         try {
@@ -58,7 +60,7 @@ public class EmailController extends BaseController {
         } catch (EmailException e) {
             logger.error(e.getMessage());
             logger.info("发送失败：服务器异常");
-            return serverExceptionBaseResponse();
+            return serverExceptionBaseResponse(response);
         }
 
         logger.info("发送成功");

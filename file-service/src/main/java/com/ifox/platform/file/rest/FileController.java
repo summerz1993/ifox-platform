@@ -65,15 +65,13 @@ public class FileController extends BaseController {
         boolean validation = fileService.validateFileType(fileType, ext.substring(1));
         if (!validation) {
             logger.info("不支持的文件类型 uuid:{}", uuid);
-            response.setStatus(NOT_SUPPORT_FILE_TYPE);
-            return notSupportFileTypeBaseResponse();
+            return notSupportFileTypeBaseResponse(response);
         }
 
         String[] serviceNameArray = env.getProperty("file-service.service-name").split(",");
         if (!Arrays.asList(serviceNameArray).contains(serviceName)) {
             logger.info("不支持的服务名称 uuid:{}", uuid);
-            response.setStatus(NOT_SUPPORT_SERVICE_NAME);
-            return notSupportServiceNameBaseResponse();
+            return notSupportServiceNameBaseResponse(response);
         }
 
         String absolutePath = env.getProperty("file-service.save.path");
@@ -88,16 +86,14 @@ public class FileController extends BaseController {
 
         if (!parentFile.canWrite()) {
             logger.info("没有文件操作权限 finalPathString:{}, uuid:{}", finalPathString, uuid);
-            response.setStatus(UNAUTHORIZED);
-            return unauthorizedBaseResponse("没有文件操作权限");
+            return unauthorizedBaseResponse("没有文件操作权限", response);
         }
 
         try {
             file.transferTo(finalPath);
         } catch (IOException e) {
             logger.warn("保存文件异常 finalPathString:{}, uuid:{}", finalPathString, uuid);
-            response.setStatus(SERVER_EXCEPTION);
-            return serverExceptionBaseResponse();
+            return serverExceptionBaseResponse(response);
         }
 
         logger.info("上传成功 finalPathString:{}, uuid:{}", finalPathString, uuid);

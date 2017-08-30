@@ -72,8 +72,7 @@ new Vue({
             return params;
         },
         deleteAdminUsers: function (ids, callback) {
-            var url = admin_user_delete_URL;
-            axios.post(url, ids, ifox_table_ajax_options)
+            axios.post(admin_user_delete_URL, ids, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if(res.data.status === 200){
@@ -81,7 +80,7 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    serverError();
+                    layer.msg(err.response.data.desc);
                 });
         }
     },

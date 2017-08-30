@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,13 +82,13 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})
     public @ResponseBody
-    OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id){
+    OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("查询菜单权限 id:{},uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
         if (menuPermissionEO == null){
             logger.info("此菜单权限不存在 uuid:{}", uuid);
-            return super.notFoundOneResponse("此菜单权限不存在");
+            return super.notFoundOneResponse("此菜单权限不存在", response);
         }
 
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
@@ -103,7 +104,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         @ApiResponse(code = 404, message = "父菜单权限不存在")
     })
     public @ResponseBody
-    OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody MenuPermissionRequest request, @RequestHeader("Authorization") String token){
+    OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody MenuPermissionRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存菜单权限 request:{}, uuid:{}", request.toString(), uuid);
 
@@ -117,7 +118,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionEO parentMenu = menuPermissionService.get(menuPermissionEO.getParentId());
         if(parentMenu == null){
             logger.info("父菜单权限不存在 uuid:{}", uuid);
-            return super.notFoundOneResponse("父菜单权限不存在");
+            return super.notFoundOneResponse("父菜单权限不存在", response);
         }
 
         menuPermissionEO.setLevel(parentMenu.getLevel() + 1);
@@ -139,14 +140,14 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         @ApiResponse(code = 487, message = "菜单包含子菜单，请先删除子菜单")
     })
     public @ResponseBody
-    BaseResponse delete(@ApiParam @PathVariable String id){
+    BaseResponse delete(@ApiParam @PathVariable String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除菜单权限 id:{}, uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
 
         if (menuPermissionEO == null){
             logger.info("此菜单权限不存在 uuid:{}", uuid);
-            return super.notFoundOneResponse("此菜单权限不存在");
+            return super.notFoundOneResponse("此菜单权限不存在", response);
         }
 
         if(menuPermissionEO.getBuildinSystem()){

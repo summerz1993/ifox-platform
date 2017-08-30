@@ -28,8 +28,7 @@ var loginApp = new Vue({
                     }
                 })
                 .catch(function(err){
-                    serverError();
-                    console.log(err);
+                    layer.msg(err.response.data.desc);
                 });
         }
     }
