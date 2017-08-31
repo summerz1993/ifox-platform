@@ -40,8 +40,7 @@ public class BaseWebController {
         HttpRequest httpRequest = getTokenHttpRequest(token);
         int code = httpRequest.code();
         String body = httpRequest.body();
-        logger.info("code = {}", code);
-        logger.info("body = {}", body);
+        logger.info("code = {}, body = {}", code, body);
 
         Any bodyAny = JsonIterator.deserialize(body);
         int status = bodyAny.get("status").toInt();
@@ -66,7 +65,12 @@ public class BaseWebController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("loginName", loginName);
+        processHeadPortrait(headPortrait, model);
 
+        return view;
+    }
+
+    private void processHeadPortrait(String headPortrait, Model model) {
         if (StringUtils.isEmpty(headPortrait)) {
             model.addAttribute("headPortrait", "");
         } else {
@@ -80,8 +84,6 @@ public class BaseWebController {
                 logger.warn("headPortraitURL编码异常");
             }
         }
-
-        return view;
     }
 
     private String getPayload(String token) {

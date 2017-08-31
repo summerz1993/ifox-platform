@@ -8,6 +8,7 @@ var admin_user_delete_URL = system_service_URL + 'adminUser/delete';
 var admin_user_update_URL = system_service_URL + '/adminUser/update';
 var admin_user_get_URL = system_service_URL + 'adminUser/get';
 var admin_user_page_URL = system_service_URL + 'adminUser/page';
+var admin_user_change_pwd_URL = system_service_URL + 'adminUser/changePassword';
 
 <!-- role -->
 var role_save_URL = system_service_URL + 'role/save';

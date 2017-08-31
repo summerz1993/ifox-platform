@@ -53,9 +53,12 @@ new Vue({
                 return;
 
             var vm = this;
-            axios.post()
+            axios.post(admin_user_change_pwd_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
-
+                    layer.msg(res.data.desc);
+                    if (res.data.status === 200) {
+                        $('#change-pwd-modal').modal('hide');
+                    }
                 })
                 .catch(function (err) {
                    serverError(err);
