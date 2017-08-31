@@ -203,4 +203,8 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successQueryMultiResponse(adminUserVOList);
     }
 
+    public void changePassword() {
+
+    }
+
 }

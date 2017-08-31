@@ -6,99 +6,124 @@
 </head>
 <body>
 
-<header id="main-header" class="main-header" th:fragment="header">
+<div th:fragment="header">
 
-    <!-- Logo -->
-    <a href="index2.html" class="logo">
-        <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>IFOX</b></span>
-        <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Admin</b>IFOX</span>
-    </a>
+    <header id="main-header" class="main-header">
 
-    <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
-        <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-            <span class="sr-only">Toggle navigation</span>
+        <!-- Logo -->
+        <a href="#" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>IFOX</b></span>
+            <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Admin</b>IFOX</span>
         </a>
-        <!-- Navbar Right Menu -->
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
 
-                <!-- Messages: style can be found in dropdown.less-->
-                <!--
-                <li class="dropdown messages-menu">
-                    &lt;!&ndash; Menu toggle button &ndash;&gt;
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
-                        <li>
-                            &lt;!&ndash; inner menu: contains the messages &ndash;&gt;
-                            <ul class="menu">
-                                <li>&lt;!&ndash; start message &ndash;&gt;
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            &lt;!&ndash; User Image &ndash;&gt;
-                                            <img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image"/>
-                                        </div>
-                                        &lt;!&ndash; Message title and timestamp &ndash;&gt;
-                                        <h4>
-                                            Support Team
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        &lt;!&ndash; The message &ndash;&gt;
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                &lt;!&ndash; end message &ndash;&gt;
-                            </ul>
-                            &lt;!&ndash; /.menu &ndash;&gt;
-                        </li>
-                        <li class="footer"><a href="#">See All Messages</a></li>
-                    </ul>
-                </li>
-                -->
-                <!-- /.messages-menu -->
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img th:if="${headPortrait!=''}" th:src="${headPortrait}" class="user-image" alt="User Image"/>
+                            <img th:if="${headPortrait==''}" th:src="@{/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image"/>
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs" th:text="${loginName}">Your LoginName Name</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
 
-                <!-- User Account Menu -->
-                <li class="dropdown user user-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <!-- The user image in the navbar-->
-                        <img th:if="${headPortrait!=''}" th:src="${headPortrait}" class="user-image" alt="User Image"/>
-                        <img th:if="${headPortrait==''}" th:src="@{/dist/img/user2-160x160.jpg}" class="user-image" alt="User Image"/>
-                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs" th:text="${loginName}">Your LoginName Name</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <!-- The user image in the menu -->
-                        <li class="user-header">
+                                <img th:if="${headPortrait!=''}" th:src="${headPortrait}" class="img-circle" alt="User Image"/>
+                                <img th:if="${headPortrait==''}" th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image"/>
 
-                            <img th:if="${headPortrait!=''}" th:src="${headPortrait}" class="img-circle" alt="User Image"/>
-                            <img th:if="${headPortrait==''}" th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image"/>
+                                <p>
+                                    <span th:text="${loginName}"></span> - 后台管理员
+                                    <small>Happy Work Everyday</small>
+                                </p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat" @click="changePwdModal">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat" @click="logout">登出</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-                            <p>
-                                <span th:text="${loginName}"></span> - 后台管理员
-                                <small>Happy Work Everyday</small>
-                            </p>
-                        </li>
-                        <!-- Menu Footer-->
-                        <li class="user-footer">
+    <!-- change password modal -->
+    <div class="modal fade" id="change-pwd-modal" tabindex="-1" role="dialog" aria-labelledby="change-pwd-modal-label"  aria-hidden="true">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="change-pwd-modal-label">
+                        密码修改
+                    </h4>
+                </div>
+                <div class="modal-body">
 
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat" @click="logout">登出</a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                    <form class="form-horizontal" id="change-pwd-form">
+                        <table class="table no-border">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label for="original-password" class="col-sm-4 text-center">原密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="password" class="form-control" id="original-password" name="originalPassword" placeholder="请输入密码" v-model="originalPassword">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="new-password" class="col-sm-4 text-center">新密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="password" class="form-control" id="new-password" name="newPassword" placeholder="请输入密码" v-model="newPassword">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="confirm-password" class="col-sm-4 text-center">确认密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="password" class="form-control" id="confirm-password" name="confirmPassword" placeholder="请输入密码" v-model="confirmPassword">
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="confirmChange">
+                        修改
+                    </button>
+                </div>
+            </div>
         </div>
-    </nav>
-</header>
+    </div>
+
+</div>
 
 </body>
 </html>

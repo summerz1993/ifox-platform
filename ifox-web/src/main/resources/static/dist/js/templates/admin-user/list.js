@@ -80,7 +80,7 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    layer.msg(err.response.data.desc);
+                    serverError(err);
                 });
         }
     },

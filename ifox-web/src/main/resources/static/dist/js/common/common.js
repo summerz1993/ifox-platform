@@ -97,6 +97,10 @@ function delCookie(name) {
 }
 
 //服务器异常提示信息
-function serverError() {
-    layer.msg('服务器异常');
+function serverError(err) {
+    if (err.response.status === 500) {
+        layer.msg('服务器异常');
+    } else {
+        layer.msg(err.response.data.desc);
+    }
 }

@@ -93,7 +93,7 @@ new Vue({
                     },
                     password:{
                         required: true,
-                        password: 8
+                        regexPassword: true
                     },
                     buildinSystem: {
                         required: true
@@ -111,7 +111,6 @@ new Vue({
                     mobile: "请输入正确的联系电话",
                     loginName: "请输入4-15位有效的登录名",
                     nickName: "请输入2-20位有效的昵称",
-                    password: "请输入至少8位，包含数字及字母的有效密码",
                     remark: "备注最多500字"
                 }
             });
@@ -130,7 +129,7 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    layer.msg(err.response.data.desc);
+                    serverError(err);
                 });
         },
         resetData: function () {

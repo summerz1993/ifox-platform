@@ -104,7 +104,7 @@ var menuTree = (function(){
                                 }
                             })
                             .catch(function (err) {
-                                layer.msg(err.response.data.desc);
+                                serverError(err);
                             });
                     }
 				}
@@ -192,7 +192,7 @@ var menuTree = (function(){
                         }
                     })
                     .catch(function (err) {
-                        layer.msg(err.response.data.desc);
+                        serverError(err);
                     });
 			},
             getDetail: function (id) {
@@ -262,7 +262,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         /**
@@ -282,7 +282,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         /**
@@ -302,7 +302,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         resetData: function () {
@@ -366,7 +366,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         selectVal: function(ele) {
@@ -394,7 +394,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         resetData: function () {
@@ -470,7 +470,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         initResources: function () {
@@ -485,7 +485,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         selectVal: function(ele) {
@@ -518,7 +518,7 @@ var menuTree = (function(){
                                     }
                                 })
                                 .catch(function (err) {
-                                    layer.msg(err.response.data.desc);
+                                    serverError(err);
                                 });
                         },
                         resetData: function () {

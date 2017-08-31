@@ -3,10 +3,9 @@ $.validator.addMethod("mobileZH", function(value, element) {
     return this.optional(element) || (mobile.test(value));
 }, "");
 
-$.validator.addMethod("password", function(value, element, length) {
-    var pass = new RegExp("[a-zA-Z0-9]" + "{" + length + "}$");
-    return this.optional(element) || (pass.test(value));
-}, "");
+$.validator.addMethod("regexPassword", function(value, element) {
+    return this.optional(element) || /^(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value);
+}, "密码长度大于8,并且必须包含一个大写,一个小写,一个数字");
 
 $.validator.addMethod("resourceUrl", function(value, element, length) {
     var resource_url = new RegExp("^\/");
