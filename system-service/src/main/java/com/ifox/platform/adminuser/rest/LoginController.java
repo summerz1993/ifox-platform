@@ -42,11 +42,9 @@ public class LoginController extends BaseController {
 
     @ApiOperation("登录接口")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ApiResponses({ @ApiResponse(code = 200, message = "登陆成功"),
-                    @ApiResponse(code = 500, message = "服务器异常"),
-                    @ApiResponse(code = 404, message = "用户不存在"),
-                    @ApiResponse(code = 480, message = "用户名或者密码错误"),
-                    @ApiResponse(code = 483, message = "用户状态无效")})
+    @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
+                    @ApiResponse(code = 460, message = "用户名或者密码错误"),
+                    @ApiResponse(code = 702, message = "用户状态无效")})
     public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("用户登陆 adminUserLoginRequest:{}, uuid:{}", adminUserLoginRequest, uuid);
@@ -100,7 +98,7 @@ public class LoginController extends BaseController {
     @ApiOperation("校验Token接口")
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 200, message = "Token校验成功"),
-                    @ApiResponse(code = 481, message = "Token校验失败")})
+                    @ApiResponse(code = 700, message = "Token校验失败")})
     public @ResponseBody BaseResponse verifyToken(@ApiParam String token) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("校验 token:{}, uuid:", token, uuid);
