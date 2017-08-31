@@ -21,6 +21,12 @@
   <!-- Google Font -->
   <link rel="stylesheet" th:href="@{/bower_components/googleapis-fonts/fonts.css}"/>
 
+    <!--bootstrap table -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
+    <!--bootstrap editable-->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap3-editable/css/bootstrap-editable.css}">
+    <!--common css-->
+    <link rel="stylesheet" th:href="@{/dist/css/common.css}">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -64,12 +70,26 @@
 <script th:src="@{/bower_components/vue/vue2.4.1.js}"></script>
 <!-- axios -->
 <script th:src="@{/bower_components/axios/axios.min.js}"></script>
+
+<!--bootstrap table-->
+<script th:src="@{/plugins/bootstrap-table/bootstrap-table.js}"></script>
+<!--bootstrap table zn-->
+<script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
 <!-- layer -->
 <script th:src="@{/bower_components/layer/layer.js}"></script>
 
+<!-- 必须引入的JS -->
 <script th:src="@{/dist/js/common/common.js}"></script>
 <script th:src="@{/dist/js/common/main-header.js}"></script>
 <script th:src="@{/dist/js/common/main-sidebar.js}"></script>
+
+<!--jquery validation-->
+<script th:src="@{/bower_components/jquery-validation/dist/jquery.validate.min.js}"></script>
+<script th:src="@{/bower_components/jquery-validation/dist/additional-methods.min.js}"></script>
+<script th:src="@{/bower_components/jquery-validation/src/localization/messages_zh.js}"></script>
+<script th:src="@{/dist/js/common/validate-error-place.js}"></script>
+
+<!-- 业务相关的js -->
 <script th:src="@{/dist/js/templates/home.js}"></script>
 
 </body>

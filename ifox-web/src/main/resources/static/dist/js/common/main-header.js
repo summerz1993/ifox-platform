@@ -1,4 +1,4 @@
-var mainHeader = new Vue({
+new Vue({
     el: '#main-header',
     methods: {
         logout: function () {
@@ -11,8 +11,54 @@ var mainHeader = new Vue({
                     }
                 })
                 .catch(function (err) {
-                    serverError();
-                    console.log(err);
+                    serverError(err);
+                });
+        },
+        changePwdModal: function () {
+            $('#change-pwd-modal').modal('show');
+        }
+    }
+});
+
+new Vue({
+    el: '#change-pwd-modal',
+    data: {
+        originalPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    },
+    methods: {
+        validate: function () {
+            return $('#change-pwd-form').validate({
+                rules: {
+                    originalPassword: {
+                        required: true
+                    },
+                    newPassword: {
+                        required: true,
+                        regexPassword: true
+                    },
+                    confirmPassword: {
+                        required: true,
+                        equalTo: "#new-password"
+                    }
+                },
+                messages: {
+                    originalPassword: "请输入原始密码"
+                }
+            });
+        },
+        confirmChange: function () {
+            if (!this.validate().form())
+                return;
+
+            var vm = this;
+            axios.post()
+                .then(function (res) {
+
+                })
+                .catch(function (err) {
+                   serverError(err);
                 });
         }
     }

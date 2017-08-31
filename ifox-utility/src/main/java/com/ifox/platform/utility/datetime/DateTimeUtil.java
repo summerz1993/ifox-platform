@@ -118,7 +118,8 @@ public class DateTimeUtil {
      */
     public static Date getThreeOclockAMOfTheNextDay() {
         LocalDateTime currentLocalDateTime = getCurrentLocalDateTime(null);
-        LocalDateTime threeOclockAMOfTheNextDay = LocalDateTime.of(currentLocalDateTime.getYear(), currentLocalDateTime.getMonth(), currentLocalDateTime.getDayOfMonth() + 1, 3, 0, 0);
+        LocalDateTime nextDay = currentLocalDateTime.plusDays(1);
+        LocalDateTime threeOclockAMOfTheNextDay = LocalDateTime.of(nextDay.getYear(), nextDay.getMonth(), nextDay.getDayOfMonth(), 3, 0, 0);
         return convertLocalDateTimeToDate(threeOclockAMOfTheNextDay);
     }
 
