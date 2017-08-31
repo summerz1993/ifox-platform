@@ -39,7 +39,7 @@ import static com.ifox.platform.common.constant.RestStatusConstant.*;
  * 文件服务控制器
  */
 @Controller("fileController")
-@RequestMapping(value = "/file", headers = {"api-version=1.0", "Authorization"})
+@RequestMapping(value = "/file")
 @Api(tags = "文件服务")
 public class FileController extends BaseController {
 
@@ -51,7 +51,7 @@ public class FileController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = {"api-version=1.0", "Authorization"})
     @ApiOperation("单文件上传")
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
                     @ApiResponse(code = 484, message = "不支持的文件类型"),
@@ -65,15 +65,13 @@ public class FileController extends BaseController {
         boolean validation = fileService.validateFileType(fileType, ext.substring(1));
         if (!validation) {
             logger.info("不支持的文件类型 uuid:{}", uuid);
-            response.setStatus(NOT_SUPPORT_FILE_TYPE);
-            return notSupportFileTypeBaseResponse();
+            return notSupportFileTypeBaseResponse(response);
         }
 
         String[] serviceNameArray = env.getProperty("file-service.service-name").split(",");
         if (!Arrays.asList(serviceNameArray).contains(serviceName)) {
             logger.info("不支持的服务名称 uuid:{}", uuid);
-            response.setStatus(NOT_SUPPORT_SERVICE_NAME);
-            return notSupportServiceNameBaseResponse();
+            return notSupportServiceNameBaseResponse(response);
         }
 
         String absolutePath = env.getProperty("file-service.save.path");
@@ -88,16 +86,14 @@ public class FileController extends BaseController {
 
         if (!parentFile.canWrite()) {
             logger.info("没有文件操作权限 finalPathString:{}, uuid:{}", finalPathString, uuid);
-            response.setStatus(UNAUTHORIZED);
-            return unauthorizedBaseResponse("没有文件操作权限");
+            return unauthorizedBaseResponse("没有文件操作权限", response);
         }
 
         try {
             file.transferTo(finalPath);
         } catch (IOException e) {
             logger.warn("保存文件异常 finalPathString:{}, uuid:{}", finalPathString, uuid);
-            response.setStatus(SERVER_EXCEPTION);
-            return serverExceptionBaseResponse();
+            return serverExceptionBaseResponse(response);
         }
 
         logger.info("上传成功 finalPathString:{}, uuid:{}", finalPathString, uuid);
@@ -111,7 +107,7 @@ public class FileController extends BaseController {
         File file=new File(absolutePath + path);
 
         HttpHeaders headers = new HttpHeaders();
-//        String fileName=new String("你好.xlsx".getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
+//        String fileName=new String("你好.xlsx".getBytes("UTF-8"),"iso-8859-1");
 //        headers.setContentDispositionFormData("attachment", fileName);
 //        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 

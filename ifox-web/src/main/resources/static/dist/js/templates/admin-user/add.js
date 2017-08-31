@@ -130,7 +130,7 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    serverError();
+                    layer.msg(err.response.data.desc);
                 });
         },
         resetData: function () {
@@ -143,6 +143,7 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            $('#headPortrait-add').fileinput('clear');
         }
     },
     mounted: function () {

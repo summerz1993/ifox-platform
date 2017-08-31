@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,20 +54,20 @@ public class RoleController extends BaseController<RoleVO> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
         @ApiResponse(code = 400, message = "无效请求：ids为空")})
-    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids) {
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除角色信息 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
             logger.info("无效请求,ids为空 uuid:{}", uuid);
-            return invalidRequestBaseResponse();
+            return invalidRequestBaseResponse(response);
         }
 
         try {
             roleService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
             logger.info("角色不存在 uuid:{}", uuid);
-            return notFoundBaseResponse("角色不存在");
+            return notFoundBaseResponse("角色不存在", response);
         }
 
         logger.info(successDelete + " uuid:{}", uuid);
@@ -76,7 +77,7 @@ public class RoleController extends BaseController<RoleVO> {
     @ApiOperation("更新角色信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
-    public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest) {
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest, uuid);
 
@@ -84,7 +85,7 @@ public class RoleController extends BaseController<RoleVO> {
         RoleEO roleEO = roleService.get(id);
         if (roleEO == null) {
             logger.info("角色不存在 id:{}, uuid:{}", id, uuid);
-            return super.notFoundBaseResponse("角色不存在");
+            return super.notFoundBaseResponse("角色不存在", response);
         }
         ModelMapperUtil.get().map(updateRequest, roleEO);
         roleService.update(roleEO);
@@ -96,14 +97,14 @@ public class RoleController extends BaseController<RoleVO> {
     @ApiOperation("查询单个角色信息")
     @RequestMapping(value = "/get/{roleId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
-    public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId) {
+    public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("查询单个角色信息 roleId:{}, uuid:{}", roleId, uuid);
 
         RoleEO roleEO = roleService.get(roleId);
         if (roleEO == null) {
             logger.info("角色不存在 roleId:{}, uuid:{}", roleId, uuid);
-            return super.notFoundOneResponse("角色不存在");
+            return super.notFoundOneResponse("角色不存在", response);
         }
         RoleVO vo = ModelMapperUtil.get().map(roleEO, RoleVO.class);
 

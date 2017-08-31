@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
@@ -48,7 +50,7 @@ public class BaseWebController {
             logger.info("token校验失败");
             model.addAttribute("error", "无效请求");
             model.addAttribute("URL", env.getProperty("ifox-web.login-url"));
-            model.addAttribute("URLName", "请重新登陆");
+            model.addAttribute("URLName", "重新登陆");
             return "/error";
         }
 
@@ -64,7 +66,20 @@ public class BaseWebController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("loginName", loginName);
-        model.addAttribute("headPortrait", headPortrait);
+
+        if (StringUtils.isEmpty(headPortrait)) {
+            model.addAttribute("headPortrait", "");
+        } else {
+            String headPortraitURL = env.getProperty("ifox-web.file-service-base-url") + "file/get?fileType=PICTURE&path=";
+            try {
+                headPortrait = URLEncoder.encode(headPortrait, "UTF-8");
+                model.addAttribute("headPortrait", headPortraitURL + headPortrait);
+            } catch (UnsupportedEncodingException e) {
+                ExceptionUtil.getStackTraceAsString(e);
+                model.addAttribute("headPortrait", "");
+                logger.warn("headPortraitURL编码异常");
+            }
+        }
 
         return view;
     }

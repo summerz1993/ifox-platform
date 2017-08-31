@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,20 +58,20 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiResponses({@ApiResponse(code = 400, message = "无效请求：ids为空"),
         @ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
-    BaseResponse delete(@ApiParam @RequestBody String[] ids){
+    BaseResponse delete(@ApiParam @RequestBody String[] ids, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除资源 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
         if (ids.length == 0){
             logger.info("无效请求,ids为空 uuid:{}", uuid);
-            return invalidRequestBaseResponse();
+            return invalidRequestBaseResponse(response);
         }
 
         try {
             resourceService.deleteMulti(ids);
         } catch (IllegalArgumentException e) {
             logger.info("资源不存在 uuid:{}", uuid);
-            return notFoundBaseResponse("资源不存在");
+            return notFoundBaseResponse("资源不存在", response);
         }
 
         logger.info(successDelete + " uuid:{}", uuid);
@@ -82,14 +83,14 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
     @SuppressWarnings("unchecked")
     public @ResponseBody
-    OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") String id){
+    OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("查询单个指定资源 id:{}, uuid:{}", id, uuid);
 
         ResourceEO resourceEO = resourceService.get(id);
         if (resourceEO == null){
             logger.info("资源不存在 id:{}, uuid:{}", id, uuid);
-            return super.notFoundOneResponse("资源不存在");
+            return super.notFoundOneResponse("资源不存在", response);
         }
 
         ResourceVO resourceVO = ModelMapperUtil.get().map(resourceEO, ResourceVO.class);
@@ -102,7 +103,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
-    BaseResponse update(@ApiParam @RequestBody ResourceUpdateRequest resource){
+    BaseResponse update(@ApiParam @RequestBody ResourceUpdateRequest resource, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新资源 resource:{}, uuid:{}", resource, uuid);
 
@@ -110,7 +111,7 @@ public class ResourceController extends BaseController<ResourceVO> {
         ResourceEO resourceEO = resourceService.get(id);
         if (resourceEO == null){
             logger.info("资源不存在 id:{}, uuid:{}", id, uuid);
-            return super.notFoundOneResponse("资源不存在");
+            return super.notFoundOneResponse("资源不存在", response);
         }
 
         ModelMapperUtil.get().map(resource, resourceEO);
@@ -143,7 +144,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     public @ResponseBody
     MultiResponse<ResourceVO> list(){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("获取所有资源uuid:{}", uuid);
+        logger.info("获取所有资源 uuid:{}", uuid);
 
         List<ResourceDTO> resourceDTOList = ModelMapperUtil.get().map(resourceService.listAll(), new TypeToken<List<ResourceDTO>>() {}.getType());
         List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOList, new TypeToken<List<ResourceVO>>() {}.getType());

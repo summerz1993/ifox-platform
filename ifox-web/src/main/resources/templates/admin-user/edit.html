@@ -28,7 +28,6 @@
                                 <td>
                                     <label for="loginName-edit" class="col-sm-4 text-center">登录名</label>
                                     <div class="col-sm-8">
-                                        <input type="hidden" class="form-control" id="id-edit" name="id" v-model="id">
                                         <input class="form-control" id="loginName-edit" name="loginName" placeholder="请输入登录名" v-model="loginName">
                                     </div>
                                 </td>
@@ -36,8 +35,8 @@
                                 <td rowspan="4">
                                     <label for="headPortrait-edit" class="col-sm-4 text-center">头像</label>
                                     <div class="col-sm-6">
-                                        <input  name="headPortrait" type="hidden" v-model="headPortrait">
-                                        <input id="headPortrait-edit" type="file" class="file-loading" accept="image/*">
+                                        <input name="headPortrait" type="hidden" v-model="headPortrait">
+                                        <input id="headPortrait-edit" type="file" class="file-loading" name="file">
                                         <div id="kv-success-modal" class="modal fade">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -105,7 +104,7 @@
                                 <td colspan="2">
                                     <label for="remark-edit" class="col-sm-2 text-center">备注</label>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control" rows="3" id="remark-edit" name="remark" placeholder="请输入。。。" v-model="remark"></textarea>
+                                        <textarea class="form-control" rows="3" id="remark-edit" name="remark" placeholder="请输入..."></textarea>
                                     </div>
                                 </td>
                             </tr>

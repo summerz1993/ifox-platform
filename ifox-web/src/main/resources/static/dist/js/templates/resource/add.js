@@ -43,7 +43,7 @@ new Vue({
                     }
                 })
                 .catch(function (err) {
-                    serverError();
+                    layer.msg(err.response.data.desc);
                 });
         },
         resetData: function () {

@@ -6,6 +6,7 @@ import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.*;
@@ -62,47 +63,63 @@ public class BaseController<T> {
 
     //--------------- token error ----------------
 
-    protected BaseResponse tokenErrorBaseResponse() {
+    protected BaseResponse tokenErrorBaseResponse(HttpServletResponse response) {
+        response.setStatus(TOKEN_ERROR);
         return new BaseResponse(TOKEN_ERROR, "token错误");
     }
 
     //--------------- server error ----------------
 
-    protected BaseResponse serverExceptionBaseResponse() {
+    protected BaseResponse serverExceptionBaseResponse(HttpServletResponse response) {
+        response.setStatus(SERVER_EXCEPTION);
         return new BaseResponse(SERVER_EXCEPTION, "服务器异常");
     }
 
     //--------------- not found ----------------
 
-    protected BaseResponse notFoundBaseResponse(String desc){
+    protected BaseResponse notFoundBaseResponse(String desc, HttpServletResponse response){
+        response.setStatus(NOT_FOUND);
         return new BaseResponse(NOT_FOUND, desc);
     }
 
     @SuppressWarnings("unchecked")
-    protected OneResponse notFoundOneResponse(String desc){
+    protected OneResponse notFoundOneResponse(String desc, HttpServletResponse response){
+        response.setStatus(NOT_FOUND);
         return new OneResponse(NOT_FOUND, desc, null);
     }
 
     //--------------- 400 ----------------
 
-    protected BaseResponse invalidRequestBaseResponse(){
+    protected BaseResponse invalidRequestBaseResponse(HttpServletResponse response){
+        response.setStatus(INVALID_REQUEST);
         return new BaseResponse(INVALID_REQUEST, "无效请求");
     }
 
     //--------------- 401 ----------------
 
-    protected BaseResponse unauthorizedBaseResponse(String desc) {
+    protected BaseResponse unauthorizedBaseResponse(String desc, HttpServletResponse response) {
+        response.setStatus(UNAUTHORIZED);
         return new BaseResponse(UNAUTHORIZED, StringUtils.isEmpty(desc) ? "未授权访问" : desc);
     }
 
     //--------------- fail ----------------
 
-    protected BaseResponse notSupportFileTypeBaseResponse(){
+    protected BaseResponse notSupportFileTypeBaseResponse(HttpServletResponse response){
+        response.setStatus(NOT_SUPPORT_FILE_TYPE);
         return new BaseResponse(NOT_SUPPORT_FILE_TYPE, "不支持的文件类型");
     }
 
-    protected BaseResponse notSupportServiceNameBaseResponse(){
+    protected BaseResponse notSupportServiceNameBaseResponse(HttpServletResponse response){
+        response.setStatus(NOT_SUPPORT_SERVICE_NAME);
         return new BaseResponse(NOT_SUPPORT_SERVICE_NAME, "不支持的服务名称");
     }
+
+    //--------------- delete self error ----------------
+
+    protected BaseResponse deleteSelfErrorBaseResponse(HttpServletResponse response){
+        response.setStatus(DELETE_SELF_ERROR);
+        return new BaseResponse(DELETE_SELF_ERROR, "不允许删除自身账号");
+    }
+
 
 }

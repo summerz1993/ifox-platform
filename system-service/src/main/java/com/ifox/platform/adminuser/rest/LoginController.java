@@ -21,6 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.*;
@@ -46,7 +47,7 @@ public class LoginController extends BaseController {
                     @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 480, message = "用户名或者密码错误"),
                     @ApiResponse(code = 483, message = "用户状态无效")})
-    public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest){
+    public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("用户登陆 adminUserLoginRequest:{}, uuid:{}", adminUserLoginRequest, uuid);
         Boolean validAdminUser;
@@ -57,13 +58,15 @@ public class LoginController extends BaseController {
             logger.warn(ExceptionUtil.getStackTraceAsString(e));
             tokenResponse.setStatus(NOT_FOUND);
             tokenResponse.setDesc("用户不存在");
-            logger.info("登陆异常 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
+            response.setStatus(NOT_FOUND);
+            logger.info("用户不存在 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
             return tokenResponse;
         }
 
         if (!validAdminUser) {
             tokenResponse.setStatus(USER_NAME_OR_PASSWORD_ERROR);
             tokenResponse.setDesc("用户名或者密码错误");
+            response.setStatus(USER_NAME_OR_PASSWORD_ERROR);
             logger.info("用户名或者密码错误 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
             return tokenResponse;
         }
@@ -73,6 +76,7 @@ public class LoginController extends BaseController {
             tokenResponse.setStatus(INVALID_STATUS);
             tokenResponse.setDesc("用户状态无效");
             logger.info("用户状态无效 uuid:{}", uuid);
+            response.setStatus(INVALID_STATUS);
             return tokenResponse;
         }
 
@@ -86,8 +90,9 @@ public class LoginController extends BaseController {
         } catch (UnsupportedEncodingException e) {
             tokenResponse.setStatus(SERVER_EXCEPTION);
             tokenResponse.setDesc("服务器异常");
+            response.setStatus(SERVER_EXCEPTION);
             logger.warn(ExceptionUtil.getStackTraceAsString(e));
-            logger.info("登陆异常 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
+            logger.info("服务器异常 loginName:{}, uuid:{}", adminUserLoginRequest.getLoginName(), uuid);
         }
         return tokenResponse;
     }
