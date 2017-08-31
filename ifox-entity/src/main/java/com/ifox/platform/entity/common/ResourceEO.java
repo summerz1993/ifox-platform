@@ -38,6 +38,7 @@ public class ResourceEO extends BaseEntity{
     /**
      * 资源对应的控制器的RequestMapping, 比如:adminUser
      */
+    @Column(nullable = false, unique = true)
     private String controller;
 
     /**
