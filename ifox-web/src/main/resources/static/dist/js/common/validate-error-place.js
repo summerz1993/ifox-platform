@@ -5,7 +5,7 @@ $.validator.addMethod("mobileZH", function(value, element) {
 
 $.validator.addMethod("regexPassword", function(value, element) {
     return this.optional(element) || /^(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value);
-}, "密码长度大于8,并且必须包含一个大写,一个小写,一个数字");
+}, "密码长度不少于8个字符,并且包含大小写字母和数字");
 
 $.validator.addMethod("resourceUrl", function(value, element, length) {
     var resource_url = new RegExp("^\/");
