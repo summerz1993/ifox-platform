@@ -253,50 +253,10 @@ var menuTree = (function(){
                                         vm.object.name.value = res_data.name;
                                         vm.object.link.value = res_data.url;
                                         vm.object.level.value = res_data.level;
-                                        vm.object.creator.value = vm.getCreator(res_data.creator);
+                                        vm.object.creator.value =res_data.creatorName;
                                         vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
-                                        vm.object.resource.value = vm.getResource(res_data.resource);
+                                        vm.object.resource.value = res_data.resourceName;
                                         vm.object.remark.value = res_data.remark;
-                                    }else{
-                                        layer.msg(res.data.desc);
-                                    }
-                                })
-                                .catch(function (err) {
-                                    serverError(err);
-                                });
-                        },
-                        /**
-                         * 获取菜单创建者
-                         * @param id
-                         */
-                        getCreator: function (id) {
-                            var url = admin_user_get_URL + "/" + id;
-                            var vm = this;
-                            axios.get(url, ifox_table_ajax_options)
-                                .then(function (res) {
-                                    if(res.data.status === 200){
-                                        var res_data = res.data.data;
-                                        vm.object.creator.value =  res_data.loginName;
-                                    }else{
-                                        layer.msg(res.data.desc);
-                                    }
-                                })
-                                .catch(function (err) {
-                                    serverError(err);
-                                });
-                        },
-                        /**
-                         * 获取菜单所属资源
-                         * @param id
-                         */
-                        getResource: function (id) {
-                            var url = resource_get_URL + "/" + id;
-                            var vm = this;
-                            axios.get(url, ifox_table_ajax_options)
-                                .then(function (res) {
-                                    if(res.data.status === 200){
-                                        var res_data = res.data.data;
-                                        vm.object.resource.value =  res_data.name;
                                     }else{
                                         layer.msg(res.data.desc);
                                     }
