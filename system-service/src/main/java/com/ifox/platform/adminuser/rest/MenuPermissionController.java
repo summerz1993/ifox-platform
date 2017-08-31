@@ -136,8 +136,8 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     @ApiResponses({
         @ApiResponse(code = 404, message = "菜单权限不存在"),
-        @ApiResponse(code = 488, message = "系统内置菜单不可删除"),
-        @ApiResponse(code = 487, message = "菜单包含子菜单，请先删除子菜单")
+        @ApiResponse(code = 707, message = "系统内置菜单不可删除"),
+        @ApiResponse(code = 706, message = "菜单包含子菜单，请先删除子菜单")
     })
     public @ResponseBody
     BaseResponse delete(@ApiParam @PathVariable String id, HttpServletResponse response){
@@ -152,12 +152,14 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
 
         if(menuPermissionEO.getBuildinSystem()){
             logger.info("为系统内置菜单，不可删除 id:{}, uuid:{}", id, uuid);
+            response.setStatus(BUILD_IN_SYSTEM_CAN_NOT_DELETE);
             return new BaseResponse(BUILD_IN_SYSTEM_CAN_NOT_DELETE, "系统内置菜单不可删除！");
         }
 
         List<MenuPermissionEO> menuPermissionEOList = menuPermissionService.listChildMenu(id);
         if(menuPermissionEOList != null && menuPermissionEOList.size() > 0){
             logger.info("当前菜单包含子菜单 uuid:{}", uuid);
+            response.setStatus(CONTAIN_CHILD_MENU_CAN_NOT_DELETE);
             return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 

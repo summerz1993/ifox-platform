@@ -53,6 +53,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
     @ApiOperation("保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ApiResponses({ @ApiResponse(code = 701, message = "登录名已经存在")})
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存用户信息 adminUserSaveRequest:{}, uuid:{}", adminUserSaveRequest, uuid);
@@ -87,7 +88,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 400, message = "无效请求：ids为空"),
-                    @ApiResponse(code = 486, message = "不允许删除自身账号")})
+                    @ApiResponse(code = 705, message = "不允许删除自身账号")})
     public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, @RequestHeader("Authorization") String token, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除用户 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
@@ -118,7 +119,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("更新用户")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
-                    @ApiResponse(code = 482, message = "登录名已经存在")})
+                    @ApiResponse(code = 701, message = "登录名已经存在")})
     public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest.toString(), uuid);

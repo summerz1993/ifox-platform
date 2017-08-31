@@ -54,8 +54,8 @@ public class FileController extends BaseController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = {"api-version=1.0", "Authorization"})
     @ApiOperation("单文件上传")
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
-                    @ApiResponse(code = 484, message = "不支持的文件类型"),
-                    @ApiResponse(code = 485, message = "不支持的服务名称")})
+                    @ApiResponse(code = 703, message = "不支持的文件类型"),
+                    @ApiResponse(code = 704, message = "不支持的服务名称")})
     public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("单文件上传 serviceName:{}, fileType:{}, uuid:{}", serviceName, fileType, uuid);
