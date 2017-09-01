@@ -62,5 +62,15 @@ new Vue({
     },
     mounted: function () {
         ifox_table_delegate.add = this.save;
+        $("#add-btn").click(function () {
+            $("#add-role-form #form-menu").empty();
+            $("#edit-role-form #form-menu").empty();
+            var _html = '<label class="col-sm-4 text-center">菜单权限</label>' +
+                            '<div id="add-menu-tree">' +
+
+                            '</div>';
+            $("#add-role-form #form-menu").append(_html);
+            menuTree.init("add-menu-tree", menu_permission_list_URL, ["checkbox"], false);
+        });
     }
 });

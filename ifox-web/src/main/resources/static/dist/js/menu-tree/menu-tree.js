@@ -113,17 +113,21 @@ var menuTree = (function(){
 			_tree_option.types = _menu.types;
 			
 			if(option.contains("contextmenu")){
+			    _menu.plugins = ["types"];
 				_menu.plugins.push("contextmenu");
 				_tree_option.contextmenu = _menu.contextmenu;
 			}
 			
-			if(option.contains("checkbox"))
-				_menu.plugins.push("checkbox");
-			
+			if(option.contains("checkbox")){
+                _menu.plugins = ["types"];
+                _menu.plugins.push("checkbox");
+            }
+
 			_tree_option.plugins = _menu.plugins;
-			
+
+            $("#" + element).jstree("destroy");
 			var js_tree = $("#" + element).jstree(_tree_option);
-			
+
 			this.data.jsTree = js_tree;
 		},
 		initEvent: function(element, option, clickable){
@@ -201,6 +205,20 @@ var menuTree = (function(){
 			refresh: function(data){
 				_menu.data.jsTree.jstree('refresh');
 			},
+            selectNode: function (arr) {
+                var inst = _menu.data.jsTree;
+                var obj_arr = [];
+                for (var i = 0; i < arr.length; i ++){
+                    var obj = inst.get_node(arr[i]);
+                    obj_arr.push(obj);
+                }
+
+                inst.select_node(obj_arr);
+            },
+            getAllSelected: function () {
+                var selected_arr = _menu.data.jsTree.jstree('get_selected');
+                return selected_arr;
+            },
             getDetailVue: function () {
                 return new Vue({
                     el: "#selected-menu-detail",
@@ -255,7 +273,7 @@ var menuTree = (function(){
                                         vm.object.level.value = res_data.level;
                                         vm.object.creator.value =res_data.creatorName;
                                         vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
-                                        vm.object.resource.value = res_data.resourceName;
+                                        vm.object.resource.value = vm.getResource(res_data.resource);
                                         vm.object.remark.value = res_data.remark;
                                     }else{
                                         layer.msg(res.data.desc);
@@ -500,6 +518,12 @@ var menuTree = (function(){
 		init: function(element, url, option, clickable){
 			_menu.initMenu(element, url, option, clickable);
 			_menu.initEvent(element, option, clickable);
-		}
+		},
+        defaultSelected: function (arr) {
+            _menu.operation.selectNode(arr);
+        },
+        getAllSelected: function () {
+            return _menu.operation.getAllSelected();
+        }
 	};
 })();

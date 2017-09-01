@@ -50,6 +50,16 @@ new Vue({
                         vm.buildinSystem = res_data.buildinSystem;
                         vm.status = res_data.status;
                         vm.remark = res_data.remark;
+
+                        $("#add-role-form #form-menu").empty();
+                        $("#edit-role-form #form-menu").empty();
+                        var _html = '<label class="col-sm-4 text-center">菜单权限</label>' +
+                            '<div id="edit-menu-tree">' +
+
+                            '</div>';
+                        $("#edit-role-form #form-menu").append(_html);
+                        menuTree.init("edit-menu-tree", menu_permission_list_URL, ["checkbox"], false);
+                        menuTree.defaultSelected(['1','2','3']);
                     }else{
                         layer.msg(res.data.desc);
                     }

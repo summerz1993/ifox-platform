@@ -9,12 +9,21 @@
 <table class="table no-border" th:fragment="form-modal">
     <tbody>
     <tr>
+        <td rowspan="6" id="form-menu">
+
+        </td>
+    </tr>
+
+    <tr>
         <td>
             <label for="name-add" class="col-sm-4 text-center">名称</label>
             <div class="col-sm-8">
                 <input class="form-control" id="name-add" name="name" v-model="name" placeholder="请输入角色名称">
             </div>
         </td>
+    </tr>
+
+    <tr>
         <td>
             <label for="identifier-add" class="col-sm-4 text-center">标识符</label>
             <div class="col-sm-8">
@@ -33,6 +42,9 @@
                 </select>
             </div>
         </td>
+    </tr>
+
+    <tr>
         <td>
             <label for="status-add" class="col-sm-4 text-center">账号状态</label>
             <div class="col-sm-8">
@@ -43,10 +55,11 @@
             </div>
         </td>
     </tr>
+
     <tr>
         <td colspan="2">
-            <label for="remark-add" class="col-sm-2 text-center">备注</label>
-            <div class="col-sm-10">
+            <label for="remark-add" class="col-sm-4 text-center">备注</label>
+            <div class="col-sm-8">
                 <textarea class="form-control" rows="3" id="remark-add" name="remark" v-model="remark" placeholder="请输入..."></textarea>
             </div>
         </td>
