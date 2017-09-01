@@ -4,11 +4,15 @@ import com.ifox.platform.adminuser.dto.MenuPermissionDTO;
 import com.ifox.platform.adminuser.request.menuPermission.MenuPermissionRequest;
 import com.ifox.platform.adminuser.response.MenuPermissionVO;
 import com.ifox.platform.adminuser.response.MenuVO;
+import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.adminuser.service.MenuPermissionService;
+import com.ifox.platform.adminuser.service.ResourceService;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
+import com.ifox.platform.entity.common.ResourceEO;
+import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
@@ -42,6 +46,12 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
 
     @Autowired
     private MenuPermissionService menuPermissionService;
+
+    @Autowired
+    private AdminUserService adminUserService;
+
+    @Autowired
+    private ResourceService resourceService;
 
     @ApiOperation("获取菜单")
     @RequestMapping(value = "/get/menu", method = RequestMethod.GET)
@@ -93,6 +103,16 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
 
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
+
+        if(menuPermissionEO.getCreator() != null){
+            AdminUserEO adminUserEO = adminUserService.get(menuPermissionEO.getCreator());
+            menuPermissionVO.setCreatorName(adminUserEO.getLoginName());
+        }
+
+        if(menuPermissionEO.getResource() != null){
+            ResourceEO resourceEO = resourceService.get(menuPermissionEO.getResource());
+            menuPermissionVO.setResourceName(resourceEO.getName());
+        }
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryOneResponse(menuPermissionVO);
