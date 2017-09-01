@@ -53,9 +53,16 @@ new Vue({
                 return;
 
             var vm = this;
-            axios.post()
+            axios.post(admin_user_change_pwd_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
-
+                    if (res.data.status === 200) {
+                        layer.msg("修改成功，2秒后重新登陆");
+                        $('#change-pwd-modal').modal('hide');
+                        delCookie('token');
+                        setTimeout(function () {
+                            window.location = web_service_URL + 'web/login';
+                        }, 2000);
+                    }
                 })
                 .catch(function (err) {
                    serverError(err);

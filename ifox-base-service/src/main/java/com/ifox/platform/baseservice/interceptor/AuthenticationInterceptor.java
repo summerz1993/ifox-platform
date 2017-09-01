@@ -1,6 +1,8 @@
 package com.ifox.platform.baseservice.interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ifox.platform.dao.sys.ResourceDao;
+import com.ifox.platform.entity.common.ResourceEO;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 import static com.ifox.platform.common.constant.RestStatusConstant.UNAUTHORIZED;
 
@@ -30,9 +33,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private ResourceDao resourceDao;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("认证拦截器 AuthenticationInterceptor --> preHandle, IP:{}, URL:{}", request.getRemoteHost(), request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        logger.info("认证拦截器 AuthenticationInterceptor --> preHandle, IP:{}, URL:{}", request.getRemoteHost(), requestURI);
 
         //预检请求(用于处理跨域访问的复杂请求)
         String method = request.getMethod();
@@ -45,16 +52,44 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // 1 检查token是否有效
+        //例子:/role/get/8ab2a8c55df468ed015df47e818a0002
+        String[] splitURI = requestURI.split("/");
+        String controller = splitURI[1];
+        //TODO:此处可做缓存
+//        ResourceEO resourceEO = resourceDao.getByController(controller);
+//        //1 资源不存在，返回404
+//        if (resourceEO == null) {
+//            logger.info("资源不存在或未定义");
+//            response.setStatus(NOT_FOUND);
+//            return false;
+//        }
+//
+//        //2 公共资源，不用验证权限
+//        if (ResourceEO.ResourceEOType.PUBLIC == resourceEO.getType()) {
+//            logger.info("公共资源");
+//            return true;
+//        }
+
+        //3 鉴权，检查token是否有效
         String token = request.getHeader("Authorization");
-        DecodedJWT decodedJWT;
         try {
-            decodedJWT = JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
+            JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
         } catch (Exception e) {
             response.setStatus(UNAUTHORIZED);
             logger.info("认证失败");
             return false;
         }
+
+        //4 角色资源 检查该用户角色是否拥有对应的权限
+        //检查URL最后是不是UUID
+        String isUUID = splitURI[splitURI.length - 1];
+        int uuidLength = 32;
+        String menuPermissionURL = "";
+        if (isUUID.length() == uuidLength) {
+            //如果是UUID则舍去
+            menuPermissionURL = requestURI.substring(0, requestURI.length() - uuidLength - 1);
+        }
+
 
         // 2 检查资源是否存在
         // 查询MenuPermissionEO -> url字段，对应RequestURI
@@ -83,4 +118,5 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
     }
+
 }

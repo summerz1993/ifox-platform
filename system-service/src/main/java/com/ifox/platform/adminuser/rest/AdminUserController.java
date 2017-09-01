@@ -1,10 +1,7 @@
 package com.ifox.platform.adminuser.rest;
 
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
-import com.ifox.platform.adminuser.request.adminuser.AdminUserPageRequest;
-import com.ifox.platform.adminuser.request.adminuser.AdminUserQueryRequest;
-import com.ifox.platform.adminuser.request.adminuser.AdminUserSaveRequest;
-import com.ifox.platform.adminuser.request.adminuser.AdminUserUpdateRequest;
+import com.ifox.platform.adminuser.request.adminuser.*;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
 import com.ifox.platform.common.page.Page;
@@ -36,6 +33,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.EXISTED_LOGIN_NAME;
+import static com.ifox.platform.common.constant.RestStatusConstant.NEW_PASSWORD_NOT_EQUAL;
+import static com.ifox.platform.common.constant.RestStatusConstant.ORIGINAL_PASSWORD_ERROR;
 
 @Api(tags = "后台用户管理")
 @Controller
@@ -65,12 +64,9 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
         }
 
-        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
-        String userId = JsonIterator.deserialize(payload).get("userId").toString();
-
         AdminUserEO adminUserEO = ModelMapperUtil.get().map(adminUserSaveRequest, AdminUserEO.class);
 
-        adminUserEO.setCreator(userId);
+        adminUserEO.setCreator(getUserIdByToken(token));
 
         byte[] bytes = DigestUtil.generateSalt(PasswordUtil.SALT_SIZE);
         String salt = EncodeUtil.encodeHex(bytes);
@@ -98,8 +94,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
             return invalidRequestBaseResponse(response);
         }
 
-        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
-        String userId = JsonIterator.deserialize(payload).get("userId").toString();
+        String userId = getUserIdByToken(token);
         if (Arrays.asList(ids).contains(userId)) {
             logger.info("不允许删除自身账号 userId:{}, uuid:{}", userId, uuid);
             return deleteSelfErrorBaseResponse(response);
@@ -203,8 +198,44 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         return successQueryMultiResponse(adminUserVOList);
     }
 
-    public void changePassword() {
+    @ApiOperation("修改密码")
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    @ApiResponses({ @ApiResponse(code = 461, message = "原密码错误"),
+                    @ApiResponse(code = 462, message = "新密码不一致")})
+    public @ResponseBody BaseResponse changePassword(@ApiParam @RequestBody AdminUserChangePwdRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response) {
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("修改密码 request:{}, uuid:{}", request, uuid);
 
+        String userId = getUserIdByToken(token);
+        AdminUserEO adminUserEO = adminUserService.get(userId);
+        boolean validateOriginalPassword = PasswordUtil.validatePassword(request.getOriginalPassword(), adminUserEO.getSalt(), adminUserEO.getPassword());
+        if (!validateOriginalPassword) {
+            logger.info("原密码错误 uuid:{}", uuid);
+            response.setStatus(ORIGINAL_PASSWORD_ERROR);
+            return new BaseResponse(ORIGINAL_PASSWORD_ERROR, "原密码错误");
+        }
+
+        if (!request.getNewPassword().equalsIgnoreCase(request.getConfirmPassword())) {
+            logger.info("新密码不一致 uuid:{}", uuid);
+            response.setStatus(NEW_PASSWORD_NOT_EQUAL);
+            return new BaseResponse(NEW_PASSWORD_NOT_EQUAL, "新密码不一致");
+        }
+
+        adminUserEO.setPassword(PasswordUtil.encryptPassword(request.getNewPassword(), adminUserEO.getSalt()));
+        adminUserService.update(adminUserEO);
+
+        logger.info(successUpdate + " uuid:{}", uuid);
+        return successUpdateBaseResponse();
+    }
+
+    /**
+     * 通过Token获取UserID
+     * @param token token
+     * @return userId
+     */
+    private String getUserIdByToken(String token) {
+        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        return JsonIterator.deserialize(payload).get("userId").toString();
     }
 
 }

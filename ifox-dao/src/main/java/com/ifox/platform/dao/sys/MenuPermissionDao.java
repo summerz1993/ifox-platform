@@ -13,7 +13,14 @@ public interface MenuPermissionDao extends GenericDao<MenuPermissionEO, String> 
 
     /**
      * 删除菜单权限和角色的关联关系
-     * @param menuId
+     * @param menuId menuId
      */
     void deleteMenuRoleRelation(String menuId);
+
+    /**
+     * 通过URL获取菜单权限实体
+     * @param URL URL
+     * @return 菜单权限实体
+     */
+    MenuPermissionEO getByURL(String URL);
 }

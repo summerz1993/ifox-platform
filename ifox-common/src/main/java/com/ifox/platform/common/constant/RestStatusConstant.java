@@ -26,7 +26,10 @@ public final class RestStatusConstant {
      */
     // 用户名或者密码错误
     public static final Integer USER_NAME_OR_PASSWORD_ERROR = 460;
-
+    // 原始密码错误
+    public static final Integer ORIGINAL_PASSWORD_ERROR = 461;
+    // 新密码不一致
+    public static final Integer NEW_PASSWORD_NOT_EQUAL = 462;
 
 
 

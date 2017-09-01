@@ -28,7 +28,7 @@ public class MenuPermissionDaoImpl extends GenericHibernateDaoImpl<MenuPermissio
 
     /**
      * 删除菜单权限和角色的关联关系
-     * @param menuId
+     * @param menuId menuId
      */
     @Override
     public void deleteMenuRoleRelation(String menuId) {
@@ -36,4 +36,16 @@ public class MenuPermissionDaoImpl extends GenericHibernateDaoImpl<MenuPermissio
         Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.createSQLQuery(sql).setParameter("menuId", menuId).executeUpdate();
     }
+
+    /**
+     * 通过URL获取菜单权限实体
+     * @param URL URL
+     * @return 菜单权限实体
+     */
+    @Override
+    public MenuPermissionEO getByURL(String URL) {
+
+        return null;
+    }
+
 }
