@@ -206,14 +206,13 @@ var menuTree = (function(){
 				_menu.data.jsTree.jstree('refresh');
 			},
             selectNode: function (arr) {
-                var inst = _menu.data.jsTree;
-                var obj_arr = [];
-                for (var i = 0; i < arr.length; i ++){
-                    var obj = inst.get_node(arr[i]);
-                    obj_arr.push(obj);
-                }
-
-                inst.select_node(obj_arr);
+                _menu.data.jsTree.on('loaded.jstree', function(e, data){
+                    var inst = data.instance;
+                    for (var i = 0; i < arr.length; i ++){
+                        var obj = inst.get_node(arr[i]);
+                        inst.select_node(obj);
+                    }
+                });
             },
             getAllSelected: function () {
                 var selected_arr = _menu.data.jsTree.jstree('get_selected');
@@ -273,7 +272,7 @@ var menuTree = (function(){
                                         vm.object.level.value = res_data.level;
                                         vm.object.creator.value =res_data.creatorName;
                                         vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
-                                        vm.object.resource.value = vm.getResource(res_data.resource);
+                                        vm.object.resource.value = res_data.resourceName;
                                         vm.object.remark.value = res_data.remark;
                                     }else{
                                         layer.msg(res.data.desc);
