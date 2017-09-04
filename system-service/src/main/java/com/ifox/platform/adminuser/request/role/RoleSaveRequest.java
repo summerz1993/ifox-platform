@@ -1,25 +1,15 @@
 package com.ifox.platform.adminuser.request.role;
 
 import com.ifox.platform.adminuser.dto.base.RoleBaseColumns;
+import com.ifox.platform.entity.sys.MenuPermissionEO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoleSaveRequest extends RoleBaseColumns {
 
-    private List<String> menuPermissions;
-
-    public List<String> getMenuPermissions() {
-        return menuPermissions;
-    }
-
-    public void setMenuPermissions(List<String> menuPermissions) {
-        this.menuPermissions = menuPermissions;
-    }
-
     @Override
     public String toString() {
-        return "RoleSaveRequest{" +
-            "menuPermissions=" + menuPermissions +
-            "} " + super.toString();
+        return "RoleSaveRequest{} " + super.toString();
     }
 }

@@ -48,7 +48,7 @@ app.datasource:
   jdbc:
     url: jdbc:mysql://localhost:3306/pure_site?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    password: yueraiyu
+    password: Aswd1234
     driver: com.mysql.jdbc.Driver
   pool:
     initialSize: 1

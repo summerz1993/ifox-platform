@@ -40,9 +40,6 @@ public class RoleController extends BaseController<RoleVO> {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private MenuPermissionService menuPermissionService;
-
     @ApiOperation("保存角色信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
@@ -50,12 +47,7 @@ public class RoleController extends BaseController<RoleVO> {
         logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
-        if(saveRequest.getMenuPermissions() != null && saveRequest.getMenuPermissions().size() > 0){
-            List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
-            for (String menuId : saveRequest.getMenuPermissions())
-                menuPermissionEOList.add(menuPermissionService.get(menuId));
-            roleEO.setMenuPermissionEOList(menuPermissionEOList);
-        }
+        roleEO.setMenuPermissionEOList(saveRequest.getMenuPermissionEOList());
 
         roleService.save(roleEO);
 
@@ -101,12 +93,7 @@ public class RoleController extends BaseController<RoleVO> {
             return super.notFoundBaseResponse("角色不存在", response);
         }
         ModelMapperUtil.get().map(updateRequest, roleEO);
-        if(updateRequest.getMenuPermissions() != null && updateRequest.getMenuPermissions().size() > 0){
-            List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
-            for (String menuId : updateRequest.getMenuPermissions())
-                menuPermissionEOList.add(menuPermissionService.get(menuId));
-            roleEO.setMenuPermissionEOList(menuPermissionEOList);
-        }
+        roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
 
         roleService.update(roleEO);
 
