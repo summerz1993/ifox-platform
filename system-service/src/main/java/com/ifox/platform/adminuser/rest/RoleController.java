@@ -5,6 +5,7 @@ import com.ifox.platform.adminuser.request.role.RolePageRequest;
 import com.ifox.platform.adminuser.request.role.RoleSaveRequest;
 import com.ifox.platform.adminuser.request.role.RoleUpdateRequest;
 import com.ifox.platform.adminuser.response.RoleVO;
+import com.ifox.platform.adminuser.service.MenuPermissionService;
 import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
@@ -12,6 +13,7 @@ import com.ifox.platform.common.rest.PageInfo;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
+import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.entity.sys.RoleEO;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +47,8 @@ public class RoleController extends BaseController<RoleVO> {
         logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
+        roleEO.setMenuPermissionEOList(saveRequest.getMenuPermissionEOList());
+
         roleService.save(roleEO);
 
         logger.info(successSave + " uuid:{}", uuid);
@@ -88,6 +93,8 @@ public class RoleController extends BaseController<RoleVO> {
             return super.notFoundBaseResponse("角色不存在", response);
         }
         ModelMapperUtil.get().map(updateRequest, roleEO);
+        roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
+
         roleService.update(roleEO);
 
         logger.info(successUpdate + " uuid:{}", uuid);
@@ -106,7 +113,13 @@ public class RoleController extends BaseController<RoleVO> {
             logger.info("角色不存在 roleId:{}, uuid:{}", roleId, uuid);
             return super.notFoundOneResponse("角色不存在", response);
         }
+        List<MenuPermissionEO> menuPermissionEOList = roleEO.getMenuPermissionEOList();
+        List<String> menuPermissions = new ArrayList<>();
+        for (MenuPermissionEO menu:menuPermissionEOList) {
+            menuPermissions.add(menu.getId());
+        }
         RoleVO vo = ModelMapperUtil.get().map(roleEO, RoleVO.class);
+        vo.setMenuPermissions(menuPermissions);
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryOneResponse(vo);

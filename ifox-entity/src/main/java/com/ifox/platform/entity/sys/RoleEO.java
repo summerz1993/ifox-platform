@@ -58,7 +58,7 @@ public class RoleEO extends BaseEntity{
     /**
      * 对应的菜单权限
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ifox_sys_role_menu_permission", joinColumns = {@JoinColumn(name = "role")}, inverseJoinColumns = {@JoinColumn(name = "menu_permission")})
     private List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
 

@@ -1,6 +1,10 @@
 package com.ifox.platform.adminuser.dto.base;
 
+import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.entity.sys.RoleEO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoleBaseColumns {
 
@@ -28,6 +32,11 @@ public class RoleBaseColumns {
      * 是否内置角色
      */
     private Boolean buildinSystem = false;
+
+    /**
+     * 菜单权限id
+     */
+    private List<String> menuPermissions;
 
     public String getName() {
         return name;
@@ -69,6 +78,26 @@ public class RoleBaseColumns {
         this.buildinSystem = buildinSystem;
     }
 
+    public List<String> getMenuPermissions() {
+        return menuPermissions;
+    }
+
+    public void setMenuPermissions(List<String> menuPermissions) {
+        this.menuPermissions = menuPermissions;
+    }
+
+    public List<MenuPermissionEO> getMenuPermissionEOList(){
+        List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
+        if(menuPermissions != null && menuPermissions.size() > 0){
+            for (String menuId : menuPermissions){
+                MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
+                menuPermissionEO.setId(menuId);
+                menuPermissionEOList.add(menuPermissionEO);
+            }
+        }
+        return menuPermissionEOList;
+    }
+
     @Override
     public String toString() {
         return "RoleBaseColumns{" +
@@ -77,6 +106,7 @@ public class RoleBaseColumns {
             ", remark='" + remark + '\'' +
             ", status=" + status +
             ", buildinSystem=" + buildinSystem +
+            ", menuPermissions=" + menuPermissions +
             '}';
     }
 }

@@ -6,6 +6,7 @@ new Vue({
         identifier: '',
         buildinSystem: 'true',
         status: 'ACTIVE',
+        menuPermissions: [],
         remark: ""
     },
     methods: {
@@ -50,6 +51,7 @@ new Vue({
                         vm.buildinSystem = res_data.buildinSystem;
                         vm.status = res_data.status;
                         vm.remark = res_data.remark;
+                        vm.menuPermissions = res_data.menuPermissions;
 
                         $("#add-role-form #form-menu").empty();
                         $("#edit-role-form #form-menu").empty();
@@ -59,7 +61,7 @@ new Vue({
                             '</div>';
                         $("#edit-role-form #form-menu").append(_html);
                         menuTree.init("edit-menu-tree", menu_permission_list_URL, ["checkbox"], false);
-                        menuTree.defaultSelected(['1','2','3']);
+                        menuTree.defaultSelected(res_data.menuPermissions);
                     }else{
                         layer.msg(res.data.desc);
                     }
@@ -73,6 +75,7 @@ new Vue({
                 return;
 
             var vm = this;
+            vm.menuPermissions = menuTree.getAllSelected();
             axios.put(role_update_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
@@ -92,6 +95,7 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            this.menuPermissions = [];
         }
     },
     mounted: function () {

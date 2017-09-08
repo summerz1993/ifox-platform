@@ -5,6 +5,7 @@ new Vue({
         identifier: '',
         buildinSystem: 'true',
         status: 'ACTIVE',
+        menuPermissions: [],
         remark: ""
     },
     methods: {
@@ -40,6 +41,7 @@ new Vue({
                 return;
 
             var vm = this;
+            vm.menuPermissions = menuTree.getAllSelected();
             axios.post(role_save_URL, vm.$data, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
@@ -58,6 +60,7 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            this.menuPermissions = [];
         }
     },
     mounted: function () {
