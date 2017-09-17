@@ -131,7 +131,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
         ModelMapperUtil.get().map(request, menuPermissionEO);
 
-        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String payload = JWTUtil.getPayloadStringByToken(token);
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
         menuPermissionEO.setCreator(userId);
 
@@ -183,10 +183,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 
-        menuPermissionService.deleteMenuRoleRelation(id);
-        menuPermissionService.deleteByEntity(menuPermissionEO);
-        logger.info(successDelete + " uuid:{}", uuid);
+        menuPermissionService.delete(id, menuPermissionEO);
 
+        logger.info(successDelete + " uuid:{}", uuid);
         return successDeleteBaseResponse();
     }
 

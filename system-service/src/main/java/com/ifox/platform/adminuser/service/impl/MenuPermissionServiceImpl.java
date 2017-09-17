@@ -71,4 +71,16 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
         queryProperties.add(new QueryProperty("parentId", EnumDao.Operation.EQUAL, id));
         return listByQueryProperty(queryProperties);
     }
+
+    /**
+     * 删除MenuPermission以及对应的关联数据
+     * @param menuPermissionId
+     * @param menuPermissionEO
+     */
+    @Override
+    @Transactional
+    public void delete(String menuPermissionId, MenuPermissionEO menuPermissionEO) {
+        menuPermissionDao.deleteMenuRoleRelation(menuPermissionId);
+        super.deleteByEntity(menuPermissionEO);
+    }
 }

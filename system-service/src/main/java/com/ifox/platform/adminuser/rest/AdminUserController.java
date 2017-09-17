@@ -234,7 +234,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
      * @return userId
      */
     private String getUserIdByToken(String token) {
-        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String payload = JWTUtil.getPayloadStringByToken(token);
         return JsonIterator.deserialize(payload).get("userId").toString();
     }
 

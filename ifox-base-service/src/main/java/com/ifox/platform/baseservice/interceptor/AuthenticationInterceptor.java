@@ -5,6 +5,10 @@ import com.ifox.platform.dao.sys.ResourceDao;
 import com.ifox.platform.entity.common.ResourceEO;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import com.sun.tools.corba.se.idl.StringGen;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
@@ -90,14 +96,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             menuPermissionURL = requestURI.substring(0, requestURI.length() - uuidLength - 1);
         }
 
-
-        // 2 检查资源是否存在
-        // 查询MenuPermissionEO -> url字段，对应RequestURI
-        // 2-1 不存在，返回404
-        // 2-2 存在，查询出来的MenuPermissionEO，得到所属的ResourceEO,走第三步
-
-        // 3-1 公共资源 直接访问
-        // return true;
+        String payload = JWTUtil.getPayloadStringByToken(token);
+        Any payLoadAny = JsonIterator.deserialize(payload);
+        String[] roleIdList = ArrayUtils.toArray(payLoadAny.get("roleIdList").toString());
+        //TODO:在RoleDao中定义方法：通过roleId查询所有的ifox_sys_role_menu_permission数据，最后比对menuPermissionURL是否在查询出来的数据中
+        
 
         // 3-2 角色资源 检查该用户角色是否拥有对应的角色
         // 根据2-2查询出来的MenuPermissionEO得到所有roleID，判断当前token中是否包含此roleID
