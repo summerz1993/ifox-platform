@@ -1,13 +1,18 @@
 package com.ifox.platform.dao.sys.impl;
 
+import com.ifox.platform.common.bean.QueryProperty;
+import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.dao.common.impl.GenericHibernateDaoImpl;
 import com.ifox.platform.dao.sys.MenuPermissionDao;
 import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.dao.HQLUtil;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -44,7 +49,12 @@ public class MenuPermissionDaoImpl extends GenericHibernateDaoImpl<MenuPermissio
      */
     @Override
     public MenuPermissionEO getByURL(String URL) {
-
+        List<QueryProperty> queryPropertyList = new ArrayList<>();
+        queryPropertyList.add(new QueryProperty("url", EnumDao.Operation.EQUAL, URL));
+        List<MenuPermissionEO> menuPermissionEOList = listByQueryProperty(queryPropertyList);
+        if (!CollectionUtils.isEmpty(menuPermissionEOList)) {
+            return menuPermissionEOList.get(0);
+        }
         return null;
     }
 

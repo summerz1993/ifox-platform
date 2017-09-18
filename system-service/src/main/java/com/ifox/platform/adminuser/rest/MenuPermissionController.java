@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -104,12 +105,12 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        if(menuPermissionEO.getCreator() != null){
+        if(!StringUtils.isEmpty(menuPermissionEO.getCreator())){
             AdminUserEO adminUserEO = adminUserService.get(menuPermissionEO.getCreator());
             menuPermissionVO.setCreatorName(adminUserEO.getLoginName());
         }
 
-        if(menuPermissionEO.getResource() != null){
+        if(!StringUtils.isEmpty(menuPermissionEO.getResource())){
             ResourceEO resourceEO = resourceService.get(menuPermissionEO.getResource());
             menuPermissionVO.setResourceName(resourceEO.getName());
         }
