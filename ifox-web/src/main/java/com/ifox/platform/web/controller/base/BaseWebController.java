@@ -2,6 +2,7 @@ package com.ifox.platform.web.controller.base;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.ifox.platform.utility.common.ExceptionUtil;
+import com.ifox.platform.utility.jwt.JWTUtil;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import org.apache.commons.codec.binary.Base64;
@@ -56,7 +57,7 @@ public class BaseWebController {
         //token校验通过
         logger.info("token校验成功");
 
-        String payload = getPayload(token);
+        String payload = JWTUtil.getPayloadStringByToken(token);
 
         Any payLoadAny = JsonIterator.deserialize(payload);
         String userId = payLoadAny.get("userId").toString();
@@ -83,18 +84,6 @@ public class BaseWebController {
                 model.addAttribute("headPortrait", "");
                 logger.warn("headPortraitURL编码异常");
             }
-        }
-    }
-
-    private String getPayload(String token) {
-        String[] split = token.split("\\.");
-        String payLoadString = split[1];
-        byte[] bytes = Base64.decodeBase64(payLoadString);
-        try {
-            return new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.error(ExceptionUtil.getStackTraceAsString(e));
-            return "";
         }
     }
 

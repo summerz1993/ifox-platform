@@ -69,6 +69,7 @@
                                     <label for="resource-edit" class="col-sm-3 text-center">所属资源</label>
                                     <div class="col-sm-9">
                                         <select id="resource-edit" name="resource" class="form-control" v-model="resource" @change="selectVal">
+                                            <option value=""></option>
                                             <option v-for="res in resources" v-bind:value="res.id">{{res.name}}</option>
                                         </select>
                                     </div>

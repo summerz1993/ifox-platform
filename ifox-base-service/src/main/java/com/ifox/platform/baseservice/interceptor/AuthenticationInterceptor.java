@@ -1,10 +1,14 @@
 package com.ifox.platform.baseservice.interceptor;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ifox.platform.dao.sys.MenuPermissionDao;
 import com.ifox.platform.dao.sys.ResourceDao;
+import com.ifox.platform.dao.sys.RoleDao;
 import com.ifox.platform.entity.common.ResourceEO;
-import com.ifox.platform.utility.common.ExceptionUtil;
+import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.jwt.JWTUtil;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.UnsupportedEncodingException;
 
 import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
 import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
@@ -28,13 +30,19 @@ import static com.ifox.platform.common.constant.RestStatusConstant.UNAUTHORIZED;
  */
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
+    private Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
     @Autowired
     private Environment env;
 
     @Autowired
     private ResourceDao resourceDao;
+
+    @Autowired
+    private MenuPermissionDao menuPermissionDao;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -51,24 +59,24 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             logger.info("OPTIONS预检请求通过");
             return false;
         }
-
+if (true) return true;
         //例子:/role/get/8ab2a8c55df468ed015df47e818a0002
         String[] splitURI = requestURI.split("/");
         String controller = splitURI[1];
         //TODO:此处可做缓存
-//        ResourceEO resourceEO = resourceDao.getByController(controller);
-//        //1 资源不存在，返回404
-//        if (resourceEO == null) {
-//            logger.info("资源不存在或未定义");
-//            response.setStatus(NOT_FOUND);
-//            return false;
-//        }
-//
-//        //2 公共资源，不用验证权限
-//        if (ResourceEO.ResourceEOType.PUBLIC == resourceEO.getType()) {
-//            logger.info("公共资源");
-//            return true;
-//        }
+        ResourceEO resourceEO = resourceDao.getByController(controller);
+        //1 资源不存在，返回404
+        if (resourceEO == null) {
+            logger.info("资源不存在或未定义");
+            response.setStatus(NOT_FOUND);
+            return false;
+        }
+
+        //2 公共资源，不用验证权限
+        if (ResourceEO.ResourceEOType.PUBLIC == resourceEO.getType()) {
+            logger.info("公共资源");
+            return true;
+        }
 
         //3 鉴权，检查token是否有效
         String token = request.getHeader("Authorization");
@@ -76,7 +84,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             JWTUtil.verifyToken(token, env.getProperty("jwt.secret"));
         } catch (Exception e) {
             response.setStatus(UNAUTHORIZED);
-            logger.info("认证失败");
+            logger.info("认证失败:token校验失败");
             return false;
         }
 
@@ -84,26 +92,30 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         //检查URL最后是不是UUID
         String isUUID = splitURI[splitURI.length - 1];
         int uuidLength = 32;
-        String menuPermissionURL = "";
+        String menuPermissionURL = requestURI;
         if (isUUID.length() == uuidLength) {
-            //如果是UUID则舍去
+            //如果是UUID则舍去, 例子:/role/get
             menuPermissionURL = requestURI.substring(0, requestURI.length() - uuidLength - 1);
         }
 
+        String payload = JWTUtil.getPayloadStringByToken(token);
+        Any payLoadAny = JsonIterator.deserialize(payload);
+        String[] roleIdList = ArrayUtils.toArray(payLoadAny.get("roleIdList").toString());
+        //TODO:此处可做缓存
+        MenuPermissionEO menuPermissionEO = menuPermissionDao.getByURL(menuPermissionURL);
+        if (menuPermissionEO == null || menuPermissionEO.getStatus() == MenuPermissionEO.MenuEOStatus.INVALID) {
+            logger.info("菜单权限不存在或未定义或状态无效");
+            response.setStatus(NOT_FOUND);
+            return false;
+        }
+        Integer count = roleDao.countByRoleIdListAndMenuPermission(roleIdList, menuPermissionEO.getId());
+        if (count == null || count.equals(0)) {
+            response.setStatus(UNAUTHORIZED);
+            logger.info("认证失败:角色资源无对应权限");
+            return false;
+        }
 
-        // 2 检查资源是否存在
-        // 查询MenuPermissionEO -> url字段，对应RequestURI
-        // 2-1 不存在，返回404
-        // 2-2 存在，查询出来的MenuPermissionEO，得到所属的ResourceEO,走第三步
-
-        // 3-1 公共资源 直接访问
-        // return true;
-
-        // 3-2 角色资源 检查该用户角色是否拥有对应的角色
-        // 根据2-2查询出来的MenuPermissionEO得到所有roleID，判断当前token中是否包含此roleID
-
-        // 3-3 私人资源 检查访问的资源是不是所属该用户  --- 此步骤建议在controller中实现
-
+        //5 私人资源 检查访问的资源是不是所属该用户  --- 此步骤建议在controller中实现
 
         logger.info("认证通过");
         return true;

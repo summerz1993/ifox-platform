@@ -9,6 +9,7 @@ import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,23 @@ public class JWTUtil {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         return jwtVerifier.verify(token);
+    }
+
+    /**
+     * 根据token解析出Payload数据
+     * @param token token
+     * @return Payload
+     */
+    public static String getPayloadStringByToken(String token) {
+        String[] split = token.split("\\.");
+        String payLoadString = split[1];
+        byte[] bytes = Base64.decodeBase64(payLoadString);
+        try {
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error(ExceptionUtil.getStackTraceAsString(e));
+            return "";
+        }
     }
 
     /**

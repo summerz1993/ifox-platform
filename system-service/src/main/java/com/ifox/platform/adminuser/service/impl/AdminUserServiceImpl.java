@@ -116,7 +116,8 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
             List<RoleEO> roleEOList = adminUserEO.getRoleEOList();
             List<String> roleIdList = new ArrayList<>();
             for (RoleEO role : roleEOList) {
-                roleIdList.add(role.getId());
+                if (role.getStatus() == RoleEO.RoleEOStatus.ACTIVE)
+                    roleIdList.add(role.getId());
             }
             int size = roleIdList.size();
             payload.setRoleIdList(roleIdList.toArray(new String[size]));

@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -104,12 +105,12 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
         ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
 
-        if(menuPermissionEO.getCreator() != null){
+        if(!StringUtils.isEmpty(menuPermissionEO.getCreator())){
             AdminUserEO adminUserEO = adminUserService.get(menuPermissionEO.getCreator());
             menuPermissionVO.setCreatorName(adminUserEO.getLoginName());
         }
 
-        if(menuPermissionEO.getResource() != null){
+        if(!StringUtils.isEmpty(menuPermissionEO.getResource())){
             ResourceEO resourceEO = resourceService.get(menuPermissionEO.getResource());
             menuPermissionVO.setResourceName(resourceEO.getName());
         }
@@ -131,7 +132,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
         ModelMapperUtil.get().map(request, menuPermissionEO);
 
-        String payload = JWTUtil.getPayloadStringByToken(token, env.getProperty("jwt.secret"));
+        String payload = JWTUtil.getPayloadStringByToken(token);
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
         menuPermissionEO.setCreator(userId);
 
@@ -183,10 +184,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 
-        menuPermissionService.deleteMenuRoleRelation(id);
-        menuPermissionService.deleteByEntity(menuPermissionEO);
-        logger.info(successDelete + " uuid:{}", uuid);
+        menuPermissionService.delete(id, menuPermissionEO);
 
+        logger.info(successDelete + " uuid:{}", uuid);
         return successDeleteBaseResponse();
     }
 

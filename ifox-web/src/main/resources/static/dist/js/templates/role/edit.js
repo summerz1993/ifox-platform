@@ -55,7 +55,7 @@ new Vue({
 
                         $("#add-role-form #form-menu").empty();
                         $("#edit-role-form #form-menu").empty();
-                        var _html = '<label class="col-sm-4 text-center">菜单权限</label>' +
+                        var _html = '<label class="col-sm-5 text-center">菜单权限</label>' +
                             '<div id="edit-menu-tree">' +
 
                             '</div>';
