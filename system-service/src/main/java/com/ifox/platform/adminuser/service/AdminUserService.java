@@ -6,6 +6,7 @@ import com.ifox.platform.adminuser.exception.RepeatedAdminUserException;
 import com.ifox.platform.adminuser.request.adminuser.AdminUserPageRequest;
 import com.ifox.platform.adminuser.request.adminuser.AdminUserQueryRequest;
 import com.ifox.platform.baseservice.GenericService;
+import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.jwt.JWTPayload;
@@ -49,5 +50,11 @@ public interface AdminUserService extends GenericService<AdminUserEO, String>{
      * @return List<AdminUserDTO>
      */
     List<AdminUserDTO> list(AdminUserQueryRequest queryRequest);
+
+    /**
+     * 删除多个用户
+     * @param ids ID
+     */
+    void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
 
 }

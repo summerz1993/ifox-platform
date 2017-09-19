@@ -1,9 +1,11 @@
 package com.ifox.platform.adminuser.rest;
 
 import com.ifox.platform.adminuser.dto.AdminUserDTO;
+import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.request.adminuser.*;
 import com.ifox.platform.adminuser.response.AdminUserVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
+import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.PageInfo;
@@ -101,10 +103,13 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         }
 
         try {
-            adminUserService.deleteMulti(ids);
-        } catch (IllegalArgumentException e) {
-            logger.info("用户不存在 uuid:{}", uuid);
-            return notFoundBaseResponse("用户不存在", response);
+            adminUserService.delete(ids);
+        } catch (NotFoundAdminUserException e) {
+            logger.info("删除的用户不存在 uuid:{}", uuid);
+            return notFoundBaseResponse("删除的用户不存在", response);
+        } catch (BuildinSystemException e) {
+            logger.info("系统内置用户不允许删除 uuid:{}", uuid);
+            return deleteBuildinSystemErrorBaseResponse("系统内置用户不允许删除", response);
         }
 
         logger.info(successDelete + " uuid:{}", uuid);

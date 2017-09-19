@@ -26,6 +26,7 @@ public final class ExceptionStatusConstant {
     public static final Integer REPEATED_ADMIN_USER_EXP = 90002;
     // EmailException
     public static final Integer EMAIL_EXP = 90003;
-
+    // BuildinSystemException
+    public static final Integer BUILDIN_SYSTEM_EXP = 90004;
 
 }

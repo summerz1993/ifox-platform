@@ -121,5 +121,11 @@ public class BaseController<T> {
         return new BaseResponse(DELETE_SELF_ERROR, "不允许删除自身账号");
     }
 
+    //--------------- buildin system ----------------
+
+    protected BaseResponse deleteBuildinSystemErrorBaseResponse(String desc, HttpServletResponse response){
+        response.setStatus(BUILD_IN_SYSTEM_CAN_NOT_DELETE);
+        return new BaseResponse(BUILD_IN_SYSTEM_CAN_NOT_DELETE, desc);
+    }
 
 }
