@@ -224,32 +224,36 @@ var menuTree = (function(){
                     data: {
                         object: {
                             name: {
-                                lable: "名称",
+                                label: "名称",
                                 value: "",
                                 isActive: true
                             },
                             link: {
-                                lable: "链接",
+                                label: "链接",
                                 value: ""
                             },
                             level: {
-                                lable: "级别",
+                                label: "级别",
                                 value: ""
                             },
-                            creator: {
-                                lable: "创建者",
+                            status: {
+                                label: "状态",
                                 value: ""
                             },
                             buildinSystem: {
-                                lable: "系统内置",
+                                label: "系统内置",
                                 value: ""
                             },
                             resource: {
-                                lable: "所属资源",
+                                label: "所属资源",
+                                value: ""
+                            },
+                            creator: {
+                                label: "创建者",
                                 value: ""
                             },
                             remark: {
-                                lable: "备注",
+                                label: "备注",
                                 value: ""
                             }
                         }
@@ -274,6 +278,13 @@ var menuTree = (function(){
                                         vm.object.buildinSystem.value = res_data.buildinSystem ? "是" : "否";
                                         vm.object.resource.value = res_data.resourceName;
                                         vm.object.remark.value = res_data.remark;
+                                        if (res_data.status === "ACTIVE") {
+                                            vm.object.status.value = "有效";
+                                        } else if (res_data.status === "INVALID") {
+                                            vm.object.status.value = "无效";
+                                        } else {
+                                            vm.object.status.value = "";
+                                        }
                                     }else{
                                         layer.msg(res.data.desc);
                                     }
@@ -303,7 +314,8 @@ var menuTree = (function(){
                         button: false,
                         resource: "",
                         resources: [],
-                        remark: ""
+                        remark: "",
+                        status: "ACTIVE"
                     },
                     methods: {
                         validate: function () {
@@ -361,7 +373,8 @@ var menuTree = (function(){
                                 buildinSystem: vm.buildinSystem,
                                 button: vm.button,
                                 resource: vm.resource,
-                                remark: vm.remark
+                                remark: vm.remark,
+                                status: vm.status
                             };
                             axios.post(menu_permission_save_URL, req_data, ifox_table_ajax_options)
                                 .then(function (res) {

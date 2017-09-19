@@ -144,7 +144,6 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         }
 
         menuPermissionEO.setLevel(parentMenu.getLevel() + 1);
-        menuPermissionEO.setStatus(MenuPermissionEO.MenuEOStatus.ACTIVE);
         menuPermissionService.save(menuPermissionEO);
 
         MenuPermissionVO menuPermissionVO = new MenuPermissionVO();

@@ -66,6 +66,18 @@
 
                             <tr>
                                 <td>
+                                    <label for="status-add" class="col-sm-3 text-center">状态</label>
+                                    <div class="col-sm-9">
+                                        <select id="status-add" name="status" class="form-control" v-model="status">
+                                            <option value="ACTIVE">有效</option>
+                                            <option value="INVALID">无效</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
                                     <label for="resource-edit" class="col-sm-3 text-center">所属资源</label>
                                     <div class="col-sm-9">
                                         <select id="resource-edit" name="resource" class="form-control" v-model="resource" @change="selectVal">
