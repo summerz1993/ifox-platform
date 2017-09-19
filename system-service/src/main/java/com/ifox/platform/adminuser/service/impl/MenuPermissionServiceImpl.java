@@ -74,13 +74,12 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
 
     /**
      * 删除MenuPermission以及对应的关联数据
-     * @param menuPermissionId
      * @param menuPermissionEO
      */
     @Override
     @Transactional
-    public void delete(String menuPermissionId, MenuPermissionEO menuPermissionEO) {
-        menuPermissionDao.deleteMenuRoleRelation(menuPermissionId);
+    public void delete(MenuPermissionEO menuPermissionEO) {
+        menuPermissionDao.deleteMenuRoleRelation(menuPermissionEO.getId());
         super.deleteByEntity(menuPermissionEO);
     }
 }

@@ -184,7 +184,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             return new BaseResponse(CONTAIN_CHILD_MENU_CAN_NOT_DELETE, "菜单包含子菜单，请先删除子菜单！");
         }
 
-        menuPermissionService.delete(id, menuPermissionEO);
+        menuPermissionService.delete(menuPermissionEO);
 
         logger.info(successDelete + " uuid:{}", uuid);
         return successDeleteBaseResponse();

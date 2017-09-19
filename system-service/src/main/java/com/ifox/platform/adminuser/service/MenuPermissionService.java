@@ -34,8 +34,7 @@ public interface MenuPermissionService extends GenericService<MenuPermissionEO, 
 
     /**
      * 删除MenuPermission以及对应的关联数据
-     * @param menuPermissionId
      * @param menuPermissionEO
      */
-    void delete(String menuPermissionId, MenuPermissionEO menuPermissionEO);
+    void delete(MenuPermissionEO menuPermissionEO);
 }
