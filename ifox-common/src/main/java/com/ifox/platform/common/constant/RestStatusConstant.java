@@ -49,4 +49,7 @@ public final class RestStatusConstant {
     public static final Integer CONTAIN_CHILD_MENU_CAN_NOT_DELETE = 706;
     //系统内置菜单不可删除
     public static final Integer BUILD_IN_SYSTEM_CAN_NOT_DELETE = 707;
+    //父菜单权限不存在
+    public static final Integer PARENT_MENU_PERMISSION_NOT_FOUND = 708;
+
 }
