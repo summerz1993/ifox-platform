@@ -1,8 +1,10 @@
 package com.ifox.platform.adminuser.service;
 
 import com.ifox.platform.adminuser.dto.RoleDTO;
+import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.request.role.RolePageRequest;
 import com.ifox.platform.baseservice.GenericService;
+import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.entity.sys.RoleEO;
 
@@ -14,5 +16,11 @@ public interface RoleService extends GenericService<RoleEO, String> {
      * @return Page<RoleDTO>
      */
     Page<RoleDTO> page(RolePageRequest pageRequest);
+
+    /**
+     * 删除多个角色
+     * @param ids ID
+     */
+    void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
 
 }
