@@ -6,7 +6,6 @@ import com.ifox.platform.adminuser.request.role.RolePageRequest;
 import com.ifox.platform.adminuser.request.role.RoleSaveRequest;
 import com.ifox.platform.adminuser.request.role.RoleUpdateRequest;
 import com.ifox.platform.adminuser.response.RoleVO;
-import com.ifox.platform.adminuser.service.MenuPermissionService;
 import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;

@@ -71,7 +71,7 @@ hibernate:
   dialect: org.hibernate.dialect.MySQL5Dialect
   show_sql: true
   hbm2ddl.auto: update
-  generate_statistics: true
+  generate_statistics: false
   max_fetch_depth: 1
   jdbc:
     fetch_size: 30
