@@ -6,7 +6,9 @@ var loginApp = new Vue({
     },
     methods: {
         login: function () {
-
+            var loading = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             var loginURL = system_service_URL + 'adminUser/login';
             var loginParams = {
                 "loginName": this.userName,
@@ -17,6 +19,7 @@ var loginApp = new Vue({
             };
             axios.post(loginURL, loginParams, loginConfig)
                 .then(function(res){
+                    layer.close(loading);
                     if (res.data.status === 200) {
                         var token = res.data.token;
                         var homeURL = web_service_URL + 'web/home';
@@ -28,6 +31,7 @@ var loginApp = new Vue({
                     }
                 })
                 .catch(function(err){
+                    layer.close(loading);
                     serverError(err);
                 });
         }
