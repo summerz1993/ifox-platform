@@ -9,7 +9,8 @@ new Vue({
         email: "",
         buildinSystem: "true",
         status: "ACTIVE",
-        remark: ""
+        remark: "",
+        roleList: []
     },
     methods: {
         initAddUserFileUpload: function () {
@@ -71,6 +72,23 @@ new Vue({
                 console.log('File uploaded triggered, response.status=' + data.response.status + " response.desc=" + data.response.desc);
             });
 
+        },
+        initRoleList: function () {
+            var vm = this;
+            var params = {
+                'status': 'ACTIVE'
+            };
+            axios.post(role_list_URL, params, ifox_table_ajax_options)
+                .then(function (res) {
+                    if(res.data.status === 200){
+                        vm.roleList = res.data.data;
+                    }else{
+                        layer.msg(res.data.desc);
+                    }
+                })
+                .catch(function (err) {
+                    serverError(err);
+                });
         },
         validate: function () {
             return $('#add-user-form').validate({
@@ -148,5 +166,6 @@ new Vue({
     mounted: function () {
         ifox_table_delegate.add = this.save;
         this.initAddUserFileUpload();
+        this.initRoleList();
     }
 });

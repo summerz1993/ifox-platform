@@ -95,6 +95,18 @@
     </tr>
     <tr>
         <td colspan="2">
+            <label class="col-sm-2 text-center">角色</label>
+            <div class="col-sm-10 role-list">
+                <ul>
+                    <li v-for="role in roleList">
+                        <input type="checkbox"> {{role.name}}
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             <label for="remark-add" class="col-sm-2 text-center">备注</label>
             <div class="col-sm-10">
                 <textarea class="form-control" rows="3" id="remark-add" name="remark" placeholder="请输入..."></textarea>

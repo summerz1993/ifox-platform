@@ -36,7 +36,7 @@ public class RoleBaseColumns {
     /**
      * 菜单权限id
      */
-    private List<String> menuPermissions;
+    private List<String> menuPermissions = new ArrayList<>();
 
     public String getName() {
         return name;

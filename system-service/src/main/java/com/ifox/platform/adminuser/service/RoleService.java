@@ -3,10 +3,13 @@ package com.ifox.platform.adminuser.service;
 import com.ifox.platform.adminuser.dto.RoleDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.request.role.RolePageRequest;
+import com.ifox.platform.adminuser.request.role.RoleQueryRequest;
 import com.ifox.platform.baseservice.GenericService;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.entity.sys.RoleEO;
+
+import java.util.List;
 
 public interface RoleService extends GenericService<RoleEO, String> {
 
@@ -29,5 +32,12 @@ public interface RoleService extends GenericService<RoleEO, String> {
      * @return RoleDTO
      */
     RoleDTO getByIdentifier(String identifier);
+
+    /**
+     * list查询
+     * @param queryRequest RoleQueryRequest
+     * @return List<RoleDTO>
+     */
+    List<RoleDTO> list(RoleQueryRequest queryRequest);
 
 }

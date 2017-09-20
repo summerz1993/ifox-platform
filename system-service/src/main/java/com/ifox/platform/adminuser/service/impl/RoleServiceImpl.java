@@ -4,6 +4,7 @@ import com.ifox.platform.adminuser.dto.RoleDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.modelmapper.RoleEOMapDTO;
 import com.ifox.platform.adminuser.request.role.RolePageRequest;
+import com.ifox.platform.adminuser.request.role.RoleQueryRequest;
 import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.baseservice.impl.GenericServiceImpl;
 import com.ifox.platform.common.bean.QueryConditions;
@@ -16,6 +17,7 @@ import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.sys.RoleDao;
 import com.ifox.platform.entity.sys.RoleEO;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -44,7 +46,7 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
     public Page<RoleDTO> page(RolePageRequest pageRequest) {
         SimplePage simplePage = pageRequest.convertSimplePage();
 
-        List<QueryProperty> queryPropertyList = getQueryPropertyList(pageRequest);
+        List<QueryProperty> queryPropertyList = getQueryPropertyList(pageRequest.getName(), pageRequest.getStatus());
         List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
 
         QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
@@ -90,21 +92,32 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
     }
 
     /**
+     * list查询
+     * @param queryRequest RoleQueryRequest
+     * @return List<RoleDTO>
+     */
+    @Override
+    public List<RoleDTO> list(RoleQueryRequest queryRequest) {
+        List<QueryProperty> queryPropertyList = getQueryPropertyList(queryRequest.getName(), queryRequest.getStatus());
+        List<RoleEO> roleEOList = listByQueryProperty(queryPropertyList);
+        return ModelMapperUtil.get().map(roleEOList, new TypeToken<List<RoleDTO>>() {}.getType());
+    }
+
+    /**
      * 根据page请求生成查询参数
-     * @param pageRequest 分页请求
+     * @param name 角色名称
+     * @param status 状态
      * @return List<QueryProperty>
      */
-    private List<QueryProperty> getQueryPropertyList(RolePageRequest pageRequest) {
+    private List<QueryProperty> getQueryPropertyList(String name, RoleEO.RoleEOStatus status) {
         List<QueryProperty> queryPropertyList = new ArrayList<>();
 
-        String name = pageRequest.getName();
         if (!StringUtils.isEmpty(name)) {
             String appendName = "%" + name + "%";
             QueryProperty nameQuery = new QueryProperty("name", EnumDao.Operation.LIKE, appendName);
             queryPropertyList.add(nameQuery);
         }
 
-        RoleEO.RoleEOStatus status = pageRequest.getStatus();
         if (status != null) {
             QueryProperty statusQuery = new QueryProperty("status", EnumDao.Operation.EQUAL, status);
             queryPropertyList.add(statusQuery);

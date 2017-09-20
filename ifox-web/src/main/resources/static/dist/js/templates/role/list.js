@@ -64,8 +64,7 @@ new Vue({
             return params;
         },
         deleteRoles: function (ids, callback) {
-            var url = role_delete_URL;
-            axios.post(url, ids, ifox_table_ajax_options)
+            axios.post(role_delete_URL, ids, ifox_table_ajax_options)
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if(res.data.status === 200){

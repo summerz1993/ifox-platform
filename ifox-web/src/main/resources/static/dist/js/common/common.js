@@ -16,6 +16,7 @@ var role_delete_URL = system_service_URL + 'role/delete';
 var role_update_URL = system_service_URL + '/role/update';
 var role_get_URL = system_service_URL + 'role/get';
 var role_page_URL = system_service_URL + 'role/page';
+var role_list_URL = system_service_URL + 'role/list';
 
 <!-- resource -->
 var resource_page_URL = system_service_URL + 'resource/page';

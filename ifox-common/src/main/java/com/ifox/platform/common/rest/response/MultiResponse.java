@@ -1,7 +1,5 @@
 package com.ifox.platform.common.rest.response;
 
-import com.ifox.platform.common.rest.response.BaseResponse;
-
 import java.util.List;
 
 /**

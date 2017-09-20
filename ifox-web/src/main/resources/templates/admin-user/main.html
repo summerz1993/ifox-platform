@@ -20,6 +20,8 @@
     <link rel="stylesheet" th:href="@{/dist/css/skins/skin-blue.min.css}"/>
     <!-- Google Font -->
     <link rel="stylesheet" th:href="@{/bower_components/googleapis-fonts/fonts.css}"/>
+    <!-- iCheck -->
+    <link rel="stylesheet" th:href="@{/plugins/iCheck/square/blue.css}">
 
     <!--bootstrap table -->
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-table/bootstrap-table.css}">
@@ -76,6 +78,8 @@
 <script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- iCheck -->
+<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
 <!-- AdminLTE App -->
 <script th:src="@{/dist/js/adminlte.min.js}"></script>
 <!-- vue -->
@@ -114,6 +118,16 @@
 <script th:src="@{/dist/js/templates/admin-user/list.js}"></script>
 <script th:src="@{/dist/js/templates/admin-user/add.js}"></script>
 <script th:src="@{/dist/js/templates/admin-user/edit.js}"></script>
+
+<script>
+    $(function () {
+        $('.role-list input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+    });
+</script>
 
 </body>
 </html>
