@@ -128,4 +128,11 @@ public class BaseController<T> {
         return new BaseResponse(BUILD_IN_SYSTEM_CAN_NOT_DELETE, desc);
     }
 
+    //--------------- existed identifier ----------------
+
+    protected BaseResponse existedIdentifierBaseResponse(String desc, HttpServletResponse response){
+        response.setStatus(EXISTED_IDENTIFIER);
+        return new BaseResponse(EXISTED_IDENTIFIER, desc);
+    }
+
 }

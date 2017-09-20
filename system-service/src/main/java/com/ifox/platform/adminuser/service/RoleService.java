@@ -23,4 +23,11 @@ public interface RoleService extends GenericService<RoleEO, String> {
      */
     void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
 
+    /**
+     * 通过identifier查询角色
+     * @param identifier identifier
+     * @return RoleDTO
+     */
+    RoleDTO getByIdentifier(String identifier);
+
 }

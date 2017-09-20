@@ -15,8 +15,10 @@ import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.sys.RoleDao;
 import com.ifox.platform.entity.sys.RoleEO;
+import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -68,6 +70,23 @@ public class RoleServiceImpl extends GenericServiceImpl<RoleEO, String> implemen
                 deleteByEntity(roleEO);
             }
         }
+    }
+
+    /**
+     * 通过identifier查询角色
+     * @param identifier identifier
+     * @return RoleDTO
+     */
+    @Override
+    public RoleDTO getByIdentifier(String identifier) {
+        List<QueryProperty> queryPropertyList = new ArrayList<>();
+        queryPropertyList.add(new QueryProperty("identifier", EnumDao.Operation.EQUAL, identifier));
+        List<RoleEO> roleEOList = listByQueryProperty(queryPropertyList);
+        if (!CollectionUtils.isEmpty(roleEOList)) {
+            RoleEO roleEO = roleEOList.get(0);
+            return ModelMapperUtil.get().map(roleEO, RoleDTO.class);
+        }
+        return null;
     }
 
     /**

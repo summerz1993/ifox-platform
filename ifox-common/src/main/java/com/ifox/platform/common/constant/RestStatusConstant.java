@@ -51,5 +51,7 @@ public final class RestStatusConstant {
     public static final Integer BUILD_IN_SYSTEM_CAN_NOT_DELETE = 707;
     //父菜单权限不存在
     public static final Integer PARENT_MENU_PERMISSION_NOT_FOUND = 708;
+    //已经存在的identifier
+    public static final Integer EXISTED_IDENTIFIER = 709;
 
 }

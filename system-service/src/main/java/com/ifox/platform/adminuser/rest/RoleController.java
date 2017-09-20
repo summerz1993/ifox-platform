@@ -43,9 +43,17 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("保存角色信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest){
+    @ApiResponses({ @ApiResponse(code = 709, message = "角色标识符已经存在") })
+    public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
+
+        String identifier = saveRequest.getIdentifier();
+        RoleDTO byIdentifier = roleService.getByIdentifier(identifier);
+        if (byIdentifier != null) {
+            logger.info("角色标识符已经存在 uuid:{}", uuid);
+            return existedIdentifierBaseResponse("角色标识符已经存在", response);
+        }
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
         roleEO.setMenuPermissionEOList(saveRequest.getMenuPermissionEOList());
@@ -85,7 +93,8 @@ public class RoleController extends BaseController<RoleVO> {
 
     @ApiOperation("更新角色信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
+    @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
+        @ApiResponse(code = 709, message = "角色标识符已经存在")})
     public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest, uuid);
@@ -96,6 +105,14 @@ public class RoleController extends BaseController<RoleVO> {
             logger.info("角色不存在 id:{}, uuid:{}", id, uuid);
             return super.notFoundBaseResponse("角色不存在", response);
         }
+
+        String identifier = updateRequest.getIdentifier();
+        RoleDTO byIdentifier = roleService.getByIdentifier(identifier);
+        if (byIdentifier != null) {
+            logger.info("角色标识符已经存在 uuid:{}", uuid);
+            return existedIdentifierBaseResponse("角色标识符已经存在", response);
+        }
+
         ModelMapperUtil.get().map(updateRequest, roleEO);
         roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
 
