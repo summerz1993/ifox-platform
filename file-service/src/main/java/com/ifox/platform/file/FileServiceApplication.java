@@ -12,8 +12,7 @@ import org.springframework.context.annotation.FilterType;
  * 文件服务
  */
 @SpringBootApplication
-@ComponentScan(value = {"com.ifox.platform.file", "com.ifox.platform.baseservice.interceptor", "com.ifox.platform.baseservice.config"},
-    excludeFilters = {@ComponentScan.Filter(value = PersistenceConfig.class, type = FilterType.ASSIGNABLE_TYPE)})
+@ComponentScan(value = {"com.ifox.platform.file"})
 public class FileServiceApplication {
 
     private static Logger logger = LoggerFactory.getLogger(FileServiceApplication.class);

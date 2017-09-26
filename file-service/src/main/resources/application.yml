@@ -14,3 +14,4 @@ file-service:
     video: rmvb,mkv,mp4,avi,3gp,amv,dmv,rm,mpeg,wmv
     audio: mp3,wma,wav,ogg
   service-name: system-service,ifox-web
+  admin-user-service-base-url: http://localhost:8081/

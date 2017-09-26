@@ -1,5 +1,6 @@
 package com.ifox.platform.file.rest;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.file.enums.EnumFile;
@@ -7,6 +8,8 @@ import com.ifox.platform.file.service.FileService;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.datetime.DateTimeUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -56,9 +59,26 @@ public class FileController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 401, message = "没有文件操作权限"),
                     @ApiResponse(code = 703, message = "不支持的文件类型"),
                     @ApiResponse(code = 704, message = "不支持的服务名称")})
-    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName, @RequestParam EnumFile.FileType fileType, HttpServletResponse response) {
+    public @ResponseBody BaseResponse upload(@RequestParam("file") MultipartFile file, @RequestParam String serviceName,
+                                             @RequestParam EnumFile.FileType fileType, HttpServletResponse response, @RequestHeader("Authorization") String token) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("单文件上传 serviceName:{}, fileType:{}, uuid:{}", serviceName, fileType, uuid);
+
+        HttpRequest httpRequest = getTokenHttpRequest(token);
+        int code = httpRequest.code();
+        String body = httpRequest.body();
+        logger.info("code = {}, body = {}", code, body);
+
+        Any bodyAny = JsonIterator.deserialize(body);
+        int status = bodyAny.get("status").toInt();
+
+        if ( SUCCESS != code || SUCCESS != status) {
+            logger.info("token校验失败");
+            return tokenErrorBaseResponse(response);
+        }
+
+        //token校验通过
+        logger.info("token校验成功");
 
         String originalFilename = file.getOriginalFilename();
         String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -128,6 +148,12 @@ public class FileController extends BaseController {
 
         return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
             headers, HttpStatus.OK);
+    }
+
+    private HttpRequest getTokenHttpRequest(String token) {
+        String verifyTokenUrl = "adminUser/verifyToken";
+        String url = env.getProperty("file-service.admin-user-service-base-url") + verifyTokenUrl;
+        return HttpRequest.post(url).header("api-version", "1.0").form("token", token);
     }
 
 
