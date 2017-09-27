@@ -1,4 +1,13 @@
-new Vue({
+$('#edit-modal').on('show.bs.modal', function (e) {
+    admin_user_edit_vue.initRoleList();
+});
+
+$('#edit-modal').on('hide.bs.modal', function (e) {
+    admin_user_edit_vue.resetData();
+    // $('#headPortrait-add').fileinput('destroy');
+});
+
+var admin_user_edit_vue = new Vue({
     el: "#edit-user-form",
     data: {
         id: "",
@@ -9,7 +18,9 @@ new Vue({
         email: "",
         buildinSystem: "true",
         status: "ACTIVE",
-        remark: ""
+        remark: "",
+        roleList: [],
+        checkedRole: []
     },
     methods: {
         initEditUserUploadFile: function() {
@@ -75,6 +86,41 @@ new Vue({
                 console.log('File uploaded triggered, response.status=' + data.response.status + " response.desc=" + data.response.desc);
             });
         },
+        initRoleList: function () {
+            var vm = this;
+            var params = {
+                'status': 'ACTIVE'
+            };
+            axios.post(role_list_URL, params, ifox_table_ajax_options)
+                .then(function (res) {
+                    if(res.data.status === 200){
+                        vm.roleList = res.data.data;
+                    }else{
+                        layer.msg(res.data.desc);
+                    }
+                })
+                .catch(function (err) {
+                    serverError(err);
+                });
+        },
+        initCheckedRole: function () {
+            var vm = this;
+            var url = system_service_URL + 'adminUser/' + vm.id + "/role";
+            axios.get(url, ifox_table_ajax_options)
+                .then(function (res) {
+                    if(res.data.status === 200){
+                        var roleList = res.data.data;
+                        for (var i = 0; i < roleList.length; i ++) {
+                            vm.checkedRole.push(roleList[i].id);
+                        }
+                    }else{
+                        layer.msg(res.data.desc);
+                    }
+                })
+                .catch(function (err) {
+                    serverError(err);
+                });
+        },
         validate: function() {
             return $('#edit-user-form').validate({
                 rules: {
@@ -126,6 +172,8 @@ new Vue({
                         vm.buildinSystem = res_data.buildinSystem;
                         vm.status = res_data.status;
                         vm.remark = res_data.remark;
+
+                        vm.initCheckedRole();
                     }else{
                         layer.msg(res.data.desc);
                     }
@@ -143,7 +191,6 @@ new Vue({
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if (res.data.status === 200){
-                        vm.resetData();
                         callback();
                     }
                 })
@@ -161,6 +208,8 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            this.roleList = [];
+            this.checkedRole = [];
             $('#headPortrait-edit').fileinput('clear');
         }
     },

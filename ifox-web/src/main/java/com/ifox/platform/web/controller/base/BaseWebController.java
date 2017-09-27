@@ -89,7 +89,6 @@ public class BaseWebController {
 
     private HttpRequest getTokenHttpRequest(String token) {
         String verifyTokenUrl = "adminUser/verifyToken";
-
         String url = env.getProperty("ifox-web.admin-user-service-base-url") + verifyTokenUrl;
         return HttpRequest.post(url).header("api-version", "1.0").form("token", token);
     }

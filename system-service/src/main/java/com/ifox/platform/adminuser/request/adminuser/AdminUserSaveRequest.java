@@ -2,6 +2,8 @@ package com.ifox.platform.adminuser.request.adminuser;
 
 import com.ifox.platform.adminuser.dto.base.AdminUserBaseColumns;
 
+import java.util.Arrays;
+
 /**
  * Created by Administrator on 2017/7/15 0015.
  */
@@ -12,6 +14,18 @@ public class AdminUserSaveRequest extends AdminUserBaseColumns{
      */
     private String password;
 
+    /**
+     * 选中的角色
+     */
+    private String[] checkedRole;
+
+    public String[] getCheckedRole() {
+        return checkedRole;
+    }
+
+    public void setCheckedRole(String[] checkedRole) {
+        this.checkedRole = checkedRole;
+    }
 
     public String getPassword() {
         return password;
@@ -21,11 +35,10 @@ public class AdminUserSaveRequest extends AdminUserBaseColumns{
         this.password = password;
     }
 
-
     @Override
     public String toString() {
         return "AdminUserSaveRequest{" +
-            "password='" + password + '\'' +
+            "checkedRole=" + Arrays.toString(checkedRole) +
             "} " + super.toString();
     }
 }

@@ -1,4 +1,13 @@
-new Vue({
+$('#add-modal').on('show.bs.modal', function (e) {
+    admin_user_add_vue.initRoleList();
+});
+
+$('#add-modal').on('hide.bs.modal', function (e) {
+    admin_user_add_vue.resetData();
+    // $('#headPortrait-add').fileinput('destroy');
+});
+
+var admin_user_add_vue = new Vue({
     el: "#add-user-form",
     data: {
         loginName: "",
@@ -10,7 +19,8 @@ new Vue({
         buildinSystem: "true",
         status: "ACTIVE",
         remark: "",
-        roleList: []
+        roleList: [],
+        checkedRole: []
     },
     methods: {
         initAddUserFileUpload: function () {
@@ -82,6 +92,13 @@ new Vue({
                 .then(function (res) {
                     if(res.data.status === 200){
                         vm.roleList = res.data.data;
+                        /*setTimeout(function () {
+                            $('.role-list input').iCheck({
+                                checkboxClass: 'icheckbox_square-blue',
+                                radioClass: 'iradio_square-blue',
+                                increaseArea: '20%' // optional
+                            });
+                        }, 500);*/
                     }else{
                         layer.msg(res.data.desc);
                     }
@@ -142,7 +159,6 @@ new Vue({
                 .then(function (res) {
                     layer.msg(res.data.desc);
                     if(res.data.status === 200){
-                        vm.resetData();
                         callback();
                     }
                 })
@@ -160,12 +176,15 @@ new Vue({
             this.buildinSystem = "true";
             this.status = "ACTIVE";
             this.remark = "";
+            this.roleList = [];
+            this.checkedRole = [];
             $('#headPortrait-add').fileinput('clear');
+            // $('.role-list input').iCheck('destroy');
         }
     },
     mounted: function () {
         ifox_table_delegate.add = this.save;
         this.initAddUserFileUpload();
-        this.initRoleList();
+        // this.initRoleList();
     }
 });

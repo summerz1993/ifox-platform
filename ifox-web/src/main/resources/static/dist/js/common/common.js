@@ -9,6 +9,7 @@ var admin_user_update_URL = system_service_URL + '/adminUser/update';
 var admin_user_get_URL = system_service_URL + 'adminUser/get';
 var admin_user_page_URL = system_service_URL + 'adminUser/page';
 var admin_user_change_pwd_URL = system_service_URL + 'adminUser/changePassword';
+var admin_user_role_list_URL = system_service_URL + 'adminUser/{userId}/role';
 
 <!-- role -->
 var role_save_URL = system_service_URL + 'role/save';
@@ -106,3 +107,12 @@ function serverError(err) {
         layer.msg(err.response.data.desc);
     }
 }
+
+//占位符实现
+String.prototype.format = function() {
+    if (arguments.length == 0)
+        return this;
+    for (var s = this, i = 0; i < arguments.length; i++)
+        s = s.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
+    return s;
+};

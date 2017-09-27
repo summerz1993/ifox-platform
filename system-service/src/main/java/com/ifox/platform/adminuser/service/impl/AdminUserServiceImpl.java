@@ -88,7 +88,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
             AdminUserEO adminUserEO = getAdminUserEOByLoginName(loginName);
             return ModelMapperUtil.get().map(adminUserEO, AdminUserDTO.class);
         } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            logger.warn(ExceptionUtil.getStackTraceAsString(e));
+            logger.warn(e.getMessage());
         }
         return null;
     }

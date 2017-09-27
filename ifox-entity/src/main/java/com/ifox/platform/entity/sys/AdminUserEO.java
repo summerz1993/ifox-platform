@@ -92,7 +92,7 @@ public class AdminUserEO extends BaseEntity {
     /**
      * 所属角色
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ifox_sys_admin_user_role", joinColumns = {@JoinColumn(name = "admin_user")}, inverseJoinColumns = {@JoinColumn(name = "role")})
     private List<RoleEO> roleEOList = new ArrayList<>();
 

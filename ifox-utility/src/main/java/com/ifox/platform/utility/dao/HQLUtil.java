@@ -205,6 +205,8 @@ public class HQLUtil {
                     orderByHQL.append(",");
                 }
             }
+        } else {
+            orderByHQL.append(" ORDER BY create_date desc");
         }
         return orderByHQL.toString();
     }

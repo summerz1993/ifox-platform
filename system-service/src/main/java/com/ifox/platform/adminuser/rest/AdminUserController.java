@@ -4,7 +4,9 @@ import com.ifox.platform.adminuser.dto.AdminUserDTO;
 import com.ifox.platform.adminuser.exception.NotFoundAdminUserException;
 import com.ifox.platform.adminuser.request.adminuser.*;
 import com.ifox.platform.adminuser.response.AdminUserVO;
+import com.ifox.platform.adminuser.response.RoleVO;
 import com.ifox.platform.adminuser.service.AdminUserService;
+import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
@@ -14,6 +16,7 @@ import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.entity.sys.AdminUserEO;
+import com.ifox.platform.entity.sys.RoleEO;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
@@ -31,16 +34,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.EXISTED_LOGIN_NAME;
-import static com.ifox.platform.common.constant.RestStatusConstant.NEW_PASSWORD_NOT_EQUAL;
-import static com.ifox.platform.common.constant.RestStatusConstant.ORIGINAL_PASSWORD_ERROR;
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 @Api(tags = "后台用户管理")
 @Controller
 @RequestMapping(value = "/adminUser", headers = {"api-version=1.0", "Authorization"})
+@SuppressWarnings("unchecked")
 public class AdminUserController extends BaseController<AdminUserVO> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -50,6 +53,9 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
     @Autowired
     private AdminUserService adminUserService;
+
+    @Autowired
+    private RoleService roleService;
 
 
     @ApiOperation("保存用户信息")
@@ -75,6 +81,14 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         adminUserEO.setSalt(salt);
         adminUserEO.setPassword(PasswordUtil.encryptPassword(adminUserSaveRequest.getPassword(), salt));
+
+        String[] checkedRoleArray = adminUserSaveRequest.getCheckedRole();
+        List<RoleEO> roleEOList = new ArrayList<>();
+        for (String roleId : checkedRoleArray) {
+            RoleEO roleEO = roleService.get(roleId);
+            roleEOList.add(roleEO);
+        }
+        adminUserEO.setRoleEOList(roleEOList);
 
         adminUserService.save(adminUserEO);
 
@@ -142,6 +156,15 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
 //        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
+
+        String[] checkedRoleArray = updateRequest.getCheckedRole();
+        List<RoleEO> roleEOList = new ArrayList<>();
+        for (String roleId : checkedRoleArray) {
+            RoleEO roleEO = roleService.get(roleId);
+            roleEOList.add(roleEO);
+        }
+        adminUserEO.setRoleEOList(roleEOList);
+
         adminUserService.update(adminUserEO);
 
         logger.info(successUpdate + " uuid:{}", uuid);
@@ -191,7 +214,6 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("获取用户列表接口")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    @SuppressWarnings("unchecked")
     public MultiResponse<AdminUserVO> list(@ApiParam @RequestBody AdminUserQueryRequest queryRequest){
         String uuid = UUIDUtil.randomUUID();
         logger.info("获取用户列表 queryRequest:{}, uuid:{}", queryRequest.toString(), uuid);
@@ -201,6 +223,26 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryMultiResponse(adminUserVOList);
+    }
+
+    @ApiOperation("获取用户角色列表接口")
+    @RequestMapping(value = "/{userId}/role", method = RequestMethod.GET)
+    @ResponseBody
+    public MultiResponse<RoleVO> roleList(@ApiParam @PathVariable(name = "userId") String userId, HttpServletResponse response) {
+        String uuid = UUIDUtil.randomUUID();
+        logger.info("获取用户角色列表 userId:{}, uuid:{}", userId, uuid);
+
+        AdminUserEO adminUserEO = adminUserService.get(userId);
+        if (adminUserEO == null) {
+            logger.info("用户不存在 uuid:{}", uuid);
+            response.setStatus(NOT_FOUND);
+            return new MultiResponse<>(NOT_FOUND, "用户不存在", null);
+        }
+        List<RoleEO> roleEOList = adminUserEO.getRoleEOList();
+        List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleEOList, new TypeToken<List<RoleVO>>() {}.getType());
+
+        logger.info(successQuery + " uuid:{}", uuid);
+        return new MultiResponse<>(SUCCESS, successQuery, roleVOList);
     }
 
     @ApiOperation("修改密码")
