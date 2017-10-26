@@ -1,6 +1,6 @@
 package com.ifox.platform.common.page;
 
-import com.ifox.platform.common.rest.PageInfo;
+import com.ifox.platform.common.rest.response.PageResponseDetail;
 
 /**
  * @author Yeager
@@ -170,8 +170,8 @@ public class SimplePage implements Pageable {
 		}
 	}
 
-	public PageInfo convertPageInfo() {
-	    return new PageInfo(getTotalCount(), getPageSize(), getPageNo());
+	public PageResponseDetail convertToPageResponseDetail() {
+	    return new PageResponseDetail(getTotalCount(), getPageSize(), getPageNo());
     }
 
 }

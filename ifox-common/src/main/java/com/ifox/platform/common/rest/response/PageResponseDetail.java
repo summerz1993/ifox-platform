@@ -1,6 +1,6 @@
-package com.ifox.platform.common.rest;
+package com.ifox.platform.common.rest.response;
 
-public class PageInfo {
+public class PageResponseDetail {
 
     /**
      * 总记录数
@@ -17,10 +17,10 @@ public class PageInfo {
      */
     private int pageNo;
 
-    public PageInfo() {
+    public PageResponseDetail() {
     }
 
-    public PageInfo(int totalCount, int pageSize, int pageNo) {
+    public PageResponseDetail(int totalCount, int pageSize, int pageNo) {
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.pageNo = pageNo;
@@ -52,7 +52,7 @@ public class PageInfo {
 
     @Override
     public String toString() {
-        return "PageInfo{" +
+        return "PageResponseDetail{" +
             "totalCount=" + totalCount +
             ", pageSize=" + pageSize +
             ", pageNo=" + pageNo +

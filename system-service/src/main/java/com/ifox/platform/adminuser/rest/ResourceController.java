@@ -9,7 +9,7 @@ import com.ifox.platform.adminuser.response.ResourceVO;
 import com.ifox.platform.adminuser.service.ResourceService;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.PageInfo;
+import com.ifox.platform.common.rest.response.PageResponseDetail;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -132,11 +131,11 @@ public class ResourceController extends BaseController<ResourceVO> {
         Page<ResourceDTO> resourceDTOPage = resourceService.page(pageRequest);
         List<ResourceDTO> resourceDTOList = resourceDTOPage.getContent();
 
-        PageInfo pageInfo = resourceDTOPage.convertPageInfo();
+        PageResponseDetail pageResponseDetail = resourceDTOPage.convertToPageResponseDetail();
         List<ResourceVO> resourceVOList = ModelMapperUtil.get().map(resourceDTOList, new TypeToken<List<ResourceVO>>() {}.getType());
 
         logger.info(successQuery + " uuid:{}", uuid);
-        return successQueryPageResponse(pageInfo, resourceVOList);
+        return successQueryPageResponse(pageResponseDetail, resourceVOList);
     }
 
     @ApiOperation("获取所有资源")

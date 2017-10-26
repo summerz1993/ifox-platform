@@ -1,7 +1,5 @@
 package com.ifox.platform.common.rest.response;
 
-import com.ifox.platform.common.rest.PageInfo;
-
 import java.util.List;
 
 /**
@@ -10,16 +8,16 @@ import java.util.List;
  */
 public class PageResponse<T> extends BaseResponse {
 
-    private PageInfo pageInfo;
+    private PageResponseDetail detail;
 
     private List<T> data;
 
-    public PageInfo getPageInfo() {
-        return pageInfo;
+    public PageResponseDetail getDetail() {
+        return detail;
     }
 
-    public void setPageInfo(PageInfo pageInfo) {
-        this.pageInfo = pageInfo;
+    public void setDetail(PageResponseDetail detail) {
+        this.detail = detail;
     }
 
     public List<T> getData() {
@@ -33,9 +31,9 @@ public class PageResponse<T> extends BaseResponse {
     public PageResponse() {
     }
 
-    public PageResponse(Integer status, String desc, PageInfo pageInfo, List<T> data) {
+    public PageResponse(Integer status, String desc, PageResponseDetail detail, List<T> data) {
         super(status, desc);
-        this.pageInfo = pageInfo;
+        this.detail = detail;
         this.data = data;
     }
 }

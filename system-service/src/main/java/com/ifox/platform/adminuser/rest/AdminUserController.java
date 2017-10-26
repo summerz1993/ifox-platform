@@ -10,7 +10,7 @@ import com.ifox.platform.adminuser.service.RoleService;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.PageInfo;
+import com.ifox.platform.common.rest.response.PageResponseDetail;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.MultiResponse;
 import com.ifox.platform.common.rest.response.OneResponse;
@@ -205,10 +205,10 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
-        PageInfo pageInfo = page.convertPageInfo();
+        PageResponseDetail pageResponseDetail = page.convertToPageResponseDetail();
 
         logger.info(successQuery + " uuid:{}", uuid);
-        return successQueryPageResponse(pageInfo, adminUserVOList);
+        return successQueryPageResponse(pageResponseDetail, adminUserVOList);
     }
 
     @ApiOperation("获取用户列表接口")

@@ -1,9 +1,6 @@
 package com.ifox.platform.common.rest;
 
-import com.ifox.platform.common.rest.response.BaseResponse;
-import com.ifox.platform.common.rest.response.MultiResponse;
-import com.ifox.platform.common.rest.response.OneResponse;
-import com.ifox.platform.common.rest.response.PageResponse;
+import com.ifox.platform.common.rest.response.*;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,8 +45,8 @@ public class BaseController<T> {
     }
 
     @SuppressWarnings("unchecked")
-    protected PageResponse successQueryPageResponse(PageInfo pageInfo, List<T> data) {
-        return new PageResponse(SUCCESS, successQuery, pageInfo, data);
+    protected PageResponse successQueryPageResponse(PageResponseDetail pageResponseDetail, List<T> data) {
+        return new PageResponse(SUCCESS, successQuery, pageResponseDetail, data);
     }
 
     @SuppressWarnings("unchecked")
