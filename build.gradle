@@ -32,11 +32,14 @@ subprojects{
 //        compile "org.springframework:spring-core"
 //        compile "org.springframework:spring-beans"
 //        compile "org.springframework:spring-context"
-        compile "org.springframework:spring-orm:$springVersion"
+
+//        compile "org.springframework:spring-orm:$springVersion"
 
         compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
             exclude group: 'commons-logging', module: 'commons-logging'
         }
+
+        compile("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
 
         compile("io.springfox:springfox-swagger2:$springfoxSwagger2Version")
         compile("io.springfox:springfox-swagger-ui:$springfoxSwaggerUIVersion")
@@ -54,5 +57,11 @@ subprojects{
 
         // https://github.com/kevinsawicki/http-request
         compile "com.github.kevinsawicki:http-request:6.0"
+
+        // https://mvnrepository.com/artifact/com.alibaba/druid
+        compile "com.alibaba:druid:$alibabaDruidVersion"
+        compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+
+        compile "com.auth0:java-jwt:$javaJWTVersion"
     }
 }

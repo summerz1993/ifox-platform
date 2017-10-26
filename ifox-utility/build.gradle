@@ -14,14 +14,6 @@ dependencies {
 
     compile project(':ifox-common')
 
-    // https://mvnrepository.com/artifact/com.alibaba/druid
-    compile "com.alibaba:druid:$alibabaDruidVersion"
-    compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
-    compile "org.hibernate:hibernate-core:$hibernateVersion"
-    compile "com.auth0:java-jwt:$javaJWTVersion"
-
-
-
     // test
     testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 

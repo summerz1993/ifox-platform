@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compile project(":ifox-base-service")
+    compile project(":ifox-common")
     compile project(":ifox-utility")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
