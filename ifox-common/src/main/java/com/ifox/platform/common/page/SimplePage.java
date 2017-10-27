@@ -2,12 +2,14 @@ package com.ifox.platform.common.page;
 
 import com.ifox.platform.common.rest.response.PageResponseDetail;
 
+import java.util.List;
+
 /**
  * @author Yeager
  *
  * 简单分页类
  */
-public class SimplePage implements Pageable {
+public class SimplePage<T> implements Pageable {
 
 	/**
 	 * 默认页码
@@ -45,6 +47,11 @@ public class SimplePage implements Pageable {
 	private int pageNo = DEFAULT_PAGE_NO;
 
     /**
+     * 当前页的数据
+     */
+    private List<T> content;
+
+    /**
      * 无参构造器
      */
 	public SimplePage() {
@@ -74,7 +81,22 @@ public class SimplePage implements Pageable {
 		adjustPageNo();
 	}
 
-	@Override
+    /**
+     * 构造器
+     *
+     * @param pageNo 页码
+     * @param pageSize 每页数量
+     * @param totalCount 总计数量
+     * @param content 数据
+     */
+    public SimplePage(int totalCount, int pageSize, int pageNo, List<T> content) {
+        this.totalCount = totalCount;
+        this.pageSize = pageSize;
+        this.pageNo = pageNo;
+        this.content = content;
+    }
+
+    @Override
 	public int getTotalCount() {
 		return totalCount;
 	}
@@ -174,4 +196,21 @@ public class SimplePage implements Pageable {
 	    return new PageResponseDetail(getTotalCount(), getPageSize(), getPageNo());
     }
 
+    public List<T> getContent() {
+        return content;
+    }
+
+    public void setContent(List<T> content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "SimplePage{" +
+            "totalCount=" + totalCount +
+            ", pageSize=" + pageSize +
+            ", pageNo=" + pageNo +
+            ", content=" + content +
+            '}';
+    }
 }

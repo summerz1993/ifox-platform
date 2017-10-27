@@ -1,6 +1,11 @@
 package com.ifox.platform.system.rest;
 
-import com.ifox.platform.system.dto.RoleDTO;
+import com.ifox.platform.common.exception.BuildinSystemException;
+import com.ifox.platform.common.page.SimplePage;
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.response.*;
+import com.ifox.platform.system.entity.MenuPermissionEO;
+import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
@@ -8,16 +13,6 @@ import com.ifox.platform.system.request.role.RoleSaveRequest;
 import com.ifox.platform.system.request.role.RoleUpdateRequest;
 import com.ifox.platform.system.response.RoleVO;
 import com.ifox.platform.system.service.RoleService;
-import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.page.Page;
-import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.response.PageResponseDetail;
-import com.ifox.platform.common.rest.response.BaseResponse;
-import com.ifox.platform.common.rest.response.MultiResponse;
-import com.ifox.platform.common.rest.response.OneResponse;
-import com.ifox.platform.common.rest.response.PageResponse;
-import com.ifox.platform.entity.sys.MenuPermissionEO;
-import com.ifox.platform.entity.sys.RoleEO;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.*;
@@ -50,9 +45,9 @@ public class RoleController extends BaseController<RoleVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
-        String identifier = saveRequest.getIdentifier();
-        RoleDTO byIdentifier = roleService.getByIdentifier(identifier);
-        if (byIdentifier != null) {
+        String identifierRequest = saveRequest.getIdentifier();
+        RoleEO byIdentifierRoleEO = roleService.getByIdentifier(identifierRequest);
+        if (byIdentifierRoleEO != null) {
             logger.info("角色标识符已经存在 uuid:{}", uuid);
             return existedIdentifierBaseResponse("角色标识符已经存在", response);
         }
@@ -108,19 +103,16 @@ public class RoleController extends BaseController<RoleVO> {
             return super.notFoundBaseResponse("角色不存在", response);
         }
 
-        String identifier = updateRequest.getIdentifier();
-        if (!roleEO.getIdentifier().equals(identifier)) {
-            RoleDTO byIdentifier = roleService.getByIdentifier(identifier);
-            if (byIdentifier != null && !roleEO.getIdentifier().equals(identifier)) {
+        String identifierRequest = updateRequest.getIdentifier();
+        if (!roleEO.getIdentifier().equals(identifierRequest)) {
+            //用户修改了identifier，需要判定数据库中是否已经存在此identifier
+            if (roleService.getByIdentifier(identifierRequest) != null) {
                 logger.info("角色标识符已经存在 uuid:{}", uuid);
                 return existedIdentifierBaseResponse("角色标识符已经存在", response);
             }
         }
 
-        ModelMapperUtil.get().map(updateRequest, roleEO);
-        roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
-
-        roleService.update(roleEO);
+        roleService.update(updateRequest);
 
         logger.info(successUpdate + " uuid:{}", uuid);
         return successUpdateBaseResponse();
@@ -156,11 +148,10 @@ public class RoleController extends BaseController<RoleVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("分页查询角色 pageRequest:{}, uuid:{}", pageRequest, uuid);
 
-        Page<RoleDTO> page = roleService.page(pageRequest);
-        List<RoleDTO> roleDTOList = page.getContent();
+        SimplePage<RoleEO> page = roleService.page(pageRequest);
 
         PageResponseDetail pageResponseDetail = page.convertToPageResponseDetail();
-        List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
+        List<RoleVO> roleVOList = ModelMapperUtil.get().map(page.getContent(), new TypeToken<List<RoleVO>>() {}.getType());
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryPageResponse(pageResponseDetail, roleVOList);
@@ -173,8 +164,8 @@ public class RoleController extends BaseController<RoleVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("分页查询角色 queryRequest:{}, uuid:{}", queryRequest, uuid);
 
-        List<RoleDTO> roleDTOList = roleService.list(queryRequest);
-        List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleDTOList, new TypeToken<List<RoleVO>>() {}.getType());
+        List<RoleEO> roleEOList = roleService.list(queryRequest);
+        List<RoleVO> roleVOList = ModelMapperUtil.get().map(roleEOList, new TypeToken<List<RoleVO>>() {}.getType());
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryMultiResponse(roleVOList);

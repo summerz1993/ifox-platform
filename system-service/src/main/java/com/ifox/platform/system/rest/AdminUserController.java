@@ -10,7 +10,6 @@ import com.ifox.platform.system.response.RoleVO;
 import com.ifox.platform.system.service.AdminUserService;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.PageResponseDetail;
 import com.ifox.platform.common.rest.response.BaseResponse;

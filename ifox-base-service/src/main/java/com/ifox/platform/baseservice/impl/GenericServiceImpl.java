@@ -3,13 +3,11 @@ package com.ifox.platform.baseservice.impl;
 import com.ifox.platform.baseservice.GenericService;
 import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.common.GenericDao;
 import com.ifox.platform.entity.base.BaseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 

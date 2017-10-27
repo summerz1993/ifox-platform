@@ -3,7 +3,6 @@ package com.ifox.platform.dao.common.impl;
 
 import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.common.GenericDao;
 import com.ifox.platform.entity.base.BaseEntity;

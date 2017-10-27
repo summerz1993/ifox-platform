@@ -7,7 +7,6 @@ import com.ifox.platform.system.request.resource.ResourceSaveRequest;
 import com.ifox.platform.system.request.resource.ResourceUpdateRequest;
 import com.ifox.platform.system.response.ResourceVO;
 import com.ifox.platform.system.service.ResourceService;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.PageResponseDetail;
 import com.ifox.platform.common.rest.response.BaseResponse;

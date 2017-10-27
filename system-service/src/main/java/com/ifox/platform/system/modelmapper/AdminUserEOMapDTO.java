@@ -1,7 +1,6 @@
 package com.ifox.platform.system.modelmapper;
 
 import com.ifox.platform.system.dto.AdminUserDTO;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.utility.modelmapper.EOMapDTO;
 import org.modelmapper.*;

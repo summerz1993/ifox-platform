@@ -13,6 +13,6 @@ public interface RoleRepository extends JpaRepository<RoleEO, String> {
 
     List<RoleEO> findByNameLikeAndStatusEquals(String name, RoleEO.RoleEOStatus status);
 
-    Page<RoleEO> findAllByNameLikeAndStatusEquals(String name, RoleEO.RoleEOStatus status, Pageable);
+    Page<RoleEO> findAllByNameLikeAndStatusEquals(String name, RoleEO.RoleEOStatus status, Pageable pageable);
 
 }

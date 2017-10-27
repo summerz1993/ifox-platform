@@ -2,7 +2,6 @@ package com.ifox.platform.dao.common;
 
 
 import com.ifox.platform.common.bean.OperationsCommon;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.entity.base.BaseEntity;
 

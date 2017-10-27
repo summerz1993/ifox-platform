@@ -9,7 +9,6 @@ import com.ifox.platform.common.bean.QueryConditions;
 import com.ifox.platform.common.bean.QueryProperty;
 import com.ifox.platform.common.bean.SimpleOrder;
 import com.ifox.platform.common.enums.EnumDao;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.dao.sys.ResourceDao;
 import com.ifox.platform.entity.common.ResourceEO;

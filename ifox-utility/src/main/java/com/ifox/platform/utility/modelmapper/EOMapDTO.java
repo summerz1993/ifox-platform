@@ -1,6 +1,5 @@
 package com.ifox.platform.utility.modelmapper;
 
-import com.ifox.platform.common.page.Page;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
 

@@ -1,22 +1,24 @@
 package com.ifox.platform.system.service.impl;
 
-import com.ifox.platform.common.bean.QueryConditions;
-import com.ifox.platform.common.bean.QueryProperty;
 import com.ifox.platform.common.bean.SimpleOrder;
+import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.system.dao.RoleRepository;
-import com.ifox.platform.system.dto.RoleDTO;
 import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
-import com.ifox.platform.system.modelmapper.RoleEOMapDTO;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
+import com.ifox.platform.system.request.role.RoleUpdateRequest;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
-import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -26,6 +28,7 @@ import static com.ifox.platform.common.constant.ExceptionStatusConstant.BUILDIN_
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_ADMIN_USER_EXP;
 
 @Service
+@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
 
     @Resource
@@ -37,21 +40,21 @@ public class RoleServiceImpl implements RoleService {
      * @return Page<RoleDTO>
      */
     @Override
-    public Page<RoleDTO> page(RolePageRequest pageRequest) {
-
-
-
-
-        SimplePage simplePage = pageRequest.convertSimplePage();
-
-        List<QueryProperty> queryPropertyList = getQueryPropertyList(pageRequest.getName(), pageRequest.getStatus());
+    public SimplePage<RoleEO> page(RolePageRequest pageRequest) {
         List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
+        Sort sort = null;
+        for (SimpleOrder simpleOrder : simpleOrderList) {
+            if (sort == null) {
+                sort = new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty());
+            } else {
+                sort.and(new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty()));
+            }
+        }
 
-        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
+        Pageable pageable = new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize(), sort);
+        Page<RoleEO> roleEOSpringDataPage = roleRepository.findAllByNameLikeAndStatusEquals(pageRequest.getName(), pageRequest.getStatus(), pageable);
 
-        Page<RoleEO> roleEOPage = pageByQueryConditions(simplePage, queryConditions);
-
-        return RoleEOMapDTO.mapPage(roleEOPage);
+        return new SimplePage<>(roleEOSpringDataPage.getNumber(), roleEOSpringDataPage.getSize(), (int)roleEOSpringDataPage.getTotalElements(), roleEOSpringDataPage.getContent());
     }
 
     /**
@@ -59,6 +62,8 @@ public class RoleServiceImpl implements RoleService {
      * @param ids ID
      */
     @Override
+    @Transactional
+    @Modifying
     public void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException {
         for (String id : ids) {
             RoleEO roleEO = roleRepository.findOne(id);
@@ -78,11 +83,10 @@ public class RoleServiceImpl implements RoleService {
      * @return RoleDTO
      */
     @Override
-    public RoleDTO getByIdentifier(String identifier) {
+    public RoleEO getByIdentifier(String identifier) {
         List<RoleEO> roleEOList = roleRepository.findByIdentifier(identifier);
         if (!CollectionUtils.isEmpty(roleEOList)) {
-            RoleEO roleEO = roleEOList.get(0);
-            return ModelMapperUtil.get().map(roleEO, RoleDTO.class);
+            return roleEOList.get(0);
         }
         return null;
     }
@@ -93,9 +97,42 @@ public class RoleServiceImpl implements RoleService {
      * @return List<RoleDTO>
      */
     @Override
-    public List<RoleDTO> list(RoleQueryRequest queryRequest) {
-        List<RoleEO> roleEOList = roleRepository.findByNameLikeAndStatusEquals(queryRequest.getName(), queryRequest.getStatus());
-        return ModelMapperUtil.get().map(roleEOList, new TypeToken<List<RoleDTO>>() {}.getType());
+    public List<RoleEO> list(RoleQueryRequest queryRequest) {
+        return roleRepository.findByNameLikeAndStatusEquals(queryRequest.getName(), queryRequest.getStatus());
+    }
+
+    /**
+     * 保存角色
+     * @param roleEO 角色实体
+     */
+    @Override
+    @Transactional
+    @Modifying
+    public void save(RoleEO roleEO) {
+        roleRepository.save(roleEO);
+    }
+
+    /**
+     * 通过ID查询角色
+     * @param id 角色ID
+     * @return RoleEO
+     */
+    @Override
+    public RoleEO get(String id) {
+        return roleRepository.getOne(id);
+    }
+
+    /**
+     * 更新角色
+     * @param updateRequest 角色信息
+     */
+    @Override
+    @Transactional
+    @Modifying
+    public void update(RoleUpdateRequest updateRequest) {
+        RoleEO roleEO = roleRepository.getOne(updateRequest.getId());
+        ModelMapperUtil.get().map(updateRequest, roleEO);
+        roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
     }
 
 }

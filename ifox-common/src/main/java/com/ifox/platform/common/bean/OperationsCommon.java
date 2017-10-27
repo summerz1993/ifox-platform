@@ -1,9 +1,6 @@
 package com.ifox.platform.common.bean;
 
 
-import com.ifox.platform.common.page.Page;
-import com.ifox.platform.common.page.SimplePage;
-
 import java.util.List;
 
 /**
@@ -122,20 +119,20 @@ public interface OperationsCommon<T, ID> {
      */
     int countByQueryConditions(QueryConditions queryConditions);
 
-    /**
-     * 分页条件查询
-     * @param simplePage 分页数据
-     * @param queryPropertyList 查询条件
-     * @return 分页实体
-     */
-    Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList);
-
-    /**
-     * 分页条件查询
-     * @param simplePage 分页数据
-     * @param queryConditions 查询条件
-     * @return 分页实体
-     */
-    Page<T> pageByQueryConditions(SimplePage simplePage, QueryConditions queryConditions);
+//    /**
+//     * 分页条件查询
+//     * @param simplePage 分页数据
+//     * @param queryPropertyList 查询条件
+//     * @return 分页实体
+//     */
+//    Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList);
+//
+//    /**
+//     * 分页条件查询
+//     * @param simplePage 分页数据
+//     * @param queryConditions 查询条件
+//     * @return 分页实体
+//     */
+//    Page<T> pageByQueryConditions(SimplePage simplePage, QueryConditions queryConditions);
 
 }

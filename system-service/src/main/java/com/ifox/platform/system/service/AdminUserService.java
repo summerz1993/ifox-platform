@@ -1,7 +1,6 @@
 package com.ifox.platform.system.service;
 
 import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.page.Page;
 import com.ifox.platform.system.dto.AdminUserDTO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;

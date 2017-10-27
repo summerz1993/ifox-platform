@@ -1,12 +1,13 @@
 package com.ifox.platform.system.service;
 
+import com.ifox.platform.common.exception.BuildinSystemException;
+import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.system.dto.RoleDTO;
 import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
-import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.page.Page;
+import com.ifox.platform.system.request.role.RoleUpdateRequest;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public interface RoleService {
     /**
      * 分页查询角色
      * @param pageRequest 分页参数
-     * @return Page<RoleDTO>
+     * @return SimplePage<RoleEO>
      */
-    Page<RoleDTO> page(RolePageRequest pageRequest);
+    SimplePage<RoleEO> page(RolePageRequest pageRequest);
 
     /**
      * 删除多个角色
@@ -28,15 +29,34 @@ public interface RoleService {
     /**
      * 通过identifier查询角色
      * @param identifier identifier
-     * @return RoleDTO
+     * @return RoleEO
      */
-    RoleDTO getByIdentifier(String identifier);
+    RoleEO getByIdentifier(String identifier);
 
     /**
      * list查询
      * @param queryRequest RoleQueryRequest
-     * @return List<RoleDTO>
+     * @return List<RoleEO>
      */
-    List<RoleDTO> list(RoleQueryRequest queryRequest);
+    List<RoleEO> list(RoleQueryRequest queryRequest);
+
+    /**
+     * 保存角色
+     * @param roleEO 角色实体
+     */
+    void save(RoleEO roleEO);
+
+    /**
+     * 通过ID查询角色
+     * @param id 角色ID
+     * @return RoleEO
+     */
+    RoleEO get(String id);
+
+    /**
+     * 更新角色
+     * @param updateRequest 角色信息
+     */
+    void update(RoleUpdateRequest updateRequest);
 
 }
