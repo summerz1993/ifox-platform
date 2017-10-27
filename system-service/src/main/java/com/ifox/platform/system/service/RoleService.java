@@ -2,9 +2,8 @@ package com.ifox.platform.system.service;
 
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.system.dto.RoleDTO;
 import com.ifox.platform.system.entity.RoleEO;
-import com.ifox.platform.system.exception.NotFoundAdminUserException;
+import com.ifox.platform.system.exception.NotFoundRoleException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
 import com.ifox.platform.system.request.role.RoleUpdateRequest;
@@ -24,7 +23,7 @@ public interface RoleService {
      * 删除多个角色
      * @param ids ID
      */
-    void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
+    void deleteMulti(String[] ids) throws NotFoundRoleException, BuildinSystemException;
 
     /**
      * 通过identifier查询角色

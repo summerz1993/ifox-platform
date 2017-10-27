@@ -1,14 +1,14 @@
 package com.ifox.platform.system.rest;
 
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.response.BaseResponse;
+import com.ifox.platform.common.rest.response.TokenResponse;
 import com.ifox.platform.system.dto.AdminUserDTO;
+import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;
 import com.ifox.platform.system.request.adminuser.AdminUserLoginRequest;
 import com.ifox.platform.system.service.AdminUserService;
-import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.response.BaseResponse;
-import com.ifox.platform.common.rest.response.TokenResponse;
-import com.ifox.platform.entity.sys.AdminUserEO;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.jwt.JWTHeader;
@@ -19,7 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;

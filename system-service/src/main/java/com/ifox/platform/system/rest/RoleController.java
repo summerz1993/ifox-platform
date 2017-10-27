@@ -75,7 +75,7 @@ public class RoleController extends BaseController<RoleVO> {
         }
 
         try {
-            roleService.delete(ids);
+            roleService.deleteMulti(ids);
         } catch (NotFoundAdminUserException e) {
             logger.info("删除的角色不存在 uuid:{}", uuid);
             return notFoundBaseResponse("删除的角色不存在", response);

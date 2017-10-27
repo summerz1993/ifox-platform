@@ -1,6 +1,7 @@
 package com.ifox.platform.common.page;
 
 import com.ifox.platform.common.rest.response.PageResponseDetail;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -202,6 +203,15 @@ public class SimplePage<T> implements Pageable {
 
     public void setContent(List<T> content) {
         this.content = content;
+    }
+
+    /**
+     * 通过Page对象初始化
+     * @param page Page
+     * @return SimplePage
+     */
+    public SimplePage<T> initWithSpringDataPage(Page<T> page) {
+        return new SimplePage<T>(page.getNumber(), page.getSize(), (int)page.getTotalElements(), page.getContent());
     }
 
     @Override

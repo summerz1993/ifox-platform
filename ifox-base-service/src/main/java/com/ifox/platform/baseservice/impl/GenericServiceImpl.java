@@ -99,13 +99,13 @@ public class GenericServiceImpl<T extends BaseEntity, ID extends Serializable> i
         return genericDao.countByQueryConditions(queryConditions);
     }
 
-    @Override
-    public Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList) {
-        return genericDao.pageByQueryProperty(simplePage, queryPropertyList);
-    }
-
-    @Override
-    public Page<T> pageByQueryConditions(SimplePage simplePage, QueryConditions queryConditions) {
-        return genericDao.pageByQueryConditions(simplePage, queryConditions);
-    }
+//    @Override
+//    public Page<T> pageByQueryProperty(SimplePage simplePage, List<QueryProperty> queryPropertyList) {
+//        return genericDao.pageByQueryProperty(simplePage, queryPropertyList);
+//    }
+//
+//    @Override
+//    public Page<T> pageByQueryConditions(SimplePage simplePage, QueryConditions queryConditions) {
+//        return genericDao.pageByQueryConditions(simplePage, queryConditions);
+//    }
 }

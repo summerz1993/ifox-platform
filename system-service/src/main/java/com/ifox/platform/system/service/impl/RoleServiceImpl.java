@@ -1,21 +1,17 @@
 package com.ifox.platform.system.service.impl;
 
-import com.ifox.platform.common.bean.SimpleOrder;
-import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.system.dao.RoleRepository;
 import com.ifox.platform.system.entity.RoleEO;
-import com.ifox.platform.system.exception.NotFoundAdminUserException;
+import com.ifox.platform.system.exception.NotFoundRoleException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
 import com.ifox.platform.system.request.role.RoleUpdateRequest;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +21,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.BUILDIN_SYSTEM_EXP;
-import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_ADMIN_USER_EXP;
+import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_ROLE_EXP;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,20 +37,10 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public SimplePage<RoleEO> page(RolePageRequest pageRequest) {
-        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
-        Sort sort = null;
-        for (SimpleOrder simpleOrder : simpleOrderList) {
-            if (sort == null) {
-                sort = new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty());
-            } else {
-                sort.and(new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty()));
-            }
-        }
+        Pageable pageable = com.ifox.platform.common.rest.request.PageRequest.convertToSpringDataPageable(pageRequest);
+        Page<RoleEO> page = roleRepository.findAllByNameLikeAndStatusEquals(pageRequest.getName(), pageRequest.getStatus(), pageable);
 
-        Pageable pageable = new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize(), sort);
-        Page<RoleEO> roleEOSpringDataPage = roleRepository.findAllByNameLikeAndStatusEquals(pageRequest.getName(), pageRequest.getStatus(), pageable);
-
-        return new SimplePage<>(roleEOSpringDataPage.getNumber(), roleEOSpringDataPage.getSize(), (int)roleEOSpringDataPage.getTotalElements(), roleEOSpringDataPage.getContent());
+        return new SimplePage<RoleEO>().initWithSpringDataPage(page);
     }
 
     /**
@@ -64,11 +50,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     @Modifying
-    public void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException {
+    public void deleteMulti(String[] ids) throws NotFoundRoleException, BuildinSystemException {
         for (String id : ids) {
             RoleEO roleEO = roleRepository.findOne(id);
             if (roleEO == null) {
-                throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "角色不存在");
+                throw new NotFoundRoleException(NOT_FOUND_ROLE_EXP, "角色不存在");
             } else if(roleEO.getBuildinSystem()) {
                 throw new BuildinSystemException(BUILDIN_SYSTEM_EXP, "系统内置角色，不允许删除");
             } else {

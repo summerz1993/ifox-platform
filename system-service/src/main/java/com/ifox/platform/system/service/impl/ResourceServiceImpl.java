@@ -1,61 +1,76 @@
 package com.ifox.platform.system.service.impl;
 
-import com.ifox.platform.system.dto.ResourceDTO;
-import com.ifox.platform.system.modelmapper.ResourceEOMapDTO;
-import com.ifox.platform.system.request.resource.ResourcePageRequest;
-import com.ifox.platform.system.service.ResourceService;
-import com.ifox.platform.baseservice.impl.GenericServiceImpl;
-import com.ifox.platform.common.bean.QueryConditions;
-import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.bean.SimpleOrder;
-import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.dao.sys.ResourceDao;
-import com.ifox.platform.entity.common.ResourceEO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ifox.platform.common.rest.request.PageRequest;
+import com.ifox.platform.system.dao.ResourceRepository;
+import com.ifox.platform.system.entity.ResourceEO;
+import com.ifox.platform.system.exception.NotFoundResourceException;
+import com.ifox.platform.system.request.resource.ResourcePageRequest;
+import com.ifox.platform.system.request.resource.ResourceUpdateRequest;
+import com.ifox.platform.system.service.ResourceService;
+import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
+
 import java.util.List;
 
-@Repository
-public class ResourceServiceImpl extends GenericServiceImpl<ResourceEO, String> implements ResourceService {
+import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_RESOURCE_EXP;
 
-    @Autowired
-    public void setGenericDao(ResourceDao resourceDao){
-        super.genericDao = resourceDao;
+@Repository
+public class ResourceServiceImpl implements ResourceService {
+
+    @Resource
+    private ResourceRepository resourceRepository;
+
+    @Override
+    public SimplePage<ResourceEO> page(ResourcePageRequest pageRequest) {
+        Pageable pageable = PageRequest.convertToSpringDataPageable(pageRequest);
+        Page<ResourceEO> page = resourceRepository.findAllByNameLikeAndTypeEquals(pageRequest.getName(), pageRequest.getType(), pageable);
+        return new SimplePage<ResourceEO>().initWithSpringDataPage(page);
     }
 
     @Override
-    public Page<ResourceDTO> page(ResourcePageRequest pageRequest) {
-        SimplePage simplePage = pageRequest.convertSimplePage();
-
-        List<QueryProperty> queryProperties = getQueryPropertyList(pageRequest);
-        List<SimpleOrder> simpleOrders = pageRequest.getSimpleOrderList();
-
-        QueryConditions queryConditions = new QueryConditions(null, queryProperties, simpleOrders);
-        Page<ResourceEO> resourceEOPage = pageByQueryConditions(simplePage, queryConditions);
-
-        return ResourceEOMapDTO.mapPage(resourceEOPage);
+    @Transactional
+    @Modifying
+    public void save(ResourceEO resourceEO) {
+        resourceRepository.save(resourceEO);
     }
 
-    private List<QueryProperty> getQueryPropertyList(ResourcePageRequest pageRequest) {
-        List<QueryProperty> queryProperties = new ArrayList<>();
-
-        String name = pageRequest.getName();
-        if (!StringUtils.isEmpty(name)) {
-            String appendName = "%" + name + "%";
-            QueryProperty nameQuery = new QueryProperty("name", EnumDao.Operation.LIKE, appendName);
-            queryProperties.add(nameQuery);
+    @Override
+    @Transactional
+    @Modifying
+    public void deleteMulti(String[] ids) throws NotFoundResourceException {
+        for (String id : ids) {
+            try {
+                resourceRepository.delete(id);
+            } catch (EmptyResultDataAccessException emptyExc) {
+                throw new NotFoundResourceException(NOT_FOUND_RESOURCE_EXP, "资源不存在");
+            }
         }
-
-        ResourceEO.ResourceEOType type = pageRequest.getType();
-        if (type != null) {
-            QueryProperty statusQuery = new QueryProperty("type", EnumDao.Operation.EQUAL, type);
-            queryProperties.add(statusQuery);
-        }
-
-        return queryProperties;
     }
+
+    @Override
+    public ResourceEO get(String id) {
+        return resourceRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    @Modifying
+    public void update(ResourceUpdateRequest resourceUpdateRequest) {
+        ResourceEO resourceEO = resourceRepository.findOne(resourceUpdateRequest.getId());
+        ModelMapperUtil.get().map(resourceUpdateRequest, resourceEO);
+    }
+
+    @Override
+    public List<ResourceEO> listAll() {
+        return resourceRepository.findAll();
+    }
+
 }
