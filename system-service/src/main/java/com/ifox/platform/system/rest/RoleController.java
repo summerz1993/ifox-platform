@@ -6,7 +6,7 @@ import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.*;
 import com.ifox.platform.system.entity.MenuPermissionEO;
 import com.ifox.platform.system.entity.RoleEO;
-import com.ifox.platform.system.exception.NotFoundAdminUserException;
+import com.ifox.platform.system.exception.NotFoundRoleException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
 import com.ifox.platform.system.request.role.RoleSaveRequest;
@@ -76,7 +76,7 @@ public class RoleController extends BaseController<RoleVO> {
 
         try {
             roleService.deleteMulti(ids);
-        } catch (NotFoundAdminUserException e) {
+        } catch (NotFoundRoleException e) {
             logger.info("删除的角色不存在 uuid:{}", uuid);
             return notFoundBaseResponse("删除的角色不存在", response);
         } catch (BuildinSystemException e) {

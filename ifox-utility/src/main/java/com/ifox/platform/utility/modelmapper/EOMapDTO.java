@@ -1,5 +1,6 @@
 package com.ifox.platform.utility.modelmapper;
 
+import com.ifox.platform.common.page.SimplePage;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -17,7 +18,7 @@ public class EOMapDTO<E, D> {
                 return modelMapper.map(source, new TypeToken<ArrayList<D>>() {}.getType());
             }
         };
-        PropertyMap<Page<E>, Page<D>> propertyMap = new PropertyMap<Page<E>, Page<D>>() {
+        PropertyMap<SimplePage<E>, SimplePage<D>> propertyMap = new PropertyMap<SimplePage<E>, SimplePage<D>>() {
             @Override
             protected void configure() {
                 using(converter).map(source.getContent(), destination.getContent());

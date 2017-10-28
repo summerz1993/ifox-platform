@@ -1,60 +1,56 @@
 package com.ifox.platform.system.service.impl;
 
-import com.ifox.platform.system.dto.AdminUserDTO;
-import com.ifox.platform.system.entity.AdminUserEO;
-import com.ifox.platform.system.exception.NotFoundAdminUserException;
-import com.ifox.platform.system.exception.RepeatedAdminUserException;
-import com.ifox.platform.system.modelmapper.AdminUserEOMapDTO;
-import com.ifox.platform.system.request.adminuser.AdminUserPageRequest;
-import com.ifox.platform.system.request.adminuser.AdminUserQueryRequest;
-import com.ifox.platform.system.service.AdminUserService;
-import com.ifox.platform.baseservice.impl.GenericServiceImpl;
-import com.ifox.platform.common.bean.QueryConditions;
-import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.bean.SimpleOrder;
-import com.ifox.platform.common.enums.EnumDao;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.dao.sys.AdminUserDao;
-import com.ifox.platform.entity.sys.AdminUserEO;
-import com.ifox.platform.entity.sys.RoleEO;
+import com.ifox.platform.common.rest.request.PageRequest;
+import com.ifox.platform.system.dao.AdminUserRepository;
+import com.ifox.platform.system.entity.AdminUserEO;
+import com.ifox.platform.system.entity.RoleEO;
+import com.ifox.platform.system.exception.NotFoundAdminUserException;
+import com.ifox.platform.system.exception.RepeatedAdminUserException;
+import com.ifox.platform.system.request.adminuser.AdminUserPageRequest;
+import com.ifox.platform.system.request.adminuser.AdminUserQueryRequest;
+import com.ifox.platform.system.request.adminuser.AdminUserUpdateRequest;
+import com.ifox.platform.system.service.AdminUserService;
+import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.common.ExceptionUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.datetime.DateTimeUtil;
 import com.ifox.platform.utility.jwt.JWTPayload;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
-import org.modelmapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.BUILDIN_SYSTEM_EXP;
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_ADMIN_USER_EXP;
-import static com.ifox.platform.common.constant.ExceptionStatusConstant.REPEATED_ADMIN_USER_EXP;
 
 @Service
-public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String> implements AdminUserService{
+@Transactional(readOnly = true)
+public class AdminUserServiceImpl implements AdminUserService{
 
     private Logger logger  = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private Environment env;
 
+    @Resource
+    private AdminUserRepository adminUserRepository;
 
-    @Autowired
-    public void setGenericDao(AdminUserDao adminUserDao){
-        super.genericDao = adminUserDao;
-    }
+    @Resource
+    private RoleService roleService;
 
     /**
      * 验证用户名和密码是否正确
@@ -64,7 +60,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      */
     @Override
     public Boolean validLoginNameAndPassword(String loginName, String password) throws NotFoundAdminUserException, RepeatedAdminUserException {
-        AdminUserEO adminUserEO = getAdminUserEOByLoginName(loginName);
+        AdminUserEO adminUserEO = getByLoginName(loginName);
         boolean validatePassword;
         try {
             validatePassword = PasswordUtil.validatePassword(password, adminUserEO.getSalt(), adminUserEO.getPassword());
@@ -82,14 +78,8 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      * @return 用户信息DTO
      */
     @Override
-    public AdminUserDTO getByLoginName(String loginName) {
-        try {
-            AdminUserEO adminUserEO = getAdminUserEOByLoginName(loginName);
-            return ModelMapperUtil.get().map(adminUserEO, AdminUserDTO.class);
-        } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            logger.warn(e.getMessage());
-        }
-        return null;
+    public AdminUserEO getByLoginName(String loginName) {
+        return adminUserRepository.findFirstByLoginNameEquals(loginName);
     }
 
     /**
@@ -100,12 +90,7 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
     @Override
     public JWTPayload generatePayload(String loginName) {
         JWTPayload payload = new JWTPayload();
-        AdminUserEO adminUserEO = null;
-        try {
-            adminUserEO = getAdminUserEOByLoginName(loginName);
-        } catch (NotFoundAdminUserException | RepeatedAdminUserException e) {
-            logger.info(ExceptionUtil.getStackTraceAsString(e));
-        }
+        AdminUserEO adminUserEO = getByLoginName(loginName);
         if (adminUserEO != null) {
             payload.setIss(env.getProperty("jwt.payload.iss"));
             payload.setIat(new Date());
@@ -133,19 +118,10 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      * @return Page<AdminUserVO>
      */
     @Override
-    public Page<AdminUserDTO> page(AdminUserPageRequest pageRequest) {
-        SimplePage simplePage = pageRequest.convertSimplePage();
-
-        AdminUserQueryRequest queryRequest = ModelMapperUtil.get().map(pageRequest, AdminUserQueryRequest.class);
-        List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
-
-        List<SimpleOrder> simpleOrderList = pageRequest.getSimpleOrderList();
-
-        QueryConditions queryConditions = new QueryConditions(null, queryPropertyList, simpleOrderList);
-
-        Page<AdminUserEO> adminUserEOPage = pageByQueryConditions(simplePage, queryConditions);
-
-        return AdminUserEOMapDTO.mapPage(adminUserEOPage);
+    public SimplePage<AdminUserEO> page(AdminUserPageRequest pageRequest) {
+        Pageable pageable = PageRequest.convertToSpringDataPageable(pageRequest);
+        Page<AdminUserEO> page = adminUserRepository.findAllByLoginNameLikeAndStatusEqualsAndBuildinSystemEquals(pageRequest.getLoginName(), pageRequest.getStatus(), pageRequest.getBuildinSystem(), pageable);
+        return new SimplePage<AdminUserEO>().initWithSpringDataPage(page);
     }
 
     /**
@@ -154,10 +130,8 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      * @return List<AdminUserDTO>
      */
     @Override
-    public List<AdminUserDTO> list(AdminUserQueryRequest queryRequest) {
-        List<QueryProperty> queryPropertyList = generateQueryPropertyList(queryRequest);
-        List<AdminUserEO> adminUserEOList = listByQueryProperty(queryPropertyList);
-        return ModelMapperUtil.get().map(adminUserEOList, new TypeToken<List<AdminUserDTO>>() {}.getType());
+    public List<AdminUserEO> list(AdminUserQueryRequest queryRequest) {
+        return adminUserRepository.findAllByLoginNameLikeAndStatusEqualsAndBuildinSystemEquals(queryRequest.getLoginName(), queryRequest.getStatus(), queryRequest.getBuildinSystem());
     }
 
     /**
@@ -166,70 +140,52 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
      */
     @Override
     @Transactional
+    @Modifying
     public void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException {
         for (String id : ids) {
-            AdminUserEO adminUserEO = get(id);
+            AdminUserEO adminUserEO = adminUserRepository.findOne(id);
             if (adminUserEO == null) {
                 throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "用户不存在");
             } else if(adminUserEO.getBuildinSystem()) {
                 throw new BuildinSystemException(BUILDIN_SYSTEM_EXP, "系统内置用户，不允许删除");
             } else {
-                deleteByEntity(adminUserEO);
+                adminUserRepository.delete(id);
             }
         }
     }
 
     @Override
     public AdminUserEO get(String id) {
-        return null;
+        return adminUserRepository.findOne(id);
     }
 
-    /**
-     * 根据请求生成查询条件
-     * @param queryRequest 请求
-     * @return List<QueryProperty>
-     */
-    private List<QueryProperty> generateQueryPropertyList(AdminUserQueryRequest queryRequest){
-        List<QueryProperty> queryPropertyList = new ArrayList<>();
-
-        String loginName = queryRequest.getLoginName();
-        if (!StringUtils.isEmpty(loginName)) {
-            String appendLoginName = "%" + loginName + "%";
-            QueryProperty queryLoginName = new QueryProperty("loginName", EnumDao.Operation.LIKE, appendLoginName);
-            queryPropertyList.add(queryLoginName);
-        }
-
-        AdminUserEO.AdminUserEOStatus status = queryRequest.getStatus();
-        if (status != null) {
-            QueryProperty queryStatus = new QueryProperty("status", EnumDao.Operation.EQUAL, status);
-            queryPropertyList.add(queryStatus);
-        }
-
-        Boolean buildinSystem = queryRequest.getBuildinSystem();
-        if (buildinSystem != null) {
-            QueryProperty queryBuildinSystem = new QueryProperty("buildinSystem", EnumDao.Operation.EQUAL, buildinSystem);
-            queryPropertyList.add(queryBuildinSystem);
-        }
-        return queryPropertyList;
+    @Override
+    @Transactional
+    @Modifying
+    public void save(AdminUserEO adminUserEO) {
+        adminUserRepository.save(adminUserEO);
     }
 
-    /**
-     * 根据登录名查询用户
-     * @param loginName 登录名
-     * @return 用户信息EO
-     */
-    private AdminUserEO getAdminUserEOByLoginName(String loginName) throws NotFoundAdminUserException, RepeatedAdminUserException {
-        QueryProperty queryProperty = new QueryProperty("loginName", EnumDao.Operation.EQUAL, loginName);
-        List<QueryProperty> queryPropertyList = new ArrayList<>();
-        queryPropertyList.add(queryProperty);
-        List<AdminUserEO> adminUserEOList = listByQueryProperty(queryPropertyList);
-        if (CollectionUtils.isEmpty(adminUserEOList)) {
-            throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "为找到此用户, loginName:" + loginName);
+    @Override
+    @Transactional
+    @Modifying
+    public AdminUserEO update(AdminUserUpdateRequest updateRequest) {
+        AdminUserEO adminUserEO = adminUserRepository.findOne(updateRequest.getId());
+        ModelMapperUtil.get().map(updateRequest, adminUserEO);
+        String[] checkedRoleArray = updateRequest.getCheckedRole();
+        List<RoleEO> roleEOList = new ArrayList<>();
+        for (String roleId : checkedRoleArray) {
+            RoleEO roleEO = roleService.get(roleId);
+            roleEOList.add(roleEO);
         }
-        if (adminUserEOList.size() > 1) {
-            throw new RepeatedAdminUserException(REPEATED_ADMIN_USER_EXP, "数据库存在重复用户名, loginName:" + loginName);
-        }
-        return adminUserEOList.get(0);
+        adminUserEO.setRoleEOList(roleEOList);
+        return adminUserEO;
     }
 
+    @Override
+    @Transactional
+    @Modifying
+    public void updatePassword(String password, String id) {
+        adminUserRepository.updatePassword(password, id);
+    }
 }

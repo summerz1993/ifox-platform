@@ -3,7 +3,6 @@ package com.ifox.platform.system.rest;
 import com.ifox.platform.common.rest.BaseController;
 import com.ifox.platform.common.rest.response.BaseResponse;
 import com.ifox.platform.common.rest.response.TokenResponse;
-import com.ifox.platform.system.dto.AdminUserDTO;
 import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;
@@ -72,8 +71,8 @@ public class LoginController extends BaseController {
             return tokenResponse;
         }
 
-        AdminUserDTO adminUserDTO = adminUserService.getByLoginName(adminUserLoginRequest.getLoginName());
-        if (adminUserDTO.getStatus() == AdminUserEO.AdminUserEOStatus.INVALID) {
+        AdminUserEO adminUserEO = adminUserService.getByLoginName(adminUserLoginRequest.getLoginName());
+        if (adminUserEO.getStatus() == AdminUserEO.AdminUserEOStatus.INVALID) {
             tokenResponse.setStatus(INVALID_STATUS);
             tokenResponse.setDesc("用户状态无效");
             logger.info("用户状态无效 uuid:{}", uuid);

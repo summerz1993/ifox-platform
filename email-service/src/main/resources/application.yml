@@ -4,6 +4,10 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
+email-service:
+  token: 1234567890Yeager
+
+#==================== spring Setting =====================#
 spring:
   mail:
     host: smtp.163.com
@@ -16,6 +20,27 @@ spring:
           auth: true
           startssl.enable: true
           startssl.required: true
-
-email-service:
-  token: 1234567890Yeager
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  mvc:
+    static-path-pattern: /**
+  http.multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    username: root
+    password: Aswd1234
+    url: jdbc:mysql://localhost:3306/spring_data_test
+  jpa:
+    database: MYSQL
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: false

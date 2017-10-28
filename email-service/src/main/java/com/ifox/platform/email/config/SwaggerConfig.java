@@ -1,4 +1,4 @@
-package com.ifox.platform.baseservice.config;
+package com.ifox.platform.email.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

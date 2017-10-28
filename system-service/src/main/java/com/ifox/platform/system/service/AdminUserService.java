@@ -8,6 +8,7 @@ import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;
 import com.ifox.platform.system.request.adminuser.AdminUserPageRequest;
 import com.ifox.platform.system.request.adminuser.AdminUserQueryRequest;
+import com.ifox.platform.system.request.adminuser.AdminUserUpdateRequest;
 import com.ifox.platform.utility.jwt.JWTPayload;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface AdminUserService{
      * @param loginName 登录名
      * @return 用户信息
      */
-    AdminUserDTO getByLoginName(String loginName);
+    AdminUserEO getByLoginName(String loginName);
 
     /**
      * 根据登录名生成PayLoad
@@ -39,16 +40,16 @@ public interface AdminUserService{
     /**
      * 分页查询
      * @param pageRequest 分页查询条件
-     * @return Page<AdminUserVO>
+     * @return Page<AdminUserEO>
      */
-    SimplePage<AdminUserDTO> page(AdminUserPageRequest pageRequest);
+    SimplePage<AdminUserEO> page(AdminUserPageRequest pageRequest);
 
     /**
      * 列表查询
      * @param queryRequest 查询条件
      * @return List<AdminUserDTO>
      */
-    List<AdminUserDTO> list(AdminUserQueryRequest queryRequest);
+    List<AdminUserEO> list(AdminUserQueryRequest queryRequest);
 
     /**
      * 删除多个用户
@@ -57,5 +58,11 @@ public interface AdminUserService{
     void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
 
     AdminUserEO get(String id);
+
+    void save(AdminUserEO adminUserEO);
+
+    AdminUserEO update(AdminUserUpdateRequest updateRequest);
+
+    void updatePassword(String password, String id);
 
 }

@@ -1,7 +1,7 @@
 package com.ifox.platform.system.modelmapper;
 
 import com.ifox.platform.system.dto.AdminUserDTO;
-import com.ifox.platform.entity.sys.AdminUserEO;
+import com.ifox.platform.system.entity.AdminUserEO;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

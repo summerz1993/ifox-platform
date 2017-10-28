@@ -58,4 +58,12 @@ public interface RoleService {
      */
     void update(RoleUpdateRequest updateRequest);
 
+    /**
+     * 根据角色ID和权限ID统计数量 - 判定此角色是否有对应的权限
+     * @param roleIdList roleIdList
+     * @param menuPermissionId menuPermissionId
+     * @return Integer
+     */
+    Integer countByRoleIdListAndMenuPermission(String[] roleIdList, String menuPermissionId);
+
 }

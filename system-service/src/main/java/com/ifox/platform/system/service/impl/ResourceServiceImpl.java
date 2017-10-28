@@ -73,4 +73,9 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceRepository.findAll();
     }
 
+    @Override
+    public ResourceEO getByController(String controller) {
+        return resourceRepository.findFirstByControllerEquals(controller);
+    }
+
 }

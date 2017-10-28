@@ -7,7 +7,6 @@ import com.ifox.platform.file.enums.EnumFile;
 import com.ifox.platform.file.service.FileService;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.datetime.DateTimeUtil;
-import com.ifox.platform.utility.jwt.JWTUtil;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import io.swagger.annotations.Api;
@@ -24,19 +23,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.*;
+import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
 
 /**
  * 文件服务控制器

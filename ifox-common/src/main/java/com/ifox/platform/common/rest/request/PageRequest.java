@@ -1,7 +1,6 @@
 package com.ifox.platform.common.rest.request;
 
 import com.ifox.platform.common.bean.SimpleOrder;
-import com.ifox.platform.common.page.SimplePage;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
@@ -41,10 +40,6 @@ public class PageRequest {
 
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
-    }
-
-    public SimplePage convertSimplePage() {
-        return new SimplePage(this.pageSize, this.pageNo);
     }
 
     /**

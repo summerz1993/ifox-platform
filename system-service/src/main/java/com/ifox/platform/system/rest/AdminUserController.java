@@ -1,6 +1,9 @@
 package com.ifox.platform.system.rest;
 
-import com.ifox.platform.system.dto.AdminUserDTO;
+import com.ifox.platform.common.exception.BuildinSystemException;
+import com.ifox.platform.common.page.SimplePage;
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.response.*;
 import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
@@ -9,13 +12,6 @@ import com.ifox.platform.system.response.AdminUserVO;
 import com.ifox.platform.system.response.RoleVO;
 import com.ifox.platform.system.service.AdminUserService;
 import com.ifox.platform.system.service.RoleService;
-import com.ifox.platform.common.exception.BuildinSystemException;
-import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.response.PageResponseDetail;
-import com.ifox.platform.common.rest.response.BaseResponse;
-import com.ifox.platform.common.rest.response.MultiResponse;
-import com.ifox.platform.common.rest.response.OneResponse;
-import com.ifox.platform.common.rest.response.PageResponse;
 import com.ifox.platform.utility.common.DigestUtil;
 import com.ifox.platform.utility.common.EncodeUtil;
 import com.ifox.platform.utility.common.PasswordUtil;
@@ -65,7 +61,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         logger.info("保存用户信息 adminUserSaveRequest:{}, uuid:{}", adminUserSaveRequest, uuid);
 
         String loginName = adminUserSaveRequest.getLoginName();
-        AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+        AdminUserEO byLoginName = adminUserService.getByLoginName(loginName);
         if (byLoginName != null) {
             logger.info("登录名已经存在 uuid:{}", uuid);
             return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
@@ -146,25 +142,14 @@ public class AdminUserController extends BaseController<AdminUserVO> {
 
         String loginName = updateRequest.getLoginName();
         if (!adminUserEO.getLoginName().equals(loginName)) {
-            AdminUserDTO byLoginName = adminUserService.getByLoginName(loginName);
+            AdminUserEO byLoginName = adminUserService.getByLoginName(loginName);
             if (byLoginName != null) {
                 logger.info("登录名已经存在 uuid:{}" ,uuid);
                 return new BaseResponse(EXISTED_LOGIN_NAME, "登录名已经存在");
             }
         }
 
-        ModelMapperUtil.get().map(updateRequest, adminUserEO);
-//        adminUserEO.setPassword(PasswordUtil.encryptPassword(updateRequest.getPassword(), adminUserEO.getSalt()));
-
-        String[] checkedRoleArray = updateRequest.getCheckedRole();
-        List<RoleEO> roleEOList = new ArrayList<>();
-        for (String roleId : checkedRoleArray) {
-            RoleEO roleEO = roleService.get(roleId);
-            roleEOList.add(roleEO);
-        }
-        adminUserEO.setRoleEOList(roleEOList);
-
-        adminUserService.update(adminUserEO);
+        adminUserService.update(updateRequest);
 
         logger.info(successUpdate + " uuid:{}", uuid);
         return successUpdateBaseResponse();
@@ -199,10 +184,10 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("分页查询用户 pageRequest:{}, uuid:{}", pageRequest.toString(), uuid);
 
-        Page<AdminUserDTO> page = adminUserService.page(pageRequest);
-        List<AdminUserDTO> adminUserDTOList = page.getContent();
+        SimplePage<AdminUserEO> page = adminUserService.page(pageRequest);
+        List<AdminUserEO> adminUserEOList = page.getContent();
 
-        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
+        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserEOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
         PageResponseDetail pageResponseDetail = page.convertToPageResponseDetail();
 
@@ -217,8 +202,8 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("获取用户列表 queryRequest:{}, uuid:{}", queryRequest.toString(), uuid);
 
-        List<AdminUserDTO> adminUserDTOList = adminUserService.list(queryRequest);
-        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserDTOList, new TypeToken<List<AdminUserVO>>() {}.getType());
+        List<AdminUserEO> adminUserEOList = adminUserService.list(queryRequest);
+        List<AdminUserVO> adminUserVOList = ModelMapperUtil.get().map(adminUserEOList, new TypeToken<List<AdminUserVO>>() {}.getType());
 
         logger.info(successQuery + " uuid:{}", uuid);
         return successQueryMultiResponse(adminUserVOList);
@@ -268,7 +253,8 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         }
 
         adminUserEO.setPassword(PasswordUtil.encryptPassword(request.getNewPassword(), adminUserEO.getSalt()));
-        adminUserService.update(adminUserEO);
+
+        adminUserService.updatePassword(adminUserEO.getPassword(), adminUserEO.getId());
 
         logger.info(successUpdate + " uuid:{}", uuid);
         return successUpdateBaseResponse();

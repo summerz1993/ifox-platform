@@ -90,7 +90,7 @@ public class SimplePage<T> implements Pageable {
      * @param totalCount 总计数量
      * @param content 数据
      */
-    public SimplePage(int totalCount, int pageSize, int pageNo, List<T> content) {
+    public SimplePage(int pageNo, int pageSize, int totalCount, List<T> content) {
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.pageNo = pageNo;

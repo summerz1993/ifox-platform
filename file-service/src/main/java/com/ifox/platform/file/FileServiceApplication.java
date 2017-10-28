@@ -1,12 +1,10 @@
 package com.ifox.platform.file;
 
-import com.ifox.platform.baseservice.config.PersistenceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 
 /**
  * 文件服务

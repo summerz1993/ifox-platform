@@ -43,4 +43,6 @@ public interface MenuPermissionService {
 
     MenuPermissionEO update(MenuPermissionRequest request);
 
+    MenuPermissionEO getByURL(String url);
+
 }

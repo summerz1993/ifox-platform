@@ -121,4 +121,15 @@ public class RoleServiceImpl implements RoleService {
         roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
     }
 
+    /**
+     * 根据角色ID和权限ID统计数量 - 判定此角色是否有对应的权限
+     * @param roleIdList roleIdList
+     * @param menuPermissionId menuPermissionId
+     * @return Integer
+     */
+    @Override
+    public Integer countByRoleIdListAndMenuPermission(String[] roleIdList, String menuPermissionId) {
+        return roleRepository.countByRoleIdListAndMenuPermission(roleIdList, menuPermissionId);
+    }
+
 }

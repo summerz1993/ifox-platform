@@ -21,4 +21,6 @@ public interface ResourceService {
     void update(ResourceUpdateRequest resourceUpdateRequest);
 
     List<ResourceEO> listAll();
+
+    ResourceEO getByController(String controller);
 }

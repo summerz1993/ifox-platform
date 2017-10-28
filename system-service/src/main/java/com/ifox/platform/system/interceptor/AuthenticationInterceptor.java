@@ -1,10 +1,10 @@
-package com.ifox.platform.baseservice.interceptor;
+package com.ifox.platform.system.interceptor;
 
-import com.ifox.platform.dao.sys.MenuPermissionDao;
-import com.ifox.platform.dao.sys.ResourceDao;
-import com.ifox.platform.dao.sys.RoleDao;
-import com.ifox.platform.entity.common.ResourceEO;
-import com.ifox.platform.entity.sys.MenuPermissionEO;
+import com.ifox.platform.system.entity.MenuPermissionEO;
+import com.ifox.platform.system.entity.ResourceEO;
+import com.ifox.platform.system.service.MenuPermissionService;
+import com.ifox.platform.system.service.ResourceService;
+import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
@@ -16,12 +16,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.ifox.platform.common.constant.RestStatusConstant.NOT_FOUND;
-import static com.ifox.platform.common.constant.RestStatusConstant.SUCCESS;
-import static com.ifox.platform.common.constant.RestStatusConstant.UNAUTHORIZED;
+import static com.ifox.platform.common.constant.RestStatusConstant.*;
 
 /**
  * 认证拦截器
@@ -35,14 +34,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private Environment env;
 
-    @Autowired
-    private ResourceDao resourceDao;
+    @Resource
+    private ResourceService resourceService;
 
-    @Autowired
-    private MenuPermissionDao menuPermissionDao;
+    @Resource
+    private MenuPermissionService menuPermissionService;
 
-    @Autowired
-    private RoleDao roleDao;
+    @Resource
+    private RoleService roleService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -59,12 +58,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             logger.info("OPTIONS预检请求通过");
             return false;
         }
-if (true) return true;
+//if (true) return true;
         //例子:/role/get/8ab2a8c55df468ed015df47e818a0002
         String[] splitURI = requestURI.split("/");
         String controller = splitURI[1];
         //TODO:此处可做缓存
-        ResourceEO resourceEO = resourceDao.getByController(controller);
+        ResourceEO resourceEO = resourceService.getByController(controller);
         //1 资源不存在，返回404
         if (resourceEO == null) {
             logger.info("资源不存在或未定义");
@@ -102,13 +101,13 @@ if (true) return true;
         Any payLoadAny = JsonIterator.deserialize(payload);
         String[] roleIdList = ArrayUtils.toArray(payLoadAny.get("roleIdList").toString());
         //TODO:此处可做缓存
-        MenuPermissionEO menuPermissionEO = menuPermissionDao.getByURL(menuPermissionURL);
+        MenuPermissionEO menuPermissionEO = menuPermissionService.getByURL(menuPermissionURL);
         if (menuPermissionEO == null || menuPermissionEO.getStatus() == MenuPermissionEO.MenuEOStatus.INVALID) {
             logger.info("菜单权限不存在或未定义或状态无效");
             response.setStatus(NOT_FOUND);
             return false;
         }
-        Integer count = roleDao.countByRoleIdListAndMenuPermission(roleIdList, menuPermissionEO.getId());
+        Integer count = roleService.countByRoleIdListAndMenuPermission(roleIdList, menuPermissionEO.getId());
         if (count == null || count.equals(0)) {
             response.setStatus(UNAUTHORIZED);
             logger.info("认证失败:角色资源无对应权限");

@@ -84,4 +84,9 @@ public class MenuPermissionServiceImpl implements MenuPermissionService {
         ModelMapperUtil.get().map(request, menuPermissionEO);
         return menuPermissionEO;
     }
+
+    @Override
+    public MenuPermissionEO getByURL(String url) {
+        return menuPermissionRepository.findFirstByUrlEquals(url);
+    }
 }

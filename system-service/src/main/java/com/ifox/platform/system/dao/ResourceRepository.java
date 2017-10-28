@@ -11,4 +11,6 @@ public interface ResourceRepository extends JpaRepository<ResourceEO, String> {
 
     Page<ResourceEO> findAllByNameLikeAndTypeEquals(String name, ResourceEO.ResourceEOType type, Pageable pageable);
 
+    ResourceEO findFirstByControllerEquals(String controller);
+
 }
