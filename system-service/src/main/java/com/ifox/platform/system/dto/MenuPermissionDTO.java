@@ -1,6 +1,7 @@
 package com.ifox.platform.system.dto;
 
 import com.ifox.platform.system.dto.base.MenuPermissionBaseColumns;
+import com.ifox.platform.system.entity.MenuPermissionEO;
 import com.ifox.platform.system.response.MenuVO;
 
 import java.util.ArrayList;
@@ -17,9 +18,9 @@ public class MenuPermissionDTO extends MenuPermissionBaseColumns {
         this.id = id;
     }
 
-    public static List<MenuVO> convertToVO(List<MenuPermissionDTO> menuPermissionDTOList) {
+    public static List<MenuVO> convertToVO(List<MenuPermissionEO> menuPermissionEOList) {
         List<MenuVO> menuVOS = new ArrayList<>();
-        for (MenuPermissionDTO menuPermissionDTO : menuPermissionDTOList){
+        for (MenuPermissionEO menuPermissionDTO : menuPermissionEOList){
             MenuVO menuVO = new MenuVO();
             menuVO.setId(menuPermissionDTO.getId());
             menuVO.setText(menuPermissionDTO.getName());

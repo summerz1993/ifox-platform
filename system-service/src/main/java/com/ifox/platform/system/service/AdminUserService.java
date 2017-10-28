@@ -1,7 +1,9 @@
 package com.ifox.platform.system.service;
 
 import com.ifox.platform.common.exception.BuildinSystemException;
+import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.system.dto.AdminUserDTO;
+import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;
 import com.ifox.platform.system.request.adminuser.AdminUserPageRequest;
@@ -39,7 +41,7 @@ public interface AdminUserService{
      * @param pageRequest 分页查询条件
      * @return Page<AdminUserVO>
      */
-    Page<AdminUserDTO> page(AdminUserPageRequest pageRequest);
+    SimplePage<AdminUserDTO> page(AdminUserPageRequest pageRequest);
 
     /**
      * 列表查询
@@ -53,5 +55,7 @@ public interface AdminUserService{
      * @param ids ID
      */
     void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException;
+
+    AdminUserEO get(String id);
 
 }

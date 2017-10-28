@@ -1,6 +1,7 @@
 package com.ifox.platform.system.service.impl;
 
 import com.ifox.platform.system.dto.AdminUserDTO;
+import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.exception.NotFoundAdminUserException;
 import com.ifox.platform.system.exception.RepeatedAdminUserException;
 import com.ifox.platform.system.modelmapper.AdminUserEOMapDTO;
@@ -176,6 +177,11 @@ public class AdminUserServiceImpl extends GenericServiceImpl<AdminUserEO, String
                 deleteByEntity(adminUserEO);
             }
         }
+    }
+
+    @Override
+    public AdminUserEO get(String id) {
+        return null;
     }
 
     /**

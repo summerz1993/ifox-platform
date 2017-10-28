@@ -13,16 +13,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.NOT_FOUND_RESOURCE_EXP;
 
-@Repository
+@Service
+@Transactional(readOnly = true)
 public class ResourceServiceImpl implements ResourceService {
 
     @Resource

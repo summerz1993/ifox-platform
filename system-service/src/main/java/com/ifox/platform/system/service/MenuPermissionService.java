@@ -1,7 +1,7 @@
 package com.ifox.platform.system.service;
 
-import com.ifox.platform.system.dto.MenuPermissionDTO;
 import com.ifox.platform.system.entity.MenuPermissionEO;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
 
 import java.util.List;
 
@@ -14,26 +14,33 @@ public interface MenuPermissionService {
 
     /**
      * 查询所有菜单权限
-     * @return List<MenuPermissionDTO>
+     * @return List<MenuPermissionEO>
      */
-    List<MenuPermissionDTO> listAllDTO();
+    List<MenuPermissionEO> listAll();
 
     /**
      * 删除菜单权限和角色的关联关系
-     * @param menuId
+     * @param menuId menuId
      */
     void deleteMenuRoleRelation(String menuId);
 
     /**
      * 查询所有子菜单
-     * @param id
-     * @return
+     * @param parentId parentId
+     * @return List<MenuPermissionEO>
      */
-    List<MenuPermissionEO> listChildMenu(String id);
+    List<MenuPermissionEO> listChildMenu(String parentId);
 
     /**
      * 删除MenuPermission以及对应的关联数据
-     * @param menuPermissionEO
+     * @param menuPermissionEO MenuPermissionEO
      */
     void delete(MenuPermissionEO menuPermissionEO);
+
+    MenuPermissionEO get(String id);
+
+    void save(MenuPermissionEO menuPermissionEO);
+
+    MenuPermissionEO update(MenuPermissionRequest request);
+
 }

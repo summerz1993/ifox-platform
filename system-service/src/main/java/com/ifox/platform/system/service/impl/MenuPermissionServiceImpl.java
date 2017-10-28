@@ -1,35 +1,22 @@
 package com.ifox.platform.system.service.impl;
 
-import com.ifox.platform.system.dto.MenuPermissionDTO;
+import com.ifox.platform.system.dao.MenuPermissionRepository;
+import com.ifox.platform.system.entity.MenuPermissionEO;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
 import com.ifox.platform.system.service.MenuPermissionService;
-import com.ifox.platform.baseservice.impl.GenericServiceImpl;
-import com.ifox.platform.common.bean.QueryProperty;
-import com.ifox.platform.common.enums.EnumDao;
-import com.ifox.platform.dao.sys.MenuPermissionDao;
-import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
-import org.modelmapper.TypeToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermissionEO, String> implements MenuPermissionService {
+@Transactional(readOnly = true)
+public class MenuPermissionServiceImpl implements MenuPermissionService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private MenuPermissionDao menuPermissionDao;
-
-    @Autowired
-    public void setGenericDao(MenuPermissionDao menuPermissionDao){
-        super.genericDao = menuPermissionDao;
-    }
+    @Resource
+    private MenuPermissionRepository menuPermissionRepository;
 
     /**
      * 获取菜单的最大层级
@@ -37,39 +24,36 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
      */
     @Override
     public Integer getBottomLevel() {
-        return menuPermissionDao.getBottomLevel();
+        return menuPermissionRepository.getBottomLevel();
     }
 
     /**
      * 查询所有菜单权限
-     * @return List<MenuPermissionDTO>
+     * @return List<MenuPermissionEO>
      */
     @Override
-    public List<MenuPermissionDTO> listAllDTO() {
-        List<MenuPermissionEO> menuPermissionEOS = listAll();
-        return ModelMapperUtil.get().map(menuPermissionEOS, new TypeToken<List<MenuPermissionDTO>>() {}.getType());
+    public List<MenuPermissionEO> listAll() {
+        return menuPermissionRepository.findAll();
     }
 
     /**
      * 删除菜单权限和角色的关联关系
-     * @param menuId
+     * @param menuId menuId
      */
     @Override
     @Transactional
     public void deleteMenuRoleRelation(String menuId) {
-        menuPermissionDao.deleteMenuRoleRelation(menuId);
+        menuPermissionRepository.deleteMenuRoleRelation(menuId);
     }
 
     /**
      * 查询所有子菜单
-     * @param id
-     * @return
+     * @param parentId
+     * @return List<MenuPermissionEO>
      */
     @Override
-    public List<MenuPermissionEO> listChildMenu(String id) {
-        List<QueryProperty> queryProperties = new ArrayList<>();
-        queryProperties.add(new QueryProperty("parentId", EnumDao.Operation.EQUAL, id));
-        return listByQueryProperty(queryProperties);
+    public List<MenuPermissionEO> listChildMenu(String parentId) {
+        return menuPermissionRepository.findAllByParentIdEquals(parentId);
     }
 
     /**
@@ -79,7 +63,25 @@ public class MenuPermissionServiceImpl extends GenericServiceImpl<MenuPermission
     @Override
     @Transactional
     public void delete(MenuPermissionEO menuPermissionEO) {
-        menuPermissionDao.deleteMenuRoleRelation(menuPermissionEO.getId());
-        super.deleteByEntity(menuPermissionEO);
+        deleteMenuRoleRelation(menuPermissionEO.getId());
+        menuPermissionRepository.delete(menuPermissionEO);
+    }
+
+    @Override
+    public MenuPermissionEO get(String id) {
+        return menuPermissionRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public void save(MenuPermissionEO menuPermissionEO) {
+        menuPermissionRepository.save(menuPermissionEO);
+    }
+
+    @Override
+    public MenuPermissionEO update(MenuPermissionRequest request) {
+        MenuPermissionEO menuPermissionEO = menuPermissionRepository.findOne(request.getId());
+        ModelMapperUtil.get().map(request, menuPermissionEO);
+        return menuPermissionEO;
     }
 }

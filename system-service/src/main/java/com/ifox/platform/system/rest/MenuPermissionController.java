@@ -1,19 +1,19 @@
 package com.ifox.platform.system.rest;
 
+import com.ifox.platform.common.rest.BaseController;
+import com.ifox.platform.common.rest.response.BaseResponse;
+import com.ifox.platform.common.rest.response.MultiResponse;
+import com.ifox.platform.common.rest.response.OneResponse;
 import com.ifox.platform.system.dto.MenuPermissionDTO;
+import com.ifox.platform.system.entity.AdminUserEO;
+import com.ifox.platform.system.entity.MenuPermissionEO;
+import com.ifox.platform.system.entity.ResourceEO;
 import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
 import com.ifox.platform.system.response.MenuPermissionVO;
 import com.ifox.platform.system.response.MenuVO;
 import com.ifox.platform.system.service.AdminUserService;
 import com.ifox.platform.system.service.MenuPermissionService;
 import com.ifox.platform.system.service.ResourceService;
-import com.ifox.platform.common.rest.BaseController;
-import com.ifox.platform.common.rest.response.BaseResponse;
-import com.ifox.platform.common.rest.response.MultiResponse;
-import com.ifox.platform.common.rest.response.OneResponse;
-import com.ifox.platform.entity.common.ResourceEO;
-import com.ifox.platform.entity.sys.AdminUserEO;
-import com.ifox.platform.entity.sys.MenuPermissionEO;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
@@ -62,7 +62,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("获取树形目录菜单 uuid:{}", uuid);
 
-        List<MenuPermissionDTO> allMPDTOList = menuPermissionService.listAllDTO();
+        List<MenuPermissionEO> menuPermissionEOList = menuPermissionService.listAll();
+
+//        List<MenuPermissionDTO> allMPDTOList = menuPermissionService.listAllDTO();
         List<MenuVO> menuVOList = new ArrayList<>();
         int topLevel = 1;
         int bottomLevel = menuPermissionService.getBottomLevel();
@@ -71,9 +73,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             int level = i;
             //临时变量
             List<MenuVO> newMenuVOList = new ArrayList<>();
-            List<MenuPermissionDTO> currentLevelMPDTOList = allMPDTOList.stream().filter(dto -> dto.getLevel() == level).collect(Collectors.toList());
-            if (!CollectionUtils.isEmpty(currentLevelMPDTOList))
-                newMenuVOList.addAll(MenuPermissionDTO.convertToVO(currentLevelMPDTOList));
+            List<MenuPermissionEO> currentLevelMPEOList = menuPermissionEOList.stream().filter(dto -> dto.getLevel() == level).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(currentLevelMPEOList))
+                newMenuVOList.addAll(MenuPermissionDTO.convertToVO(currentLevelMPEOList));
             for (MenuVO menuVO : newMenuVOList) {
                 //设置children来源于menuVOList
                 List<MenuVO> childrenList = menuVOList.stream().filter(vo -> menuVO.getId().equals(vo.getParentId())).collect(Collectors.toList());
@@ -198,12 +200,8 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         String uuid = UUIDUtil.randomUUID();
         logger.info("修改菜单权限 request:{}, uuid:{}", request.toString(), uuid);
 
-        MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
-        ModelMapperUtil.get().map(request, menuPermissionEO);
-
-        menuPermissionService.update(menuPermissionEO);
-        MenuPermissionVO menuPermissionVO = new MenuPermissionVO();
-        ModelMapperUtil.get().map(menuPermissionEO, menuPermissionVO);
+        MenuPermissionEO menuPermissionEO = menuPermissionService.update(request);
+        MenuPermissionVO menuPermissionVO = ModelMapperUtil.get().map(menuPermissionEO, MenuPermissionVO.class);
 
         logger.info(successUpdate + " uuid:{}", uuid);
         return new OneResponse(SUCCESS, successSave, menuPermissionVO);
