@@ -1,5 +1,6 @@
 package com.ifox.platform.system.interceptor;
 
+import com.ifox.platform.common.http.OptionsRequestHandler;
 import com.ifox.platform.system.entity.MenuPermissionEO;
 import com.ifox.platform.system.entity.ResourceEO;
 import com.ifox.platform.system.service.MenuPermissionService;
@@ -49,15 +50,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         logger.info("认证拦截器 AuthenticationInterceptor --> preHandle, IP:{}, URL:{}", request.getRemoteHost(), requestURI);
 
         //预检请求(用于处理跨域访问的复杂请求)
-        String method = request.getMethod();
-        if ("OPTIONS".equals(method)) {
-            response.setStatus(SUCCESS);
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,PUT,OPTIONS");
-            response.setHeader("Access-Control-Allow-Headers", "api-version, Authorization, Content-Type");
+        boolean success = OptionsRequestHandler.handleOptions(request, response);
+        if (success) {
             logger.info("OPTIONS预检请求通过");
             return false;
         }
+
 if (true) return true;
         //例子:/role/get/8ab2a8c55df468ed015df47e818a0002
         String[] splitURI = requestURI.split("/");

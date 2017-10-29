@@ -1,6 +1,6 @@
 package com.ifox.platform.file.config;
 
-import com.ifox.platform.file.interceptor.AuthenticationInterceptor;
+import com.ifox.platform.file.interceptor.OptionsRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
@@ -43,8 +43,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationInterceptor authenticationInterceptor(){
-        return new AuthenticationInterceptor();
+    public OptionsRequestInterceptor authenticationInterceptor(){
+        return new OptionsRequestInterceptor();
     }
 
     /**
@@ -55,7 +55,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
             .addPathPatterns("/**")
-            .excludePathPatterns("/adminUser/login", "/adminUser/verifyToken/**", "/error", "/swagger-resources/**", "/file/get");
+            .excludePathPatterns("/error", "/swagger-resources/**", "/file/get");
         super.addInterceptors(registry);
     }
 }
