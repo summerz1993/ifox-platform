@@ -5,3 +5,5 @@ include 'ifox-utility'
 include 'system-service'
 include 'email-service'
 include 'file-service'
+include 'ifox-jpa'
+

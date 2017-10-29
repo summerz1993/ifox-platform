@@ -58,7 +58,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             logger.info("OPTIONS预检请求通过");
             return false;
         }
-//if (true) return true;
+if (true) return true;
         //例子:/role/get/8ab2a8c55df468ed015df47e818a0002
         String[] splitURI = requestURI.split("/");
         String controller = splitURI[1];

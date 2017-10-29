@@ -2,6 +2,8 @@ package com.ifox.platform.system.service.impl;
 
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
+import com.ifox.platform.jpa.converter.PageRequestConverter;
+import com.ifox.platform.jpa.converter.SpringDataPageConverter;
 import com.ifox.platform.system.dao.RoleRepository;
 import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundRoleException;
@@ -37,10 +39,9 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public SimplePage<RoleEO> page(RolePageRequest pageRequest) {
-        Pageable pageable = com.ifox.platform.common.rest.request.PageRequest.convertToSpringDataPageable(pageRequest);
+        Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
         Page<RoleEO> page = roleRepository.findAllByNameLikeAndStatusEquals(pageRequest.getName(), pageRequest.getStatus(), pageable);
-
-        return new SimplePage<RoleEO>().initWithSpringDataPage(page);
+        return new SpringDataPageConverter<RoleEO>().convertToSimplePage(page);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.ifox.platform.common.entity;
+package com.ifox.platform.jpa.entity;
 
 
 import org.hibernate.annotations.GenericGenerator;

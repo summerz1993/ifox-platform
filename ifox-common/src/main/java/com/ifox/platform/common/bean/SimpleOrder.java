@@ -2,9 +2,6 @@ package com.ifox.platform.common.bean;
 
 
 import com.ifox.platform.common.enums.EnumDao;
-import org.springframework.data.domain.Sort;
-
-import java.util.List;
 
 /**
  * @author Yeager
@@ -49,23 +46,6 @@ public class SimpleOrder {
 
     public void setOrderMode(EnumDao.OrderMode orderMode) {
         this.orderMode = orderMode;
-    }
-
-    /**
-     * 转换自定义的SimpleOrder为spring data的Sort
-     * @param simpleOrderList 自定义的SimpleOrder
-     * @return Sort
-     */
-    public static Sort convertToSort(List<SimpleOrder> simpleOrderList) {
-        Sort sort = null;
-        for (SimpleOrder simpleOrder : simpleOrderList) {
-            if (sort == null) {
-                sort = new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty());
-            } else {
-                sort.and(new Sort(simpleOrder.getOrderMode() == EnumDao.OrderMode.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, simpleOrder.getProperty()));
-            }
-        }
-        return sort;
     }
 
     @Override

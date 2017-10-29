@@ -3,6 +3,8 @@ package com.ifox.platform.system.service.impl;
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.common.rest.request.PageRequest;
+import com.ifox.platform.jpa.converter.PageRequestConverter;
+import com.ifox.platform.jpa.converter.SpringDataPageConverter;
 import com.ifox.platform.system.dao.AdminUserRepository;
 import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.entity.RoleEO;
@@ -119,9 +121,9 @@ public class AdminUserServiceImpl implements AdminUserService{
      */
     @Override
     public SimplePage<AdminUserEO> page(AdminUserPageRequest pageRequest) {
-        Pageable pageable = PageRequest.convertToSpringDataPageable(pageRequest);
+        Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
         Page<AdminUserEO> page = adminUserRepository.findAllByLoginNameLikeAndStatusEqualsAndBuildinSystemEquals(pageRequest.getLoginName(), pageRequest.getStatus(), pageRequest.getBuildinSystem(), pageable);
-        return new SimplePage<AdminUserEO>().initWithSpringDataPage(page);
+        return new SpringDataPageConverter<AdminUserEO>().convertToSimplePage(page);
     }
 
     /**

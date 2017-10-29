@@ -11,11 +11,9 @@ repositories {
 }
 
 dependencies {
+    compile project(":ifox-common")
 
-//    compile project(':ifox-common')
-
-    // test
-    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

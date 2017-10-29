@@ -78,12 +78,14 @@ public class AdminUserController extends BaseController<AdminUserVO> {
         adminUserEO.setPassword(PasswordUtil.encryptPassword(adminUserSaveRequest.getPassword(), salt));
 
         String[] checkedRoleArray = adminUserSaveRequest.getCheckedRole();
-        List<RoleEO> roleEOList = new ArrayList<>();
-        for (String roleId : checkedRoleArray) {
-            RoleEO roleEO = roleService.get(roleId);
-            roleEOList.add(roleEO);
+        if (checkedRoleArray != null && checkedRoleArray.length > 0) {
+            List<RoleEO> roleEOList = new ArrayList<>();
+            for (String roleId : checkedRoleArray) {
+                RoleEO roleEO = roleService.get(roleId);
+                roleEOList.add(roleEO);
+            }
+            adminUserEO.setRoleEOList(roleEOList);
         }
-        adminUserEO.setRoleEOList(roleEOList);
 
         adminUserService.save(adminUserEO);
 

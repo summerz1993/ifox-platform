@@ -2,6 +2,8 @@ package com.ifox.platform.system.service.impl;
 
 import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.common.rest.request.PageRequest;
+import com.ifox.platform.jpa.converter.PageRequestConverter;
+import com.ifox.platform.jpa.converter.SpringDataPageConverter;
 import com.ifox.platform.system.dao.ResourceRepository;
 import com.ifox.platform.system.entity.ResourceEO;
 import com.ifox.platform.system.exception.NotFoundResourceException;
@@ -30,9 +32,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public SimplePage<ResourceEO> page(ResourcePageRequest pageRequest) {
-        Pageable pageable = PageRequest.convertToSpringDataPageable(pageRequest);
+        Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
         Page<ResourceEO> page = resourceRepository.findAllByNameLikeAndTypeEquals(pageRequest.getName(), pageRequest.getType(), pageable);
-        return new SimplePage<ResourceEO>().initWithSpringDataPage(page);
+        return new SpringDataPageConverter<ResourceEO>().convertToSimplePage(page);
     }
 
     @Override

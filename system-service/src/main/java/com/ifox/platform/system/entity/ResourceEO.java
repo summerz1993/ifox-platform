@@ -1,7 +1,7 @@
 package com.ifox.platform.system.entity;
 
 
-import com.ifox.platform.common.entity.BaseEntity;
+import com.ifox.platform.jpa.entity.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;

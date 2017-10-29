@@ -1,4 +1,4 @@
-package com.ifox.platform.utility.converter;
+package com.ifox.platform.common.converter;
 
 
 import com.ifox.platform.common.enums.EnumDao;
