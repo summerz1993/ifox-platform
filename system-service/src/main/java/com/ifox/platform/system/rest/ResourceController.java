@@ -14,9 +14,11 @@ import com.ifox.platform.system.service.ResourceService;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,7 +39,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiOperation("添加资源")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody
-    BaseResponse save(@ApiParam @RequestBody ResourceSaveRequest resourceSaveRequest){
+    BaseResponse save(@ApiParam @RequestBody @Validated ResourceSaveRequest resourceSaveRequest){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存资源 resourceSaveRequest:{}, uuid:{}", resourceSaveRequest.toString(), uuid);
 
@@ -53,7 +55,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiResponses({@ApiResponse(code = 400, message = "无效请求：ids为空"),
         @ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
-    BaseResponse delete(@ApiParam @RequestBody String[] ids, HttpServletResponse response){
+    BaseResponse delete(@ApiParam @RequestBody @NotBlank String[] ids, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除资源 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
@@ -78,7 +80,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
     @SuppressWarnings("unchecked")
     public @ResponseBody
-    OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") String id, HttpServletResponse response){
+    OneResponse<ResourceVO> get(@ApiParam @PathVariable(name = "resourceId") @NotBlank String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("查询单个指定资源 id:{}, uuid:{}", id, uuid);
 
@@ -98,7 +100,7 @@ public class ResourceController extends BaseController<ResourceVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({@ApiResponse(code = 404, message = "资源不存在")})
     public @ResponseBody
-    BaseResponse update(@ApiParam @RequestBody ResourceUpdateRequest resourceUpdateRequest, HttpServletResponse response){
+    BaseResponse update(@ApiParam @RequestBody @Validated ResourceUpdateRequest resourceUpdateRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新资源 resourceUpdateRequest:{}, uuid:{}", resourceUpdateRequest, uuid);
 

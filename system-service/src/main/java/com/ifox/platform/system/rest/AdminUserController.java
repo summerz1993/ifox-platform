@@ -20,12 +20,14 @@ import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +58,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 701, message = "登录名已经存在")})
-    public @ResponseBody BaseResponse save(@ApiParam @RequestBody AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
+    public @ResponseBody BaseResponse save(@ApiParam @RequestBody @Validated AdminUserSaveRequest adminUserSaveRequest, @RequestHeader("Authorization") String token){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存用户信息 adminUserSaveRequest:{}, uuid:{}", adminUserSaveRequest, uuid);
 
@@ -131,7 +133,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 701, message = "登录名已经存在")})
-    public @ResponseBody BaseResponse update(@ApiParam @RequestBody AdminUserUpdateRequest updateRequest, HttpServletResponse response){
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody @Validated AdminUserUpdateRequest updateRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest.toString(), uuid);
 
@@ -161,7 +163,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "此用户不存在") })
     @SuppressWarnings("unchecked")
-    public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") String userId, HttpServletResponse response){
+    public @ResponseBody OneResponse<AdminUserVO> get(@ApiParam @PathVariable(name = "userId") @NotBlank String userId, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("单个用户信息查询 userId:{}, uuid:{}", userId, uuid);
 
@@ -214,7 +216,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @ApiOperation("获取用户角色列表接口")
     @RequestMapping(value = "/{userId}/role", method = RequestMethod.GET)
     @ResponseBody
-    public MultiResponse<RoleVO> roleList(@ApiParam @PathVariable(name = "userId") String userId, HttpServletResponse response) {
+    public MultiResponse<RoleVO> listRole(@ApiParam @PathVariable(name = "userId") @NotBlank String userId, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("获取用户角色列表 userId:{}, uuid:{}", userId, uuid);
 
@@ -235,7 +237,7 @@ public class AdminUserController extends BaseController<AdminUserVO> {
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 461, message = "原密码错误"),
                     @ApiResponse(code = 462, message = "新密码不一致")})
-    public @ResponseBody BaseResponse changePassword(@ApiParam @RequestBody AdminUserChangePwdRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response) {
+    public @ResponseBody BaseResponse changePassword(@ApiParam @RequestBody @Validated AdminUserChangePwdRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("修改密码 request:{}, uuid:{}", request, uuid);
 

@@ -1,13 +1,17 @@
 package com.ifox.platform.system.request.adminuser;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 登录请求
  * @author Yeager
  */
 public class AdminUserLoginRequest {
 
+    @NotBlank
     private String loginName;
 
+    @NotBlank
     private String password;
 
     public String getLoginName() {

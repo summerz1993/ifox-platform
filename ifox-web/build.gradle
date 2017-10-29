@@ -15,6 +15,7 @@ dependencies {
     compile "net.sourceforge.nekohtml:nekohtml:1.9.21"
 
     compile project(":ifox-utility")
+    compile project(":ifox-common")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

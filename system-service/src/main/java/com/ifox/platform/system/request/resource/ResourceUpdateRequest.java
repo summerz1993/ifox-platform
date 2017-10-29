@@ -1,22 +1,10 @@
 package com.ifox.platform.system.request.resource;
 
-import com.ifox.platform.system.dto.base.ResourceBaseColumns;
+import com.ifox.platform.system.dto.ResourceDTO;
 
-public class ResourceUpdateRequest extends ResourceBaseColumns {
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+public class ResourceUpdateRequest extends ResourceDTO {
     @Override
     public String toString() {
-        return "ResourceUpdateRequest{" +
-            "id='" + id + '\'' +
-            "} " + super.toString();
+        return "ResourceUpdateRequest{} " + super.toString();
     }
 }

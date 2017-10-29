@@ -1,6 +1,7 @@
 package com.ifox.platform.common.rest.request;
 
 import com.ifox.platform.common.bean.SimpleOrder;
+import com.ifox.platform.common.enums.EnumDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +14,12 @@ public class PageRequest {
     /**
      * 当页数量
      */
-    private int pageSize;
+    private int pageSize = 10;
 
     /**
      * 页码
      */
-    private int pageNo;
+    private int pageNo = 1;
 
     /**
      * 排序条件
@@ -47,6 +48,13 @@ public class PageRequest {
 
     public void setSimpleOrderList(List<SimpleOrder> simpleOrderList) {
         this.simpleOrderList = simpleOrderList;
+    }
+
+    public PageRequest() {
+        if (simpleOrderList.size() == 0) {
+            //添加默认的排序: create_date倒叙
+            simpleOrderList.add(new SimpleOrder("createDate", EnumDao.OrderMode.DESC));
+        }
     }
 
     @Override

@@ -1,22 +1,10 @@
 package com.ifox.platform.system.request.role;
 
-import com.ifox.platform.system.dto.base.RoleBaseColumns;
+import com.ifox.platform.system.dto.RoleDTO;
 
-public class RoleUpdateRequest extends RoleBaseColumns {
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+public class RoleUpdateRequest extends RoleDTO {
     @Override
     public String toString() {
-        return "RoleUpdateRequest{" +
-            "id='" + id + '\'' +
-            "} " + super.toString();
+        return "RoleUpdateRequest{} " + super.toString();
     }
 }

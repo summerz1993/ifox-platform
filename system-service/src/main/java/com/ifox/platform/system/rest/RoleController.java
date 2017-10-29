@@ -12,17 +12,20 @@ import com.ifox.platform.system.request.role.RoleQueryRequest;
 import com.ifox.platform.system.request.role.RoleSaveRequest;
 import com.ifox.platform.system.request.role.RoleUpdateRequest;
 import com.ifox.platform.system.response.RoleVO;
+import com.ifox.platform.system.service.MenuPermissionService;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +38,16 @@ public class RoleController extends BaseController<RoleVO> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private RoleService roleService;
+
+    @Resource
+    private MenuPermissionService menuPermissionService;
 
     @ApiOperation("保存角色信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 709, message = "角色标识符已经存在") })
-    public @ResponseBody BaseResponse save(@ApiParam @RequestBody RoleSaveRequest saveRequest, HttpServletResponse response){
+    public @ResponseBody BaseResponse save(@ApiParam @RequestBody @Validated RoleSaveRequest saveRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("保存角色信息 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
@@ -53,7 +59,14 @@ public class RoleController extends BaseController<RoleVO> {
         }
 
         RoleEO roleEO = ModelMapperUtil.get().map(saveRequest, RoleEO.class);
-        roleEO.setMenuPermissionEOList(saveRequest.getMenuPermissionEOList());
+
+        List<String> menuPermissionIdList = saveRequest.getMenuPermissions();
+        List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
+        for (String menuPermissionId : menuPermissionIdList) {
+            MenuPermissionEO menuPermissionEO = menuPermissionService.get(menuPermissionId);
+            menuPermissionEOList.add(menuPermissionEO);
+        }
+        roleEO.setMenuPermissionEOList(menuPermissionEOList);
 
         roleService.save(roleEO);
 
@@ -65,7 +78,7 @@ public class RoleController extends BaseController<RoleVO> {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
         @ApiResponse(code = 400, message = "无效请求：ids为空")})
-    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody String[] ids, HttpServletResponse response) {
+    public @ResponseBody BaseResponse delete(@ApiParam @RequestBody @NotBlank String[] ids, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除角色信息 ids:{}, uuid:{}", Arrays.toString(ids), uuid);
 
@@ -92,7 +105,7 @@ public class RoleController extends BaseController<RoleVO> {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在"),
         @ApiResponse(code = 709, message = "角色标识符已经存在")})
-    public @ResponseBody BaseResponse update(@ApiParam @RequestBody RoleUpdateRequest updateRequest, HttpServletResponse response) {
+    public @ResponseBody BaseResponse update(@ApiParam @RequestBody @Validated RoleUpdateRequest updateRequest, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("更新用户信息 updateRequest:{}, uuid:{}", updateRequest, uuid);
 
@@ -121,7 +134,7 @@ public class RoleController extends BaseController<RoleVO> {
     @ApiOperation("查询单个角色信息")
     @RequestMapping(value = "/get/{roleId}", method = RequestMethod.GET)
     @ApiResponses({ @ApiResponse(code = 404, message = "角色不存在") })
-    public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") String roleId, HttpServletResponse response) {
+    public @ResponseBody OneResponse get(@ApiParam @PathVariable(name = "roleId") @NotBlank String roleId, HttpServletResponse response) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("查询单个角色信息 roleId:{}, uuid:{}", roleId, uuid);
 

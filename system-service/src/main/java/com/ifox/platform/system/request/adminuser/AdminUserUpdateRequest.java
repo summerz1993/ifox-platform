@@ -1,25 +1,15 @@
 package com.ifox.platform.system.request.adminuser;
 
-import com.ifox.platform.system.dto.base.AdminUserBaseColumns;
+import com.ifox.platform.system.dto.AdminUserDTO;
 
 import java.util.Arrays;
 
-public class AdminUserUpdateRequest extends AdminUserBaseColumns {
-
-    private String id;
+public class AdminUserUpdateRequest extends AdminUserDTO {
 
     /**
      * 选中的角色
      */
     private String[] checkedRole;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String[] getCheckedRole() {
         return checkedRole;
@@ -32,8 +22,7 @@ public class AdminUserUpdateRequest extends AdminUserBaseColumns {
     @Override
     public String toString() {
         return "AdminUserUpdateRequest{" +
-            "id='" + id + '\'' +
-            ", checkedRole=" + Arrays.toString(checkedRole) +
+            "checkedRole=" + Arrays.toString(checkedRole) +
             "} " + super.toString();
     }
 }

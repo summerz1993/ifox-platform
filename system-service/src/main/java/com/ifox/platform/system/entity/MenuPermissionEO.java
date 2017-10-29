@@ -60,7 +60,7 @@ public class MenuPermissionEO extends BaseEntity {
     /**
      * 父菜单
      */
-    @Column(name = "parent_id")
+    @Column
     private String parentId;
 
     /**

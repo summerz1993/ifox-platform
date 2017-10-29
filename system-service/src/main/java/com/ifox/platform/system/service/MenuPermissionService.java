@@ -1,7 +1,7 @@
 package com.ifox.platform.system.service;
 
 import com.ifox.platform.system.entity.MenuPermissionEO;
-import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionUpdateRequest;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public interface MenuPermissionService {
 
     void save(MenuPermissionEO menuPermissionEO);
 
-    MenuPermissionEO update(MenuPermissionRequest request);
+    MenuPermissionEO update(MenuPermissionUpdateRequest updateRequest);
 
     MenuPermissionEO getByURL(String url);
 

@@ -5,11 +5,13 @@ import com.ifox.platform.common.page.SimplePage;
 import com.ifox.platform.jpa.converter.PageRequestConverter;
 import com.ifox.platform.jpa.converter.SpringDataPageConverter;
 import com.ifox.platform.system.dao.RoleRepository;
+import com.ifox.platform.system.entity.MenuPermissionEO;
 import com.ifox.platform.system.entity.RoleEO;
 import com.ifox.platform.system.exception.NotFoundRoleException;
 import com.ifox.platform.system.request.role.RolePageRequest;
 import com.ifox.platform.system.request.role.RoleQueryRequest;
 import com.ifox.platform.system.request.role.RoleUpdateRequest;
+import com.ifox.platform.system.service.MenuPermissionService;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ifox.platform.common.constant.ExceptionStatusConstant.BUILDIN_SYSTEM_EXP;
@@ -31,6 +34,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Resource
     private RoleRepository roleRepository;
+
+    @Resource
+    private MenuPermissionService menuPermissionService;
 
     /**
      * 分页查询角色
@@ -119,7 +125,14 @@ public class RoleServiceImpl implements RoleService {
     public void update(RoleUpdateRequest updateRequest) {
         RoleEO roleEO = roleRepository.getOne(updateRequest.getId());
         ModelMapperUtil.get().map(updateRequest, roleEO);
-        roleEO.setMenuPermissionEOList(updateRequest.getMenuPermissionEOList());
+
+        List<String> menuPermissionIdList = updateRequest.getMenuPermissions();
+        List<MenuPermissionEO> menuPermissionEOList = new ArrayList<>();
+        for (String menuPermissionId : menuPermissionIdList) {
+            MenuPermissionEO menuPermissionEO = menuPermissionService.get(menuPermissionId);
+            menuPermissionEOList.add(menuPermissionEO);
+        }
+        roleEO.setMenuPermissionEOList(menuPermissionEOList);
     }
 
     /**

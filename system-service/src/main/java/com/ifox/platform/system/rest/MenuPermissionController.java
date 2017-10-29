@@ -8,7 +8,8 @@ import com.ifox.platform.system.dto.MenuPermissionDTO;
 import com.ifox.platform.system.entity.AdminUserEO;
 import com.ifox.platform.system.entity.MenuPermissionEO;
 import com.ifox.platform.system.entity.ResourceEO;
-import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionSaveRequest;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionUpdateRequest;
 import com.ifox.platform.system.response.MenuPermissionVO;
 import com.ifox.platform.system.response.MenuVO;
 import com.ifox.platform.system.service.AdminUserService;
@@ -19,6 +20,7 @@ import com.ifox.platform.utility.jwt.JWTUtil;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import com.jsoniter.JsonIterator;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -75,7 +78,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
             List<MenuVO> newMenuVOList = new ArrayList<>();
             List<MenuPermissionEO> currentLevelMPEOList = menuPermissionEOList.stream().filter(dto -> dto.getLevel() == level).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(currentLevelMPEOList))
-                newMenuVOList.addAll(MenuPermissionDTO.convertToVO(currentLevelMPEOList));
+                newMenuVOList.addAll(MenuPermissionDTO.convertEOToVO(currentLevelMPEOList));
             for (MenuVO menuVO : newMenuVOList) {
                 //设置children来源于menuVOList
                 List<MenuVO> childrenList = menuVOList.stream().filter(vo -> menuVO.getId().equals(vo.getParentId())).collect(Collectors.toList());
@@ -95,9 +98,9 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     @ApiResponses({@ApiResponse(code = 404, message = "菜单权限不存在")})
     public @ResponseBody
-    OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable String id, HttpServletResponse response){
+    OneResponse<MenuPermissionVO> get(@ApiParam @PathVariable @NotBlank String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("查询菜单权限 id:{},uuid:{}", id, uuid);
+        logger.info("查询菜单权限 id:{}, uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
         if (menuPermissionEO == null){
             logger.info("此菜单权限不存在 uuid:{}", uuid);
@@ -128,12 +131,12 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         @ApiResponse(code = 708, message = "父菜单权限不存在")
     })
     public @ResponseBody
-    OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody MenuPermissionRequest request, @RequestHeader("Authorization") String token, HttpServletResponse response){
+    OneResponse<MenuPermissionVO> save(@ApiParam @RequestBody @Validated MenuPermissionSaveRequest saveRequest, @RequestHeader("Authorization") String token, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("保存菜单权限 request:{}, uuid:{}", request.toString(), uuid);
+        logger.info("保存菜单权限 saveRequest:{}, uuid:{}", saveRequest.toString(), uuid);
 
         MenuPermissionEO menuPermissionEO = new MenuPermissionEO();
-        ModelMapperUtil.get().map(request, menuPermissionEO);
+        ModelMapperUtil.get().map(saveRequest, menuPermissionEO);
 
         String payload = JWTUtil.getPayloadStringByToken(token);
         String userId = JsonIterator.deserialize(payload).get("userId").toString();
@@ -163,7 +166,7 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
         @ApiResponse(code = 706, message = "菜单包含子菜单，请先删除子菜单")
     })
     public @ResponseBody
-    BaseResponse delete(@ApiParam @PathVariable String id, HttpServletResponse response){
+    BaseResponse delete(@ApiParam @PathVariable @NotBlank String id, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("删除菜单权限 id:{}, uuid:{}", id, uuid);
         MenuPermissionEO menuPermissionEO = menuPermissionService.get(id);
@@ -196,11 +199,11 @@ public class MenuPermissionController extends BaseController<MenuPermissionVO> {
     @ApiOperation("修改菜单权限")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody
-    OneResponse<MenuPermissionVO> update(@ApiParam @RequestBody MenuPermissionRequest request){
+    OneResponse<MenuPermissionVO> update(@ApiParam @RequestBody @Validated MenuPermissionUpdateRequest updateRequest){
         String uuid = UUIDUtil.randomUUID();
-        logger.info("修改菜单权限 request:{}, uuid:{}", request.toString(), uuid);
+        logger.info("修改菜单权限 updateRequest:{}, uuid:{}", updateRequest.toString(), uuid);
 
-        MenuPermissionEO menuPermissionEO = menuPermissionService.update(request);
+        MenuPermissionEO menuPermissionEO = menuPermissionService.update(updateRequest);
         MenuPermissionVO menuPermissionVO = ModelMapperUtil.get().map(menuPermissionEO, MenuPermissionVO.class);
 
         logger.info(successUpdate + " uuid:{}", uuid);

@@ -1,17 +1,20 @@
-package com.ifox.platform.system.dto.base;
-
+package com.ifox.platform.system.request.menuPermission;
 
 import com.ifox.platform.system.entity.MenuPermissionEO;
+import org.hibernate.validator.constraints.NotBlank;
 
-public class MenuPermissionBaseColumns {
+public class MenuPermissionSaveRequest {
+
     /**
      * 名称
      */
+    @NotBlank
     private String name;
 
     /**
      * 链接, 例子: /adminUser/save
      */
+    @NotBlank
     private String url;
 
     /**
@@ -27,21 +30,25 @@ public class MenuPermissionBaseColumns {
     /**
      * 是否为按钮(不在左侧菜单中显示)
      */
+    @NotBlank
     private Boolean button;
 
     /**
      * 父菜单
      */
+    @NotBlank
     private String parentId;
 
     /**
      * 状态
      */
+    @NotBlank
     private MenuPermissionEO.MenuEOStatus status;
 
     /**
      * 是否内置菜单(不可删除)
      */
+    @NotBlank
     private Boolean buildinSystem = false;
 
     /**
@@ -52,6 +59,7 @@ public class MenuPermissionBaseColumns {
     /**
      * 所属资源
      */
+    @NotBlank
     private String resource;
 
     public String getName() {
@@ -136,7 +144,7 @@ public class MenuPermissionBaseColumns {
 
     @Override
     public String toString() {
-        return "MenuPermissionColumns{" +
+        return "MenuPermissionSaveRequest{" +
             "name='" + name + '\'' +
             ", url='" + url + '\'' +
             ", remark='" + remark + '\'' +

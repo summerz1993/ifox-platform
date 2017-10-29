@@ -2,7 +2,7 @@ package com.ifox.platform.system.service.impl;
 
 import com.ifox.platform.system.dao.MenuPermissionRepository;
 import com.ifox.platform.system.entity.MenuPermissionEO;
-import com.ifox.platform.system.request.menuPermission.MenuPermissionRequest;
+import com.ifox.platform.system.request.menuPermission.MenuPermissionUpdateRequest;
 import com.ifox.platform.system.service.MenuPermissionService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import org.springframework.stereotype.Service;
@@ -79,9 +79,9 @@ public class MenuPermissionServiceImpl implements MenuPermissionService {
     }
 
     @Override
-    public MenuPermissionEO update(MenuPermissionRequest request) {
-        MenuPermissionEO menuPermissionEO = menuPermissionRepository.findOne(request.getId());
-        ModelMapperUtil.get().map(request, menuPermissionEO);
+    public MenuPermissionEO update(MenuPermissionUpdateRequest updateRequest) {
+        MenuPermissionEO menuPermissionEO = menuPermissionRepository.findOne(updateRequest.getId());
+        ModelMapperUtil.get().map(updateRequest, menuPermissionEO);
         return menuPermissionEO;
     }
 

@@ -1,11 +1,20 @@
 package com.ifox.platform.system.request.adminuser;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Size;
+
 public class AdminUserChangePwdRequest {
 
+    @NotBlank
     private String originalPassword;
 
+    @NotBlank
+    @Size(min = 8)
     private String newPassword;
 
+    @NotBlank
+    @Size(min = 8)
     private String confirmPassword;
 
     public String getOriginalPassword() {

@@ -13,11 +13,13 @@ import com.ifox.platform.utility.common.UUIDUtil;
 import com.ifox.platform.utility.jwt.JWTHeader;
 import com.ifox.platform.utility.jwt.JWTUtil;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,7 +49,7 @@ public class LoginController extends BaseController {
     @ApiResponses({ @ApiResponse(code = 404, message = "用户不存在"),
                     @ApiResponse(code = 460, message = "用户名或者密码错误"),
                     @ApiResponse(code = 702, message = "用户状态无效")})
-    public @ResponseBody TokenResponse login(@ApiParam @RequestBody AdminUserLoginRequest adminUserLoginRequest, HttpServletResponse response){
+    public @ResponseBody TokenResponse login(@ApiParam @RequestBody @Validated AdminUserLoginRequest adminUserLoginRequest, HttpServletResponse response){
         String uuid = UUIDUtil.randomUUID();
         logger.info("用户登陆 adminUserLoginRequest:{}, uuid:{}", adminUserLoginRequest, uuid);
         Boolean validAdminUser;
@@ -101,7 +103,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/verifyToken", method = RequestMethod.POST)
     @ApiResponses({ @ApiResponse(code = 200, message = "Token校验成功"),
                     @ApiResponse(code = 700, message = "Token校验失败")})
-    public @ResponseBody BaseResponse verifyToken(@ApiParam String token) {
+    public @ResponseBody BaseResponse verifyToken(@ApiParam @NotBlank String token) {
         String uuid = UUIDUtil.randomUUID();
         logger.info("校验 token:{}, uuid:", token, uuid);
         try {
