@@ -387,9 +387,9 @@ function responseHandler(res){
 		pageSize: ''
 	};
 	table_res.rows = res.data;
-	table_res.total = res.pageInfo.totalCount;
-	table_res.pageNo = res.pageInfo.pageNo;
-	table_res.pageSize = res.pageInfo.pageSize;
+	table_res.total = res.detail.totalCount;
+	table_res.pageNo = res.detail.pageNo;
+	table_res.pageSize = res.detail.pageSize;
 	
 	$.each(table_res.rows, function (i, row) {
 		row.state = $.inArray(row.id, selections) !== -1;

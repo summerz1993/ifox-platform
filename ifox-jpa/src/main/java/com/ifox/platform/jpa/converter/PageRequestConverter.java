@@ -11,7 +11,7 @@ public class PageRequestConverter {
      * @return Pageable
      */
     public static Pageable convertToSpringDataPageable(PageRequest pageRequest) {
-        return new org.springframework.data.domain.PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize(), SimpleOrderConverter.convertToSort(pageRequest.getSimpleOrderList()));
+        return new org.springframework.data.domain.PageRequest(pageRequest.getPageNo() - 1, pageRequest.getPageSize(), SimpleOrderConverter.convertToSort(pageRequest.getSimpleOrderList()));
     }
 
 }
