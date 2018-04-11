@@ -20,16 +20,13 @@ subprojects{
     }
 
     dependencies {
-        compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
-            exclude group: 'commons-logging', module: 'commons-logging'
-        }
+        compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
 
         compile("io.springfox:springfox-swagger2:$springfoxSwagger2Version")
         compile("io.springfox:springfox-swagger-ui:$springfoxSwaggerUIVersion")
 
-        compile('org.apache.commons:commons-lang3:3.5') {
-            exclude group: 'org.slf4j', module: 'slf4j-api' //by both name and group
-        }
+        compile('org.apache.commons:commons-lang3:3.5')
+
         // https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.io
         compile group: 'org.apache.directory.studio', name: 'org.apache.commons.io', version: '2.4'
 

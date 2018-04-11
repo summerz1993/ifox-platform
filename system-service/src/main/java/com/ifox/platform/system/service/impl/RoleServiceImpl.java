@@ -14,6 +14,7 @@ import com.ifox.platform.system.request.role.RoleUpdateRequest;
 import com.ifox.platform.system.service.MenuPermissionService;
 import com.ifox.platform.system.service.RoleService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -46,7 +47,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public SimplePage<RoleEO> page(RolePageRequest pageRequest) {
         Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
-        Page<RoleEO> page = roleRepository.findAllByNameLikeAndStatusEquals(pageRequest.getName(), pageRequest.getStatus(), pageable);
+        RoleEO roleEO = ModelMapperUtil.get().map(pageRequest, RoleEO.class);
+        Page<RoleEO> page = roleRepository.findAll(Example.of(roleEO), pageable);
         return new SpringDataPageConverter<RoleEO>().convertToSimplePage(page);
     }
 
@@ -91,7 +93,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public List<RoleEO> list(RoleQueryRequest queryRequest) {
-        return roleRepository.findByNameLikeAndStatusEquals(queryRequest.getName(), queryRequest.getStatus());
+        RoleEO roleEO = ModelMapperUtil.get().map(queryRequest, RoleEO.class);
+        return roleRepository.findAll(Example.of(roleEO));
     }
 
     /**

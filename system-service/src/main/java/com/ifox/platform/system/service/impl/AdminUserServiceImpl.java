@@ -2,7 +2,6 @@ package com.ifox.platform.system.service.impl;
 
 import com.ifox.platform.common.exception.BuildinSystemException;
 import com.ifox.platform.common.page.SimplePage;
-import com.ifox.platform.common.rest.request.PageRequest;
 import com.ifox.platform.jpa.converter.PageRequestConverter;
 import com.ifox.platform.jpa.converter.SpringDataPageConverter;
 import com.ifox.platform.system.dao.AdminUserRepository;
@@ -25,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -122,7 +122,8 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Override
     public SimplePage<AdminUserEO> page(AdminUserPageRequest pageRequest) {
         Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
-        Page<AdminUserEO> page = adminUserRepository.findAllByLoginNameLikeAndStatusEqualsAndBuildinSystemEquals(pageRequest.getLoginName(), pageRequest.getStatus(), pageRequest.getBuildinSystem(), pageable);
+        AdminUserEO adminUserEO = ModelMapperUtil.get().map(pageRequest, AdminUserEO.class);
+        Page<AdminUserEO> page = adminUserRepository.findAll(Example.of(adminUserEO), pageable);
         return new SpringDataPageConverter<AdminUserEO>().convertToSimplePage(page);
     }
 
@@ -133,7 +134,8 @@ public class AdminUserServiceImpl implements AdminUserService{
      */
     @Override
     public List<AdminUserEO> list(AdminUserQueryRequest queryRequest) {
-        return adminUserRepository.findAllByLoginNameLikeAndStatusEqualsAndBuildinSystemEquals(queryRequest.getLoginName(), queryRequest.getStatus(), queryRequest.getBuildinSystem());
+        AdminUserEO adminUserEO = ModelMapperUtil.get().map(queryRequest, AdminUserEO.class);
+        return adminUserRepository.findAll(Example.of(adminUserEO));
     }
 
     /**

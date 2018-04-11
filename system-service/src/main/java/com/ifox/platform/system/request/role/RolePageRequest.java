@@ -15,6 +15,11 @@ public class RolePageRequest extends PageRequest {
      */
     private RoleEO.RoleEOStatus status;
 
+    /**
+     * 是否内置
+     */
+    private Boolean buildinSystem;
+
     public String getName() {
         return name;
     }
@@ -31,11 +36,20 @@ public class RolePageRequest extends PageRequest {
         this.status = status;
     }
 
+    public Boolean getBuildinSystem() {
+        return buildinSystem;
+    }
+
+    public void setBuildinSystem(Boolean buildinSystem) {
+        this.buildinSystem = buildinSystem;
+    }
+
     @Override
     public String toString() {
         return "RolePageRequest{" +
             "name='" + name + '\'' +
             ", status=" + status +
+            ", buildinSystem=" + buildinSystem +
             "} " + super.toString();
     }
 }

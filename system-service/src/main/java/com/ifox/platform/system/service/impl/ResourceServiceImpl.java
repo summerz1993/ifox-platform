@@ -12,6 +12,7 @@ import com.ifox.platform.system.request.resource.ResourceUpdateRequest;
 import com.ifox.platform.system.service.ResourceService;
 import com.ifox.platform.utility.modelmapper.ModelMapperUtil;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,7 +34,8 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public SimplePage<ResourceEO> page(ResourcePageRequest pageRequest) {
         Pageable pageable = PageRequestConverter.convertToSpringDataPageable(pageRequest);
-        Page<ResourceEO> page = resourceRepository.findAllByNameLikeAndTypeEquals(pageRequest.getName(), pageRequest.getType(), pageable);
+        ResourceEO resourceEO = ModelMapperUtil.get().map(pageRequest, ResourceEO.class);
+        Page<ResourceEO> page = resourceRepository.findAll(Example.of(resourceEO), pageable);
         return new SpringDataPageConverter<ResourceEO>().convertToSimplePage(page);
     }
 
