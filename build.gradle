@@ -4,15 +4,8 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'idea'
 
-sourceCompatibility = 1.8
-
 repositories {
-    mavenLocal()
     jcenter()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 subprojects{
@@ -23,18 +16,10 @@ subprojects{
     targetCompatibility = 1.8
 
     repositories {
-        mavenLocal()
         jcenter()
     }
 
     dependencies {
-        //spring 以下依赖包由spring boot自动加载
-//        compile "org.springframework:spring-core"
-//        compile "org.springframework:spring-beans"
-//        compile "org.springframework:spring-context"
-
-//        compile "org.springframework:spring-orm:$springVersion"
-
         compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
             exclude group: 'commons-logging', module: 'commons-logging'
         }

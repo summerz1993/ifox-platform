@@ -59,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
     @Modifying
     public void deleteMulti(String[] ids) throws NotFoundRoleException, BuildinSystemException {
         for (String id : ids) {
-            RoleEO roleEO = roleRepository.findOne(id);
+            RoleEO roleEO = roleRepository.getOne(id);
             if (roleEO == null) {
                 throw new NotFoundRoleException(NOT_FOUND_ROLE_EXP, "角色不存在");
             } else if(roleEO.getBuildinSystem()) {

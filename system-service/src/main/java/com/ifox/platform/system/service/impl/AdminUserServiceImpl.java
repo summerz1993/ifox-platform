@@ -145,20 +145,20 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Modifying
     public void delete(String[] ids) throws NotFoundAdminUserException, BuildinSystemException {
         for (String id : ids) {
-            AdminUserEO adminUserEO = adminUserRepository.findOne(id);
+            AdminUserEO adminUserEO = adminUserRepository.getOne(id);
             if (adminUserEO == null) {
                 throw new NotFoundAdminUserException(NOT_FOUND_ADMIN_USER_EXP, "用户不存在");
             } else if(adminUserEO.getBuildinSystem()) {
                 throw new BuildinSystemException(BUILDIN_SYSTEM_EXP, "系统内置用户，不允许删除");
             } else {
-                adminUserRepository.delete(id);
+                adminUserRepository.deleteById(id);
             }
         }
     }
 
     @Override
     public AdminUserEO get(String id) {
-        return adminUserRepository.findOne(id);
+        return adminUserRepository.getOne(id);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class AdminUserServiceImpl implements AdminUserService{
     @Transactional
     @Modifying
     public AdminUserEO update(AdminUserUpdateRequest updateRequest) {
-        AdminUserEO adminUserEO = adminUserRepository.findOne(updateRequest.getId());
+        AdminUserEO adminUserEO = adminUserRepository.getOne(updateRequest.getId());
         ModelMapperUtil.get().map(updateRequest, adminUserEO);
         String[] checkedRoleArray = updateRequest.getCheckedRole();
         List<RoleEO> roleEOList = new ArrayList<>();

@@ -50,7 +50,7 @@ public class ResourceServiceImpl implements ResourceService {
     public void deleteMulti(String[] ids) throws NotFoundResourceException {
         for (String id : ids) {
             try {
-                resourceRepository.delete(id);
+                resourceRepository.deleteById(id);
             } catch (EmptyResultDataAccessException emptyExc) {
                 throw new NotFoundResourceException(NOT_FOUND_RESOURCE_EXP, "资源不存在");
             }
@@ -59,14 +59,14 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceEO get(String id) {
-        return resourceRepository.findOne(id);
+        return resourceRepository.getOne(id);
     }
 
     @Override
     @Transactional
     @Modifying
     public void update(ResourceUpdateRequest resourceUpdateRequest) {
-        ResourceEO resourceEO = resourceRepository.findOne(resourceUpdateRequest.getId());
+        ResourceEO resourceEO = resourceRepository.getOne(resourceUpdateRequest.getId());
         ModelMapperUtil.get().map(resourceUpdateRequest, resourceEO);
     }
 

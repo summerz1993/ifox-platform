@@ -69,7 +69,7 @@ public class MenuPermissionServiceImpl implements MenuPermissionService {
 
     @Override
     public MenuPermissionEO get(String id) {
-        return menuPermissionRepository.findOne(id);
+        return menuPermissionRepository.getOne(id);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MenuPermissionServiceImpl implements MenuPermissionService {
 
     @Override
     public MenuPermissionEO update(MenuPermissionUpdateRequest updateRequest) {
-        MenuPermissionEO menuPermissionEO = menuPermissionRepository.findOne(updateRequest.getId());
+        MenuPermissionEO menuPermissionEO = menuPermissionRepository.getOne(updateRequest.getId());
         ModelMapperUtil.get().map(updateRequest, menuPermissionEO);
         return menuPermissionEO;
     }
